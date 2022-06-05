@@ -1,0 +1,34 @@
+- name: Set directory facts
+  ansible.builtin.set_fact:
+    shell_login_bash: $HOME/.config/shell/login.bash
+    shell_login_fish: $HOME/.config/shell/login.fish
+    shell_login_zsh: $HOME/.config/shell/login.zsh
+
+- name: Create rc files
+  ansible.builtin.shell: |
+    >> {{ shell_login_bash }}
+    >> {{ shell_login_fish }}
+    >> {{ shell_login_zsh }}
+  args: { warn: false }
+  changed_when: false
+
+- name: "bash : Add block to shell_login_bash"
+  ansible.builtin.blockinfile:
+    path: "{{ shell_login_bash }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    insertbefore: BOF
+    block: "{{ lookup('file', 'login.bash') }}"
+
+- name: "fish : Add block to shell_login_fish"
+  ansible.builtin.blockinfile:
+    path: "{{ shell_login_fish }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    insertbefore: BOF
+    block: "{{ lookup('file', 'login.fish') }}"
+
+- name: "zsh : Add block to shell_login_zsh"
+  ansible.builtin.blockinfile:
+    path: "{{ shell_login_zsh }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    insertbefore: BOF
+    block: "{{ lookup('file', 'login.zsh') }}"

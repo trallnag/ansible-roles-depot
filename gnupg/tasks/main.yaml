@@ -1,0 +1,62 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    gnupg_config_dir: $HOME/.config/gnupg
+
+- name: Create dirs
+  ansible.builtin.shell: |
+    mkdir -p {{ gnupg_config_dir }}
+    mkdir -p {{ gnupg_config_dir }}/scripts
+  args: { warn: false }
+  changed_when: false
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - pinentry-curses
+      - pinentry-gnome3
+  become: true
+
+- name: Place $HOME/.gnupg/gpg-agent.conf
+  ansible.builtin.copy:
+    src: gpg-agent.conf
+    dest: $HOME/.gnupg/gpg-agent.conf
+
+- name: Place $HOME/.gnupg/gpg.conf
+  ansible.builtin.copy:
+    src: gpg.conf
+    dest: $HOME/.gnupg/gpg.conf
+
+- name: Place scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ gnupg_config_dir }}/scripts"
+    mode: u=rwx,g=r,o=r
+  with_fileglob: scripts/*
+
+- name: Create a symbolic link
+  ansible.builtin.file:
+    src: "{{ gnupg_config_dir }}/scripts/{{ item | basename }}"
+    dest: '$HOME/.local/bin/{{ item | basename | regex_replace("\..*", "") }}'
+    state: link
+    force: true
+  with_fileglob: scripts/*
+
+- name: "bash : Add block to bash_profile"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      # Required in any case.
+      export GPG_TTY=$(tty)
+      # Prompt key unlock.
+      {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
+
+- name: "zsh : Add block to zsh_zprofile"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      # Required in any case.
+      export GPG_TTY=$(tty)
+      # Prompt key unlock.
+      {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash

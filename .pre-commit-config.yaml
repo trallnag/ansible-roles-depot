@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: trailing-whitespace
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        args: [--prose-wrap, always]
+        types_or: [markdown]
+
+  - repo: local
+    hooks:
+      - id: shfmt
+        name: shfmt
+        language: system
+        entry: shfmt
+        args:
+          - --binary-next-line
+          - --diff
+          - --indent=2
+          - --keep-padding
+          - --list
+          - --simplify
+          - --case-indent
+          - --space-redirects
+          - --write
+        types_or: [bash, sh]

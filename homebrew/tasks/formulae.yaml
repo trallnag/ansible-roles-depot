@@ -1,0 +1,24 @@
+- name: Install formulae
+  community.general.homebrew:
+    name:
+      - gh
+      - helm
+      - hugo
+      - kubectx
+      - kubernetes-cli
+      - terraform
+      - zellij
+      - terragrunt
+
+      # https://github.com/mvdan/sh
+      - shfmt
+
+      # https://github.com/koalaman/shellcheck
+      - shellcheck
+
+# - name: Add formulae to unlink file
+#   ansible.builtin.lineinfile:
+#     path: "{{ homebrew_unliked }}"
+#     line: "{{ item }}"
+#   with_items:
+#     - kubernetes-cli

@@ -1,0 +1,37 @@
+- name: Install
+  community.general.homebrew:
+    name: exa
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    exa_aliases:
+      - word: es
+        subst: exa
+      - word: e
+        subst: exa -a
+      - word: eo
+        subst: exa -1a --group-directories-first
+      - word: el
+        subst: exa -ahl --time-style=long-iso --links --classify --color-scale --group-directories-first
+      - word: ex
+        subst: exa -lbhHigUmuSa@ --time-style=long-iso --color-scale
+      - word: et
+        subst: exa -aT --group-directories-first
+
+- name: "bash : Integration"
+  blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in exa_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}
+
+- name: "zsh : Integration"
+  blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in exa_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}

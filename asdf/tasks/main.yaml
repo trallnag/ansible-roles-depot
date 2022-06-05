@@ -1,0 +1,60 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    asdf_dir: $HOME/.asdf
+
+- name: Clone asdf repository to {{ asdf_dir }}
+  ansible.builtin.git:
+    repo: https://github.com/trallnag/asdf.git
+    dest: "{{ asdf_dir }}"
+    version: fallback-path-exe
+
+# ------------------------------------------------------------------------------
+# Environment.
+
+- name: "bash : Add block to bash_bashrc to setup environment"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
+    block: |
+      source {{ asdf_dir }}/asdf.sh
+
+- name: "zsh : Add init block to zsh_zshrc to setup environment"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
+    block: |
+      source {{ asdf_dir }}/asdf.sh
+
+# ------------------------------------------------------------------------------
+# Completions.
+
+- name: "bash : Add block to bash_bashrc to setup completions"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completions"
+    block: |
+      source {{ asdf_dir }}/completions/asdf.bash
+
+- name: "zsh : Add init block to zsh_zshrc_compinit_pre to setup completions"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_compinit_pre }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completions"
+    block: |
+      fpath=({{ asdf_dir }}/completions $fpath)
+
+# ------------------------------------------------------------------------------
+
+- name: Add plugins without packages
+  ansible.builtin.shell: |
+    source {{ asdf_dir }}/asdf.sh
+    asdf plugin add {{ item }} || true
+  args: { executable: "{{ bash_executable }}" }
+  register: task
+  changed_when: "'already added' not in task.stderr"
+  loop:
+    - helm
+    - kubectl
+    - shellcheck
+    - shfmt
+    - terraform
+    - terragrunt

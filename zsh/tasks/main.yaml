@@ -1,0 +1,22 @@
+- name: Install
+  ansible.builtin.apt: { name: zsh }
+  become: true
+
+- import_tasks: facts.yaml
+
+- import_tasks: cleanup.yaml
+
+- import_tasks: runcmds.yaml
+
+- import_tasks: modules.yaml
+
+- name: Place scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ zsh_scripts }}/{{ item | basename }}"
+    mode: u=rwx,g=r,o=r
+    force: true
+  with_fileglob: scripts/*.zsh
+  changed_when: false
+
+- import_tasks: cron.yaml

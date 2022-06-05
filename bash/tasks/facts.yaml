@@ -1,0 +1,45 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    bash_executable: /usr/bin/bash
+
+    bash_completions_dir: $HOME/.local/share/bash-completion/completions
+
+    bash_profile: $HOME/.config/bash/dynrc/profile.bash
+    bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
+
+- name: Create dirs and files
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/bash/dynrc
+    mkdir -p {{ bash_completions_dir }}
+
+    >> {{ bash_profile }}
+    >> {{ bash_bashrc }}
+  args: { warn: false }
+  changed_when: false
+
+- name: "shell : Add block to shell_login_bash"
+  blockinfile:
+    path: "{{ shell_login_bash }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_BASH_COMPLETIONS_DIR={{ bash_completions_dir }}
+      export DOT_BASH_PROFILE={{ bash_profile }}
+      export DOT_BASH_BASHRC={{ bash_bashrc }}
+
+- name: "shell : Add block to shell_login_fish"
+  blockinfile:
+    path: "{{ shell_login_fish }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      set -x DOT_BASH_COMPLETIONS_DIR {{ bash_completions_dir }}
+      set -x DOT_BASH_PROFILE {{ bash_profile }}
+      set -x DOT_BASH_BASHRC {{ bash_bashrc }}
+
+- name: "shell : Add block to shell_login_zsh"
+  blockinfile:
+    path: "{{ shell_login_zsh }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_BASH_COMPLETIONS_DIR={{ bash_completions_dir }}
+      export DOT_BASH_PROFILE={{ bash_profile }}
+      export DOT_BASH_BASHRC={{ bash_bashrc }}

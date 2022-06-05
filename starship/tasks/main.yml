@@ -1,0 +1,16 @@
+- name: Install
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- --yes
+  changed_when: false
+
+- name: Place $HOME/.config/starship.toml
+  ansible.builtin.copy:
+    src: starship.toml
+    dest: $HOME/.config/starship.toml
+
+- name: "bash : Add block to bash_bashrc"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: ecd4a7a0-f22a-4406-a5a3-1427870330b4"
+    block: |
+      eval "$(starship init bash)"

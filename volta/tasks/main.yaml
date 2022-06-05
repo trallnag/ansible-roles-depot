@@ -1,0 +1,15 @@
+- name: Install
+  community.general.homebrew:
+    name: volta
+
+- name: Install and set node@18 as default
+  ansible.builtin.shell: |
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    volta install node@18
+  changed_when: false
+
+- name: Install a few tools
+  ansible.builtin.shell: |
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    volta install prettier
+  changed_when: false

@@ -1,0 +1,17 @@
+- name: Install
+  ansible.builtin.apt:
+    name: nano
+    state: present
+  become: true
+
+- name: Create directory $HOME/.config/nano
+  ansible.builtin.file:
+    path: $HOME/.config/nano
+    state: directory
+
+- name: Place $HOME/.config/nano/nanorc
+  ansible.builtin.copy:
+    src: nanorc
+    dest: $HOME/.config/nano/nanorc
+    mode: u=rw,g=r,o=r
+    force: true

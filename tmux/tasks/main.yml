@@ -1,0 +1,43 @@
+- name: Install
+  community.general.homebrew:
+    name:
+      - tmux
+    state: present
+
+# ------------------------------------------------------------------------------
+# Place files and stuff.
+
+- name: Create directories
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/tmux
+    mkdir -p $HOME/.config/tmux/plugins
+  args: { warn: false }
+  changed_when: false
+
+- name: Place $HOME/.config/tmux/tmux.conf
+  ansible.builtin.copy:
+    src: tmux.conf
+    dest: $HOME/.config/tmux/tmux.conf
+
+- name: Place misc executable files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "$HOME/.config/tmux/{{ item }}"
+    mode: u=rwx,g=r,o=r
+  loop:
+    - tpm-pre.sh
+    - tpm-post.sh
+    - toggle-mouse.sh
+    - uptime.sh
+
+# ------------------------------------------------------------------------------
+
+- name: Clone tmux plugin manager
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: $HOME/.config/tmux/plugins/tpm
+
+- name: Install plugins
+  shell: bash -c "$HOME/.config/tmux/plugins/tpm/bin/install_plugins"
+  register: task
+  changed_when: "'download success' in task.stdout"

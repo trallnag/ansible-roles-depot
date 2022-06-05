@@ -1,0 +1,28 @@
+- name: Install
+  ansible.builtin.apt:
+    name: bash
+  become: true
+
+- import_tasks: cleanup.yaml
+
+- import_tasks: facts.yaml
+
+- name: Delete $HOME/.bash_profile
+  ansible.builtin.file:
+    path: $HOME/.bash_profile
+    state: absent
+
+- name: Place $HOME/.profile
+  ansible.builtin.copy:
+    src: .profile
+    dest: $HOME/.profile
+
+- name: Place $HOME/.bashrc
+  ansible.builtin.copy:
+    src: .bashrc
+    dest: $HOME/.bashrc
+
+- name: Place $HOME/.bash_logout
+  ansible.builtin.copy:
+    src: .bash_logout
+    dest: $HOME/.bash_logout

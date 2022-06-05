@@ -1,0 +1,81 @@
+- name: Install
+  ansible.builtin.shell: |
+    if [ ! -d ~/.cargo ]; then
+      curl --silent --show-error --fail https://sh.rustup.rs | sh -s -- --quiet --no-modify-path -y
+      echo status=changed
+    fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+# ------------------------------------------------------------------------------
+# Environment path.
+
+- name: "bash : Add block to bash_profile"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: e5294c6c-b966-4027-9361-dc1d726f72ee"
+    block: |
+      PATH=$PATH:$HOME/.cargo/bin
+
+- name: "zsh : Add block to zsh_zprofile"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 721e1f10-0360-43c3-b354-b9a65d6303e0"
+    block: |
+      path=($path $HOME/.cargo/bin)
+
+# ------------------------------------------------------------------------------
+# Environment script.
+
+- name: "bash : Add block to bash_bashrc that sources env file"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 3b463e3c-12ce-4d40-ad22-c51b1a012139"
+    block: |
+      test -f $HOME/.cargo/env && source $HOME/.cargo/env
+
+- name: "zsh : Add block to zsh_zshrc that sources env file"
+  blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 9ebad7e5-bf71-46d6-a934-256aa6d79fc3"
+    block: |
+      test -f $HOME/.cargo/env && source $HOME/.cargo/env
+
+# ------------------------------------------------------------------------------
+# Completions.
+
+- name: "bash : Create and place completion scripts"
+  ansible.builtin.shell: |
+    export PATH=$PATH:$HOME/.cargo/bin && source $HOME/.cargo/env
+
+    fcargo=$HOME/.local/share/bash-completion/completions/cargo.bash
+    frustup=$HOME/.local/share/bash-completion/completions/rustup.bash
+
+    hash_before=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    rustup completions bash cargo > $fcargo
+    rustup completions bash > $frustup
+
+    hash_after=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    if [ "$hash_before" != "$hash_after" ]; then echo status=changed; fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: "zsh : Create and place completion scripts"
+  ansible.builtin.shell: |
+    export PATH=$PATH:$HOME/.cargo/bin && source $HOME/.cargo/env
+
+    fcargo={{ zsh_completions_dir }}/_cargo
+    frustup={{ zsh_completions_dir }}/_rustup
+
+    hash_before=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    rustup completions zsh cargo > $fcargo
+    rustup completions zsh > $frustup
+
+    hash_after=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    if [ "$hash_before" != "$hash_after" ]; then echo status=changed; fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"

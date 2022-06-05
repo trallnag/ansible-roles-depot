@@ -1,0 +1,47 @@
+- name: Clone trallnag/ohmyzsh
+  ansible.builtin.git:
+    repo: https://github.com/trallnag/ohmyzsh.git
+    dest: "{{ zsh_plugins }}/oh-my-zsh"
+
+- name: Clone zsh-completions
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-completions.git
+    dest: "{{ zsh_plugins }}/zsh-completions"
+
+- name: Clone zsh-history-substring-search
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-history-substring-search.git
+    dest: "{{ zsh_plugins }}/zsh-history-substring-search"
+
+- name: Clone zsh-syntax-highlighting
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ zsh_plugins }}/zsh-syntax-highlighting"
+
+- name: Clone zsh-autosuggestions
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "{{ zsh_plugins }}/zsh-autosuggestions"
+
+# ------------------------------------------------------------------------------
+# Powerlevel10k
+
+- name: Clone powerlevel10k
+  ansible.builtin.git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ zsh_plugins }}/powerlevel10k"
+
+- name: Place $HOME/.config/zsh/.p10k.zsh
+  ansible.builtin.copy:
+    src: .p10k.zsh
+    dest: $HOME/.config/zsh/.p10k.zsh
+
+- name: Place $HOME/.config/zsh/p10k-pre.zsh
+  ansible.builtin.copy:
+    src: p10k-pre.zsh
+    dest: $HOME/.config/zsh/p10k-pre.zsh
+
+- name: Place $HOME/.config/zsh/p10k-post.zsh
+  ansible.builtin.copy:
+    src: p10k-post.zsh
+    dest: $HOME/.config/zsh/p10k-post.zsh

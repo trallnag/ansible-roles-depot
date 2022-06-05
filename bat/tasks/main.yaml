@@ -1,0 +1,32 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    bat_config_path: $HOME/.config/bat/bat.conf
+
+- name: Install
+  community.general.homebrew:
+    name: bat
+
+- name: Create directory
+  ansible.builtin.shell: |
+    mkdir -p {{ bat_config_path | dirname }}
+  args: { warn: false }
+  changed_when: false
+
+- name: Place config
+  ansible.builtin.copy:
+    src: bat.conf
+    dest: "{{ bat_config_path }}"
+
+- name: "bash : Integration"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export BAT_CONFIG_PATH={{ bat_config_path }}
+
+- name: "zsh : Integration"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export BAT_CONFIG_PATH={{ bat_config_path }}

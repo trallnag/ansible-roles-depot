@@ -1,0 +1,65 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    pipx_default_python: /usr/bin/python
+
+# ------------------------------------------------------------------------------
+# Install Pipx.
+
+- name: Install dependencies with APT
+  ansible.builtin.apt:
+    name:
+      - python-is-python3
+      - python3-argcomplete
+      - python3-pip
+      - python3-setuptools
+      - python3-venv
+  become: true
+
+- name: Install with Pip
+  ansible.builtin.pip:
+    name: pipx
+    state: latest
+
+# ------------------------------------------------------------------------------
+# Setup environment.
+
+- name: "bash : Add block to bash_profile"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+
+- name: "zsh : Add block to zsh_zprofile"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+
+# ------------------------------------------------------------------------------
+# Setup completions.
+
+- name: "bash : Add block to bash_profile"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(register-python-argcomplete pipx)"
+
+- name: "zsh : Add block to zsh_zshrc_compinit_post"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_compinit_post }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(register-python-argcomplete pipx)"
+
+# ------------------------------------------------------------------------------
+# Install packages with Pipx.
+
+- name: Install packages
+  community.general.pipx:
+    name: "{{ item }}"
+  loop:
+    - pre-commit # https://github.com/pre-commit/pre-commit
+    - bpython # https://github.com/bpython/bpython

@@ -1,0 +1,54 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    ssh_config_dir: $HOME/.config/ssh
+    ssh_data_dir: $HOME/.local/share/ssh
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ ssh_config_dir }}"
+    - "{{ ssh_config_dir }}/scripts"
+    - "{{ ssh_data_dir }}"
+
+- name: Place scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ ssh_config_dir }}/scripts"
+    mode: u=rwx,g=,o=
+  loop:
+    - ssh-agent-trigger.bash
+    - ssh-pass-passphrase.bash
+
+# ------------------------------------------------------------------------------
+# Initialize single ssh-agent across sessions.
+
+- name: "bash : Add block to bash_profile to init ssh-agent"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: init-ssh-agent"
+    block: "{{ lookup('ansible.builtin.template', 'init-ssh-agent.bash') }}"
+
+- name: "zsh : Add block to zsh_zprofile to init ssh-agent"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: init-ssh-agent"
+    block: "{{ lookup('ansible.builtin.template', 'init-ssh-agent.zsh') }}"
+
+# ------------------------------------------------------------------------------
+# Add default private key to ssh-agent.
+
+- name: "bash : Add block to bash_profile to add key to ssh-agent"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: ssh-add"
+    block: |
+      {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash
+
+- name: "zsh : Add block to zsh_zprofile to add key to ssh-agent"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: ssh-add"
+    block: |
+      {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash

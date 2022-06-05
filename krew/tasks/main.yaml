@@ -1,0 +1,54 @@
+- name: Install
+  community.general.homebrew:
+    name: krew
+
+# ------------------------------------------------------------------------------
+
+- name: "bash : Add block to bash_profile"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      PATH="$PATH:$HOME/.krew/bin"
+
+- name: "zsh : Add block to zsh_zprofile"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      path=($path $HOME/.krew/bin)
+
+# ------------------------------------------------------------------------------
+
+- name: Upgrade plugins
+  ansible.builtin.script: upgrade-plugins.bash
+  register: task
+  changed_when: "'status=changed' in task.stderr"
+
+- name: Install plugins
+  ansible.builtin.shell: |
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    PATH="${PATH}:${HOME}/.krew/bin"
+
+    installed_plugins="$(kubectl krew list)"
+
+    if ! echo "$installed_plugins" | grep -q "^{{ item }}"; then
+      kubectl krew install {{ item }}
+      echo status=changed
+    fi
+  args: { executable: "{{ bash_executable }}" }
+  register: task
+  changed_when: "'status=changed' in task.stderr"
+  loop:
+    - access-matrix # https://github.com/corneliusweig/rakkess
+    - deprecations # https://github.com/rikatz/kubepug
+    - explore # https://github.com/keisku/kubectl-explore
+    - fields # https://github.com/rewanthtammana/kubectl-fields
+    - fuzzy # https://github.com/d-kuro/kubectl-fuzzy
+    - images # https://github.com/chenjiandongx/kubectl-images
+    - ktop # https://github.com/vladimirvivien/ktop
+    - lineage # https://github.com/tohjustin/kube-lineage
+    - neat # https://github.com/itaysk/kubectl-neat
+    - resource-capacity # https://github.com/robscott/kube-capacity
+    - score # https://github.com/zegl/kube-score
+    - who-can # https://github.com/aquasecurity/kubectl-who-can

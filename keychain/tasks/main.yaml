@@ -1,0 +1,35 @@
+- name: Install
+  ansible.builtin.package:
+    name: keychain
+  become: true
+
+- name: Create $HOME/.local/share/keychain
+  ansible.builtin.file:
+    state: directory
+    path: $HOME/.local/share/keychain
+
+- name: "bash : Add block to bash_profile"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      if command -v keychain 1> /dev/null 2> /dev/null; then
+        odir="--dir $HOME/.local/share/keychain"
+        oeval="--eval id_ed25519 ACCB8F306184BEEE49E7370E5DBF2C327E72AA3F"
+        eval $(keychain --agents ssh,gpg --timeout 43200 $odir $oeval)
+        unset odir
+        unset oeval
+      fi
+
+- name: "zsh : Add block to zsh_zprofile"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      if command -v keychain 1> /dev/null 2> /dev/null; then
+        odir="--dir $HOME/.local/share/keychain"
+        oeval="--eval id_ed25519 ACCB8F306184BEEE49E7370E5DBF2C327E72AA3F"
+        eval $(keychain --agents ssh,gpg --timeout 43200 $odir $oeval)
+        unset odir
+        unset oeval
+      fi

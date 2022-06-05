@@ -1,0 +1,12 @@
+- name: Install
+  community.general.homebrew:
+    name: git-extras
+
+# Necessary due to caveat in formula. For some reason completion for Zsh is
+# not being setup automatically. For Bash it works fine out of the box.
+- name: "zsh : Add block to zsh_zshrc_compinit_post"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_compinit_post }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source /home/linuxbrew/.linuxbrew/opt/git-extras/share/git-extras/git-extras-completion.zsh

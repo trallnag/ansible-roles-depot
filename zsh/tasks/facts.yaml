@@ -1,0 +1,124 @@
+- name: Set directory facts
+  ansible.builtin.set_fact:
+    zsh_completions_dir: $HOME/.config/zsh/completions
+    zsh_dynrc: $HOME/.config/zsh/dynrc
+    zsh_functions: $HOME/.config/zsh/functions
+    zsh_plugins: $HOME/.config/zsh/plugins
+    zsh_scripts: $HOME/.config/zsh/scripts
+
+- name: Create directories
+  ansible.builtin.shell: |
+    mkdir -p ~/.cache/zsh
+    mkdir -p ~/.config/zsh
+
+    mkdir -p {{ zsh_completions_dir }}
+    mkdir -p {{ zsh_dynrc }}
+    mkdir -p {{ zsh_functions }}
+    mkdir -p {{ zsh_plugins }}
+    mkdir -p {{ zsh_scripts }}
+  args: { warn: false }
+  changed_when: false
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    zsh_zprofile: "{{ zsh_dynrc }}/zprofile.zsh"
+
+    zsh_zshrc_interactive: "{{ zsh_dynrc }}/zshrc-interactive.zsh"
+    zsh_zshrc: "{{ zsh_dynrc }}/zshrc.zsh"
+    zsh_zshrc_compinit_pre: "{{ zsh_dynrc }}/zshrc-compinit-pre.zsh"
+    zsh_zshrc_compinit_post: "{{ zsh_dynrc }}/zshrc-compinit-post.zsh"
+
+    zsh_zlogin: "{{ zsh_dynrc }}/zlogin.zsh"
+
+    zsh_zlogout: "{{ zsh_dynrc }}/zlogout.zsh"
+
+    zsh_p10k: "{{ zsh_dynrc }}/p10k.zsh"
+
+- name: Create files
+  ansible.builtin.shell: |
+    >> {{ zsh_zprofile }}
+
+    >> {{ zsh_zshrc_interactive }}
+    >> {{ zsh_zshrc }}
+    >> {{ zsh_zshrc_compinit_pre }}
+    >> {{ zsh_zshrc_compinit_post }}
+
+    >> {{ zsh_zlogin }}
+
+    >> {{ zsh_zlogout }}
+
+    >> {{ zsh_p10k }}
+  args: { warn: false }
+  changed_when: false
+
+- name: "shell : Add block to $HOME/.config/shell/login.bash"
+  blockinfile:
+    path: $HOME/.config/shell/login.bash
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_ZSH_COMPLETIONS_DIR={{ zsh_completions_dir }}
+      export DOT_ZSH_DYNRC={{ zsh_dynrc }}
+      export DOT_ZSH_FUNCTIONS={{ zsh_functions }}
+      export DOT_ZSH_PLUGINS={{ zsh_plugins }}
+      export DOT_ZSH_SCRIPTS={{ zsh_scripts }}
+
+      export DOT_ZSH_ZPROFILE={{ zsh_zprofile }}
+
+      export DOT_ZSH_ZSHRC_INTERACTIVE={{ zsh_zshrc_interactive }}
+      export DOT_ZSH_ZSHRC={{ zsh_zshrc }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE={{ zsh_zshrc_compinit_pre }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST={{ zsh_zshrc_compinit_post }}
+
+      export DOT_ZSH_ZLOGIN={{ zsh_zlogin }}
+
+      export DOT_ZSH_ZLOGOUT={{ zsh_zlogout }}
+
+      export DOT_ZSH_P10K={{ zsh_p10k }}
+
+- name: "shell : Add block to $HOME/.config/shell/login.fish"
+  blockinfile:
+    path: $HOME/.config/shell/login.fish
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      set -x DOT_ZSH_COMPLETIONS_DIR {{ zsh_completions_dir }}
+      set -x DOT_ZSH_DYNRC {{ zsh_dynrc }}
+      set -x DOT_ZSH_FUNCTIONS {{ zsh_functions }}
+      set -x DOT_ZSH_PLUGINS {{ zsh_plugins }}
+      set -x DOT_ZSH_SCRIPTS {{ zsh_scripts }}
+
+      set -x DOT_ZSH_ZPROFILE {{ zsh_zprofile }}
+
+      set -x DOT_ZSH_ZSHRC_INTERACTIVE {{ zsh_zshrc_interactive }}
+      set -x DOT_ZSH_ZSHRC {{ zsh_zshrc }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_PRE {{ zsh_zshrc_compinit_pre }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_POST {{ zsh_zshrc_compinit_post }}
+
+      set -x DOT_ZSH_ZLOGIN {{ zsh_zlogin }}
+
+      set -x DOT_ZSH_ZLOGOUT {{ zsh_zlogout }}
+
+      set -x DOT_ZSH_P10K {{ zsh_p10k }}
+
+- name: "shell : Add block to $HOME/.config/shell/login.zsh"
+  blockinfile:
+    path: $HOME/.config/shell/login.zsh
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_ZSH_COMPLETIONS_DIR={{ zsh_completions_dir }}
+      export DOT_ZSH_DYNRC={{ zsh_dynrc }}
+      export DOT_ZSH_FUNCTIONS={{ zsh_functions }}
+      export DOT_ZSH_PLUGINS={{ zsh_plugins }}
+      export DOT_ZSH_SCRIPTS={{ zsh_scripts }}
+
+      export DOT_ZSH_ZPROFILE={{ zsh_zprofile }}
+
+      export DOT_ZSH_ZSHRC_INTERACTIVE={{ zsh_zshrc_interactive }}
+      export DOT_ZSH_ZSHRC={{ zsh_zshrc }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE={{ zsh_zshrc_compinit_pre }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST={{ zsh_zshrc_compinit_post }}
+
+      export DOT_ZSH_ZLOGIN={{ zsh_zlogin }}
+
+      export DOT_ZSH_ZLOGOUT={{ zsh_zlogout }}
+
+      export DOT_ZSH_P10K={{ zsh_p10k }}
