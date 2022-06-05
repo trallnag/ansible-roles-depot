@@ -1,0 +1,25 @@
+- name: Install
+  community.general.homebrew:
+    name: git-extras
+    state: present
+    path: "{{ brew_path }}"
+
+
+# ------------------------------------------------------------------------------
+# Zsh
+
+
+- name: "zsh : Add init block to {{ zsh_zshrc_bottom_before_comp_init }}"
+  blockinfile:
+    path: "{{ zsh_zshrc_bottom_before_comp_init }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source /home/linuxbrew/.linuxbrew/opt/git-extras/share/git-extras/git-extras-completion.zsh
+  register: task
+
+- name: "zsh : Compile {{ zsh_zshrc_bottom_before_comp_init }}"
+  when: task.changed
+  ansible.builtin.command: zsh -c 'zcompile -R {{ zsh_zshrc_bottom_before_comp_init }}'
+
+
+# ------------------------------------------------------------------------------
