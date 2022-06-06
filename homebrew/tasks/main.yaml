@@ -11,6 +11,8 @@
 
 - name: Run install script
   ansible.builtin.shell: |
+    sudo -v || exit 1
+
     if ! test -d /home/linuxbrew/.linuxbrew; then
       unset INTERACTIVE && export NONINTERACTIVE=1
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -79,5 +81,6 @@
     name:
       - gcc
       - gh
+      - hugo
     state: present
     path: "{{ brew_path }}"
