@@ -2,12 +2,8 @@
 > I use this role in my playbooks by adding the repo as a Git submodule and
 > symlinking roles I want into the roles directory of the respective playbook.
 
-# Ansible Role `git_extras`
+# Ansible Role `homebrew`
 
-- <https://github.com/tj/git-extras>
+This role installs Homebrew and several formulaes.
 
-## Cheat Sheet
-
-To login on a new machine:
-
-    gh auth login
+- <https://docs.brew.sh/Homebrew-on-Linux>
