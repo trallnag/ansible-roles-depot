@@ -1,0 +1,113 @@
+# ------------------------------------------------------------------------------
+# Install tmux from source
+
+
+- name: Install dependencies for compiling and running
+  ansible.builtin.apt:
+    name: 
+      - tmux
+      - libevent-dev 
+      - ncurses-dev
+      - build-essential
+      - bison
+      - pkg-config
+      - autoconf 
+      - automake
+      - pkg-config
+    state: present
+  become: true
+
+- name: Decide if installation is required
+  ansible.builtin.shell: |
+    if [ "$(tmux -V)" != "tmux {{ tmux_version }}" ]; then
+      echo status=installation_required
+      rm -rf /tmp/tmux-source
+    fi
+  register: task
+  become: true
+
+- name: Clone source repo
+  when: '"status=installation_required" in task.stdout'
+  ansible.builtin.git:
+    repo: https://github.com/tmux/tmux.git
+    dest: /tmp/tmux-source
+    version: "{{ tmux_version }}"
+    depth: 1
+    force: true
+  become: true
+
+- name: Compile and install
+  when: '"status=installation_required" in task.stdout'
+  ansible.builtin.shell: |
+    cd /tmp/tmux-source \
+      && sh autogen.sh \
+      && ./configure \
+      && make \
+      && make install
+  become: true
+
+
+# ------------------------------------------------------------------------------
+# Place files and stuff
+
+
+- name: Create necessary directories
+  ansible.builtin.shell: |
+    mkdir -p ~/.config/tmux
+  args: {warn: false} 
+  changed_when: false
+
+- name: Place ~/.tmux.conf
+  ansible.builtin.copy:
+    src: .tmux.conf
+    dest: ~/.tmux.conf
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place ~/.config/tmux/pre-tpm.sh
+  ansible.builtin.copy:
+    src: pre-tpm.sh
+    dest: ~/.config/tmux/pre-tpm.sh
+    mode: u=rwx,g=r,o=r
+    force: true
+
+- name: Place ~/.config/tmux/post-tpm.sh
+  ansible.builtin.copy:
+    src: post-tpm.sh
+    dest: ~/.config/tmux/post-tpm.sh
+    mode: u=rwx,g=r,o=r
+    force: true
+
+- name: Place ~/.config/tmux/toggle-mouse.sh
+  ansible.builtin.copy:
+    src: toggle-mouse.sh
+    dest: ~/.config/tmux/toggle-mouse.sh
+    mode: u=rwx,g=r,o=r
+    force: true
+
+- name: Place ~/.config/tmux/uptime.sh
+  ansible.builtin.copy:
+    src: uptime.sh
+    dest: ~/.config/tmux/uptime.sh
+    mode: u=rwx,g=r,o=r
+    force: true
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Clone tmux plugin manager
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: ~/.tmux/plugins/tpm
+    version: "HEAD"
+    depth: 1
+    force: false
+
+- name: Install plugins
+  shell: bash -c "~/.tmux/plugins/tpm/bin/install_plugins"
+  register: task
+  changed_when: '"download success" in task.stdout'
+
+
+# ------------------------------------------------------------------------------
