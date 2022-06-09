@@ -1,0 +1,177 @@
+# ------------------------------------------------------------------------------
+# OMZ
+
+
+- name: Clone trallnag/ohmyzsh
+  ansible.builtin.git:
+    repo: https://github.com/trallnag/ohmyzsh.git
+    dest: "{{ zsh_modules }}/oh-my-zsh"
+    version: "HEAD"
+    depth: 1
+    force: true
+  register: task
+
+- name: Compile scripts in trallnag/ohmyzsh
+  when: task.changed
+  ansible.builtin.shell: |
+    cd {{ zsh_modules }}/oh-my-zsh
+    zcompile -R lib/*.zsh
+    zcompile -R *.zsh
+  args: { executable: /bin/zsh }
+
+
+# ------------------------------------------------------------------------------
+# zsh-completions
+
+
+- name: Clone zsh-completions
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-completions.git
+    dest: "{{ zsh_modules }}/zsh-completions"
+    version: "HEAD"
+    depth: 1
+    force: false
+
+
+# ------------------------------------------------------------------------------
+# zsh-history-substring-search
+
+
+- name: Clone zsh-history-substring-search
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-history-substring-search.git
+    dest: "{{ zsh_modules }}/zsh-history-substring-search"
+    version: "HEAD"
+    depth: 1
+    force: false
+  register: task
+
+- name: Compile zsh-history-substring-search
+  when: task.changed
+  ansible.builtin.shell: |
+    cd {{ zsh_modules }}/zsh-history-substring-search
+    zcompile -R zsh-history-substring-search.zsh
+  args: { executable: /bin/zsh }
+
+
+# ------------------------------------------------------------------------------
+# zsh-syntax-highlighting
+
+
+- name: Clone zsh-syntax-highlighting
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ zsh_modules }}/zsh-syntax-highlighting"
+    version: "HEAD"
+    depth: 1
+    force: false
+  register: task
+
+- name: Compile zsh-syntax-highlighting
+  when: task.changed
+  ansible.builtin.shell: |
+    cd {{ zsh_modules }}/zsh-syntax-highlighting
+
+    zcompile -R zsh-syntax-highlighting.zsh
+
+    for directory in highlighters/*/; do
+      zcompile -R ${directory}*.zsh
+    done
+  args: { executable: /bin/zsh }
+
+
+# ------------------------------------------------------------------------------
+# zsh-autosuggestions
+
+
+- name: Clone zsh-autosuggestions
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: "{{ zsh_modules }}/zsh-autosuggestions"
+    version: "v0.7.0"
+    depth: 1
+    force: false
+  register: task
+
+- name: Compile zsh-autosuggestions
+  when: task.changed
+  ansible.builtin.shell: |
+    cd {{ zsh_modules }}/zsh-autosuggestions
+
+    zcompile -R zsh-autosuggestions.zsh
+
+    for file in src/*.zsh; do
+      zcompile -R $file
+    done
+
+    for file in src/strategies/*.zsh; do
+      zcompile -R $file
+    done
+  args:
+    executable: /bin/zsh
+
+
+# ------------------------------------------------------------------------------
+# powerlevel10k
+
+
+- name: Clone powerlevel10k
+  ansible.builtin.git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ zsh_modules }}/powerlevel10k"
+    version: "v1.16.1"
+    depth: 1
+    force: false
+
+- name: Place {{ zsh_dynrc }}/.p10k.zsh
+  ansible.builtin.copy:
+    src: .p10k.zsh
+    dest: "{{ zsh_dynrc }}/.p10k.zsh"
+    mode: u=rw,g=r,o=r
+    force: true
+  register: task
+
+- name: Compile {{ zsh_dynrc }}/.p10k.zsh
+  when: task.changed
+  ansible.builtin.shell: zcompile -R {{ zsh_dynrc }}/.p10k.zsh
+  args: { executable: /bin/zsh }
+
+- name: Place {{ zsh_dynrc }}/p10k-before-dyn.zsh
+  ansible.builtin.copy:
+    src: p10k-before-dyn.zsh
+    dest: "{{ zsh_dynrc }}/p10k-before-dyn.zsh"
+    mode: u=rw,g=r,o=r
+    force: true
+  register: task
+
+- name: Compile {{ zsh_dynrc }}/p10k-before-dyn.zsh
+  when: task.changed
+  ansible.builtin.shell: zcompile -R {{ zsh_dynrc }}/p10k-before-dyn.zsh
+  args: { executable: /bin/zsh }
+
+- name: Place {{ zsh_dynrc }}/p10k-after-dyn.zsh
+  ansible.builtin.copy:
+    src: p10k-after-dyn.zsh
+    dest: "{{ zsh_dynrc }}/p10k-after-dyn.zsh"
+    mode: u=rw,g=r,o=r
+    force: true
+  register: task
+
+- name: Compile {{ zsh_dynrc }}/p10k-after-dyn.zsh
+  when: task.changed
+  ansible.builtin.shell: zcompile -R {{ zsh_dynrc }}/p10k-after-dyn.zsh
+  args: { executable: /bin/zsh }
+
+- name: Create {{ zsh_dynrc }}/p10k-dyn.zsh
+  ansible.builtin.shell: |
+    >> {{ zsh_dynrc }}/p10k-dyn.zsh
+  args: { warn: false }
+  changed_when: false
+
+- name: Compile {{ zsh_dynrc }}/p10k-dyn.zsh
+  ansible.builtin.shell: zcompile -R {{ zsh_dynrc }}/p10k-dyn.zsh
+  args: { executable: /bin/zsh }
+  changed_when: false
+
+
+# ------------------------------------------------------------------------------

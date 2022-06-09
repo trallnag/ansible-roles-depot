@@ -2,4 +2,4 @@
 > I use this role in my playbooks by adding the repo as a Git submodule and
 > symlinking roles I want into the roles directory of the respective playbook.
 
-# Ansible Role `bash`
+# Ansible Role `sh`

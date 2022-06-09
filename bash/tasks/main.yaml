@@ -38,13 +38,6 @@
     mode: u=rw,g=r,o=r
     force: true
 
-- name: Place $HOME/.profile
-  ansible.builtin.template:
-    src: .profile
-    dest: $HOME/.profile
-    mode: u=rw,g=r,o=r
-    force: true
-
 - name: Place $HOME/.bash_profile
   ansible.builtin.template:
     src: .bash_profile

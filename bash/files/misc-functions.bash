@@ -23,6 +23,20 @@ delete_bash_rc() {
 
     "$HOME/.bashrc"
     "$HOME/.bash_profile"
+  )
+
+  for file in "${files_to_delete[@]}"; do
+    echo "Deleting \"$file\"..."
+    rm "$file"
+  done
+}
+
+delete_sh_rc() {
+  files_to_delete=(
+    "$SH_PROFILE_TOP"
+    "$SH_PROFILE_MIDDLE"
+    "$SH_PROFILE_BOTTOM"
+
     "$HOME/.profile"
   )
 

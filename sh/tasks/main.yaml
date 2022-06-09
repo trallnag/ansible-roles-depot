@@ -1,0 +1,26 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    sh_profile_top: $HOME/.config/sh/profile-top.sh
+    sh_profile_middle: $HOME/.config/sh/profile-middle.sh
+    sh_profile_bottom: $HOME/.config/sh/profile-bottom.sh
+
+- name: Create necessary directories
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/sh
+  args: {warn: false} 
+  changed_when: false
+
+- name: Create necessary files
+  ansible.builtin.shell: |
+    >> {{ sh_profile_top }}
+    >> {{ sh_profile_middle }}
+    >> {{ sh_profile_bottom }}
+  args: {warn: false} 
+  changed_when: false
+
+- name: Place $HOME/.profile
+  ansible.builtin.template:
+    src: .profile
+    dest: $HOME/.profile
+    mode: u=rw,g=r,o=r
+    force: true

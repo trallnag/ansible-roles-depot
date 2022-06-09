@@ -1,9 +1,16 @@
 # ------------------------------------------------------------------------------
 
 
-[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+export SH_PROFILE_TOP="{{ sh_profile_top }}"
+export SH_PROFILE_MIDDLE="{{ sh_profile_middle }}"
+export SH_PROFILE_BOTTOM="{{ sh_profile_bottom }}"
 
-[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+
+# ------------------------------------------------------------------------------
+
+
+PATH="$HOME/bin:$PATH"
+PATH="$HOME/.local/bin:$PATH"
 
 # Editors.
 export EDITOR=nano
@@ -11,7 +18,7 @@ export VISUAL=nano
 export PAGER=less
 
 # Language.
-if [[ -z "$LANG" ]]; then
+if [ -z "$LANG" ]; then
   export LANG=en_US.UTF-8
 fi
 
@@ -49,6 +56,14 @@ export LESS_TERMCAP_se=$'\e[0m'          # Ends standout-mode.
 export LESS_TERMCAP_so=$'\e[00;47;30m'   # Begins standout-mode.
 export LESS_TERMCAP_ue=$'\e[0m'          # Ends underline.
 export LESS_TERMCAP_us=$'\e[01;32m'      # Begins underline.
+
+
+# ------------------------------------------------------------------------------
+
+
+. "$SH_PROFILE_TOP"
+. "$SH_PROFILE_MIDDLE"
+. "$SH_PROFILE_BOTTOM"
 
 
 # ------------------------------------------------------------------------------
