@@ -1,0 +1,60 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    bash_bashrc_top: $HOME/.config/bash/bashrc-top.bash
+    bash_bashrc_middle: $HOME/.config/bash/bashrc-middle.bash
+    bash_bashrc_bottom: $HOME/.config/bash/bashrc-bottom.bash
+
+    bash_profile_top: $HOME/.config/bash/bash-profile-top.bash
+    bash_profile_middle: $HOME/.config/bash/bash-profile-middle.bash
+    bash_profile_bottom: $HOME/.config/bash/bash-profile-bottom.bash
+
+    bash_completions: $HOME/.local/share/bash-completion/completions
+    bash_functions: $HOME/.local/share/functions
+
+- name: Create necessary directories
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/bash
+    mkdir -p {{ bash_completions }}
+    mkdir -p {{ bash_functions }}
+  args: {warn: false} 
+  changed_when: false
+
+- name: Create necessary files
+  ansible.builtin.shell: |
+    >> {{ bash_bashrc_top }}
+    >> {{ bash_bashrc_middle }}
+    >> {{ bash_bashrc_bottom }}
+
+    >> {{ bash_profile_top }}
+    >> {{ bash_profile_middle }}
+    >> {{ bash_profile_bottom }}
+  args: {warn: false} 
+  changed_when: false
+
+- name: Place $HOME/.bashrc
+  ansible.builtin.template:
+    src: .bashrc
+    dest: $HOME/.bashrc
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place $HOME/.profile
+  ansible.builtin.template:
+    src: .profile
+    dest: $HOME/.profile
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place $HOME/.bash_profile
+  ansible.builtin.template:
+    src: .bash_profile
+    dest: $HOME/.bash_profile
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place misc-functions.bash
+  ansible.builtin.copy:
+    src: misc-functions.bash
+    dest: "{{ bash_functions }}/misc-functions.bash"
+    mode: u=rw,g=r,o=r
+    force: true
