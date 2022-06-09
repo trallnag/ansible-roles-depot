@@ -149,12 +149,12 @@ shopt -s cdspell 2> /dev/null
 
 
 for file in $BASH_FUNCTIONS/*.bash; do
-  source $file
+  source "$file"
 done
 
-source $BASH_BASHRC_TOP
-source $BASH_BASHRC_MIDDLE
-source $BASH_BASHRC_BOTTOM
+source "$BASH_BASHRC_TOP"
+source "$BASH_BASHRC_MIDDLE"
+source "$BASH_BASHRC_BOTTOM"
 
 
 # ------------------------------------------------------------------------------
