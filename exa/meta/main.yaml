@@ -1,0 +1,4 @@
+dependencies:
+  - role: bash
+  - role: homebrew
+  - role: zsh
