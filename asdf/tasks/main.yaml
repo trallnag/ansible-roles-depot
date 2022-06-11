@@ -1,0 +1,24 @@
+- name: Clone asdf repository to ~/.asdf
+  ansible.builtin.git:
+    repo: https://github.com/asdf-vm/asdf.git
+    dest: ~/.asdf
+    version: "v0.10.2"
+    force: true
+
+- name: "bash : Add init block to {{ bash_bashrc_top }}"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc_top }}"
+    insertbefore: BOF
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source ~/.asdf/asdf.sh
+      source ~/.asdf/completions/asdf.bash
+
+- name: "zsh : Add init block to {{ zsh_zshrc_top_non_interactive }}"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_top_non_interactive }}"
+    insertbefore: BOF
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source ~/.asdf/asdf.sh
+      fpath=($ASDF_DIR/completions $fpath)
