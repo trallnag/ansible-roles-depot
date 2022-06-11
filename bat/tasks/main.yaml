@@ -1,0 +1,17 @@
+- name: Install
+  community.general.homebrew:
+    name: bat
+    state: present
+
+- name: Create directory
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/bat/config
+  args: {warn: false} 
+  changed_when: false
+
+- name: Place config
+  ansible.builtin.copy:
+    src: config.txt
+    dest: $HOME/.config/bat/config
+    mode: u=rw,g=r,o=r
+    force: true

@@ -1,0 +1,20 @@
+- name: Install
+  community.general.homebrew:
+    name: ripgrep
+    state: present
+
+- name: Place config
+  ansible.builtin.copy:
+    src: config.txt
+    dest: $HOME/.config/.ripgreprc
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: "sh : Add block to sh_profile_middle"
+  blockinfile:
+    path: "{{ sh_profile_middle }}"
+    insertafter: EOF
+    state: present
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export RIPGREP_CONFIG_PATH=$HOME/.config/.ripgreprc
