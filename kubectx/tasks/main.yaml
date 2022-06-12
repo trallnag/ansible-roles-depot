@@ -1,0 +1,20 @@
+- name: Install with asdf
+  ansible.builtin.import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: kubectx
+    asdf_plugin_git_url: https://github.com/trallnag/asdf-kubectx.git
+    asdf_plugin_package_versions: ["{{ kubectx_version }}"]
+    asdf_plugin_package_version_global: "{{ kubectx_version }}"
+
+- name: "bash : Download completion script and place it"
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ahmetb/kubectx/v{{ kubectx_version }}/completion/kubectx.bash
+    dest: "{{ bash_completions }}/kubectx.bash"
+    force: true
+
+- name: "zsh : Download completion script and place it"
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ahmetb/kubectx/v{{ kubectx_version }}/completion/kubectx.zsh
+    dest: "{{ zsh_completions }}/_kubectx"
+    force: true

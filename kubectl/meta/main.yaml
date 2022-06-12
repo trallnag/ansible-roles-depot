@@ -1,0 +1,4 @@
+dependencies:
+  - role: asdf
+  - role: zsh
+  - role: bash

@@ -1,0 +1,22 @@
+- name: Install with asdf
+  ansible.builtin.import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: kubectl
+    asdf_plugin_git_url: https://github.com/asdf-community/asdf-kubectl.git
+    asdf_plugin_package_versions: ["1.24.1"]
+    asdf_plugin_package_version_global: "1.24.1"
+
+- name: "bash : Add init block to bash_bashrc_middle"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source <(kubectl completion bash)
+
+- name: "zsh : Add init block to zshrc_bottom_after_comp_init"
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_bottom_after_comp_init }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source <(kubectl completion zsh)

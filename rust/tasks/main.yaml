@@ -1,0 +1,83 @@
+# ------------------------------------------------------------------------------
+
+
+- name: Install
+  ansible.builtin.shell: |
+    if [ ! -d ~/.cargo ]; then
+      curl --silent --show-error --fail https://sh.rustup.rs | sh -s -- --quiet --no-modify-path -y
+      echo status=changed
+    fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: "sh : Add block to sh_profile_middle"
+  blockinfile:
+    path: "{{ sh_profile_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export PATH=$PATH:$HOME/.cargo/bin
+
+
+# ------------------------------------------------------------------------------
+# Bash
+
+
+- name: "bash : Add block to bash_bashrc_middle"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source $HOME/.cargo/env
+
+- name: "bash : Create and place completion scripts for cargo and rustup"
+  ansible.builtin.shell: |
+    export PATH=$PATH:$HOME/.cargo/bin
+    . $HOME/.cargo/env
+
+    fcargo=$HOME/.local/share/bash-completion/completions/cargo.bash
+    frustup=$HOME/.local/share/bash-completion/completions/rustup.bash    
+
+    hash_before=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    rustup completions bash cargo > $fcargo
+    rustup completions bash > $frustup
+
+    hash_after=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    if [ "$hash_before" != "$hash_after" ]; then echo status=changed; fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+
+# ------------------------------------------------------------------------------
+# Zsh
+
+
+- name: "zsh : Add block to zsh_zshrc_middle"
+  blockinfile:
+    path: "{{ zsh_zshrc_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      source $HOME/.cargo/env
+
+- name: "zsh : Create and place completion scripts for cargo and rustup"
+  ansible.builtin.shell: |
+    export PATH=$PATH:$HOME/.cargo/bin
+    . $HOME/.cargo/env
+
+    fcargo={{ zsh_completions }}/_cargo
+    frustup={{ zsh_completions }}/_rustup
+
+    hash_before=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    rustup completions zsh cargo > $fcargo
+    rustup completions zsh > $frustup
+
+    hash_after=$( ( cat $fcargo $frustup || true ) | sha256sum )
+
+    if [ "$hash_before" != "$hash_after" ]; then echo status=changed; fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+
+# ------------------------------------------------------------------------------
