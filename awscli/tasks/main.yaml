@@ -1,0 +1,27 @@
+- name: Import role trallnag.awscli
+  import_role:
+    name: trallnag.awscli
+  vars:
+    awscli_version: "2.7.7"
+
+- name: "sh : Add block to sh_profile_middle"
+  blockinfile:
+    path: "{{ sh_profile_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export PATH=/usr/local/aws/bin:$PATH
+      export AWS_PAGER=
+
+- name: "bash : Add init block to bash_bashrc_middle"
+  blockinfile:
+    path: "{{ bash_bashrc_middle }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      complete -C /usr/local/bin/aws_completer aws
+
+- name: "zsh : Add init block to zsh_zshrc_bottom_after_comp_init"
+  blockinfile:
+    path: "{{ zsh_zshrc_bottom_after_comp_init }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      complete -C /usr/local/bin/aws_completer aws

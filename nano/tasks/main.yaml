@@ -1,0 +1,12 @@
+- name: Create directory
+  ansible.builtin.shell: |
+    mkdir -p ~/.config/nano
+  args: {warn: false}
+  changed_when: false
+
+- name: Place ~/.config/nano/nanorc
+  ansible.builtin.copy:
+    src: nanorc
+    dest: ~/.config/nano/nanorc
+    mode: u=rw,g=r,o=r
+    force: true

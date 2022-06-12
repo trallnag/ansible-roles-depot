@@ -2,14 +2,4 @@
 > I use this role in my playbooks by adding the repo as a Git submodule and
 > symlinking roles I want into the roles directory of the respective playbook.
 
-# Ansible Role `asdf`
-
-- <http://asdf-vm.com/>
-- <https://github.com/asdf-vm/asdf>
-
-## FAQ
-
-### Change version of asdf?
-
-Go to [`tasks/main.yaml`](tasks/main.yaml) and bump the version in the
-`ansible.builtin.git` task.
+# Ansible Role `nano`
