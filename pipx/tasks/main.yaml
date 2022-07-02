@@ -1,0 +1,20 @@
+- name: Install
+  community.general.homebrew:
+    name: pipx
+    state: present
+
+- name: 'pre-commit : Install'
+  ansible.builtin.shell: |
+    if ! pipx list | grep pre-commit; then
+      pipx install pre-commit && echo status=changed
+    fi
+  register: task
+  changed_when: '"status=changed" in task.stdout'
+
+- name: 'bpython : Install'
+  ansible.builtin.shell: |
+    if ! pipx list | grep bpython; then
+      pipx install bpython && echo status=changed
+    fi
+  register: task
+  changed_when: '"status=changed" in task.stdout'

@@ -10,11 +10,11 @@
     mode: u=rw,g=r,o=r
     force: true
 
-- name: "sh : Add block to sh_profile_middle"
+- name: 'sh : Add block to sh_profile_middle'
   blockinfile:
-    path: "{{ sh_profile_middle }}"
+    path: '{{ sh_profile_middle }}'
     insertafter: EOF
     state: present
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       export RIPGREP_CONFIG_PATH=$HOME/.config/.ripgreprc

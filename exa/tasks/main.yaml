@@ -3,7 +3,7 @@
     name: exa
     state: present
 
-- name: Set fact
+- name: Set facts
   ansible.builtin.set_fact:
     exa_aliases: |
       alias ls='exa'
@@ -12,20 +12,20 @@
       alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --color-scale'
       alias lt='exa --all --tree --group-directories-first'
 
-- name: "bash : Add aliases"
+- name: 'bash : Add aliases'
   blockinfile:
-    path: "{{ bash_bashrc_middle }}"
+    path: '{{ bash_bashrc_middle }}'
     insertafter: EOF
     state: present
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       {{ exa_aliases }}
 
-- name: "zsh : Add aliases"
+- name: 'zsh : Add aliases'
   blockinfile:
-    path: "{{ zsh_zshrc_middle }}"
+    path: '{{ zsh_zshrc_middle }}'
     insertafter: EOF
     state: present
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       {{ exa_aliases }}

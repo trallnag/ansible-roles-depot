@@ -1,0 +1,41 @@
+- name: Place ~/.zshenv
+  ansible.builtin.shell: |
+    echo 'ZDOTDIR=~/.config/zsh' > ~/.zshenv
+    echo 'source "$ZDOTDIR/.zshenv"' >> ~/.zshenv
+  args: { warn: false }
+  changed_when: false
+
+- name: Place ~/.config/zsh/.zshenv
+  ansible.builtin.template:
+    src: .zshenv
+    dest: ~/.config/zsh/.zshenv
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place ~/.config/zsh/.zprofile
+  ansible.builtin.copy:
+    src: .zprofile
+    dest: ~/.config/zsh/.zprofile
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place ~/.config/zsh/.zshrc
+  ansible.builtin.copy:
+    src: .zshrc
+    dest: ~/.config/zsh/.zshrc
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place ~/.config/zsh/.zlogin
+  ansible.builtin.copy:
+    src: .zlogin
+    dest: ~/.config/zsh/.zlogin
+    mode: u=rw,g=r,o=r
+    force: true
+
+- name: Place ~/.config/zsh/.zlogout
+  ansible.builtin.copy:
+    src: .zlogout
+    dest: ~/.config/zsh/.zlogout
+    mode: u=rw,g=r,o=r
+    force: true

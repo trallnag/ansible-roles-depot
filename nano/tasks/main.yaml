@@ -1,7 +1,7 @@
 - name: Create directory
   ansible.builtin.shell: |
     mkdir -p ~/.config/nano
-  args: {warn: false}
+  args: { warn: false }
   changed_when: false
 
 - name: Place ~/.config/nano/nanorc

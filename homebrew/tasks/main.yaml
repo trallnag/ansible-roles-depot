@@ -17,21 +17,19 @@
       unset INTERACTIVE && export NONINTERACTIVE=1
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
   register: task
 
-- { name: "Debug", debug: {var: task.stdout_lines}, tags: [debug]}
-
+- { name: 'Debug', debug: { var: task.stdout_lines } }
 
 # ------------------------------------------------------------------------------
 # Bash
 
-
-- name: "bash : Add init block to {{ bash_profile_top }}"
+- name: 'bash : Add init block to {{ bash_profile_top }}'
   blockinfile:
-    path: "{{ bash_profile_top }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    path: '{{ bash_profile_top }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
@@ -49,28 +47,24 @@
         fi
       fi
 
-
 # ------------------------------------------------------------------------------
 # Zsh
 
-
-- name: "zsh : Add init block to {{ zsh_zprofile_top }}"
+- name: 'zsh : Add init block to {{ zsh_zprofile_top }}'
   blockinfile:
-    path: "{{ zsh_zprofile_top }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    path: '{{ zsh_zprofile_top }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
       FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
   register: task
 
-- name: "zsh : Compile {{ zsh_zprofile_top }}"
+- name: 'zsh : Compile {{ zsh_zprofile_top }}'
   when: task.changed
   ansible.builtin.command: zsh -c 'zcompile -R {{ zsh_zprofile_top }}'
 
-
 # ------------------------------------------------------------------------------
-
 
 - name: Set facts
   ansible.builtin.set_fact:
@@ -79,8 +73,8 @@
 - name: Install formulae
   community.general.homebrew:
     name:
-      - gcc
       - gh
       - hugo
+      - zellij
+      - pipx
     state: present
-    path: "{{ brew_path }}"

@@ -1,13 +1,13 @@
-> This role is not meant to be shared. It is only meant to be used by myself.
-> I use this role in my playbooks by adding the repo as a Git submodule and
-> symlinking roles I want into the roles directory of the respective playbook.
-
 # Ansible Role `git_extras`
 
+Installs git-extras with Homebrew and setups completion for Zsh because that
+is not done automatically for whatever reason (see formula).
+
 - <https://github.com/tj/git-extras>
+- <https://github.com/Homebrew/homebrew-core/blob/master/Formula/git-extras.rb>
 
-## Cheat Sheet
+## Version Management
 
-To login on a new machine:
+Versions and updates are not managed via Ansible. Must be done manually.
 
-    gh auth login
+    brew update && brew upgrade

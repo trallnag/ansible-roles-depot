@@ -7,10 +7,10 @@
 
 # - { name: Debug, debug: { var: task.stdout_lines }, tags: [debug] }
 
-- name: "bash : Add init block to {{ bash_bashrc_bottom }}"
+- name: 'bash : Add init block to bash_bashrc_bottom'
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_bottom }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    path: '{{ bash_bashrc_bottom }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
     block: |
       eval "$(starship init bash)"
 

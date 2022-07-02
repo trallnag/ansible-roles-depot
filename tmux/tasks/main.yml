@@ -25,6 +25,7 @@
     fi
   register: task
   become: true
+  changed_when: '"status=installation_required" in task.stdout'
 
 - name: Clone source repo
   when: '"status=installation_required" in task.stdout'

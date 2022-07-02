@@ -1,0 +1,73 @@
+- name: Place ~/.gnupg/gpg-agent.conf
+  ansible.builtin.copy:
+    src: gpg-agent.conf
+    dest: ~/.gnupg/gpg-agent.conf
+    mode: u=rw,g=r,o=r
+
+- name: Place ~/.gnupg/gpg.conf
+  ansible.builtin.copy:
+    src: gpg.conf
+    dest: ~/.gnupg/gpg.conf
+    mode: u=rw,g=r,o=r
+
+- name: 'sh : Add block to sh_profile_middle'
+  blockinfile:
+    path: '{{ sh_profile_middle }}'
+    insertafter: EOF
+    state: present
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      export GPG_TTY=$(tty)
+
+- name: Create directory
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.local/share/gpg/scripts
+  args: { warn: false }
+  changed_when: false
+
+- name: Place scripts
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '$HOME/.local/share/gpg/scripts'
+    mode: u=rwx,g=r,o=r
+  with_fileglob: scripts/*
+  changed_when: false
+
+- name: Symlink scripts
+  ansible.builtin.shell: |
+    x=$HOME/.local/share/gpg/scripts
+    y=$HOME/.local/bin
+    z="--symbolic --force"
+    ln $z $x/gpg-agent-restart.sh  $y/gpg-agent-restart
+    ln $z $x/gpg-agent-sign-temporary-file.sh  $y/gpg-agent-sign-temporary-file
+  args: { warn: false }
+  changed_when: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# - name: Place ~/.local/bin/gpg-agent-restart
+#   ansible.builtin.copy:
+#     src: gpg-agent-restart.sh
+#     dest: ~/.local/bin/gpg-agent-restart
+#     mode: "0744"
+
+# - name: Place ~/.local/bin/gpg-agent-sign-temporary-file.sh
+#   ansible.builtin.copy:
+#     src: gpg-agent-sign-temporary-file.sh
+#     dest: ~/.local/bin/gpg-agent-sign-temporary-file
+#     mode: "0744"
+

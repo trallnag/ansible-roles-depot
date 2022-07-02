@@ -16,7 +16,7 @@
     mkdir -p $HOME/.config/bash
     mkdir -p {{ bash_completions }}
     mkdir -p {{ bash_functions }}
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
 
 - name: Create necessary files
@@ -28,7 +28,7 @@
     >> {{ bash_profile_top }}
     >> {{ bash_profile_middle }}
     >> {{ bash_profile_bottom }}
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
 
 - name: Place $HOME/.bashrc
@@ -48,6 +48,6 @@
 - name: Place misc-functions.bash
   ansible.builtin.copy:
     src: misc-functions.bash
-    dest: "{{ bash_functions }}/misc-functions.bash"
+    dest: '{{ bash_functions }}/misc-functions.bash'
     mode: u=rw,g=r,o=r
     force: true

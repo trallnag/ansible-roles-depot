@@ -35,6 +35,7 @@ export ZSH_DYNRC="{{ zsh_dynrc }}"
 export ZSH_MODULES="{{ zsh_modules }}"
 export ZSH_COMPLETIONS="{{ zsh_completions }}"
 export ZSH_FUNCTIONS="{{ zsh_functions }}"
+export ZSH_SCRIPTS="{{ zsh_scripts }}"
 
 export ZSH_ZSHENV_BOTTOM="{{ zsh_zshenv_bottom }}"
 

@@ -1,0 +1,22 @@
+- name: Install Terraform with asdf
+  ansible.builtin.import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: terraform
+    asdf_plugin_git_url: https://github.com/asdf-community/asdf-hashicorp.git
+    asdf_plugin_package_versions: ['1.2.4']
+    asdf_plugin_package_version_global: '1.2.4'
+
+- name: 'bash : Setup completion'
+  ansible.builtin.blockinfile:
+    path: '{{ bash_bashrc_middle }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      complete -C terraform terraform
+
+- name: 'zsh : Setup completion'
+  ansible.builtin.blockinfile:
+    path: '{{ zsh_zshrc_bottom_after_comp_init }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      complete -o nospace -C terraform terraform

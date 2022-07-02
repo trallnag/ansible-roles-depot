@@ -1,6 +1,3 @@
-# ------------------------------------------------------------------------------
-
-
 - name: Install OS packages
   ansible.builtin.package:
     name:
@@ -8,48 +5,42 @@
     state: present
   become: true
 
-
-# ------------------------------------------------------------------------------
-
-
 - name: Set facts
   ansible.builtin.set_fact:
     zsh_dynrc: $HOME/.config/zsh/dynrc
     zsh_modules: $HOME/.config/zsh/modules
     zsh_completions: $HOME/.local/share/zsh/completions
     zsh_functions: $HOME/.config/zsh/functions
+    zsh_scripts: $HOME/.local/share/zsh/scripts
 
 - name: Set facts
   ansible.builtin.set_fact:
-    zsh_zshenv_bottom: "{{ zsh_dynrc }}/zshenv-bottom.zsh"
-    
-    zsh_zprofile_top: "{{ zsh_dynrc }}/zprofile-top.zsh"
-    zsh_zprofile_middle: "{{ zsh_dynrc }}/zprofile-middle.zsh"
-    zsh_zprofile_bottom: "{{ zsh_dynrc }}/zprofile-bottom.zsh"
-    
-    zsh_zshrc_top_interactive: "{{ zsh_dynrc }}/zshrc-top-interactive.zsh"
-    zsh_zshrc_top_non_interactive: "{{ zsh_dynrc }}/zshrc-top-non-interactive.zsh"
-    zsh_zshrc_middle: "{{ zsh_dynrc }}/zshrc-middle.zsh"
-    zsh_zshrc_bottom_before_comp_init: "{{ zsh_dynrc }}/zshrc-bottom-before-comp-init.zsh"
-    zsh_zshrc_bottom_after_comp_init: "{{ zsh_dynrc }}/zshrc-bottom-after-comp-init.zsh"
-    
-    zsh_zlogin_bottom: "{{ zsh_dynrc }}/zlogin-bottom.zsh"
-    
-    zsh_zlogout_bottom: "{{ zsh_dynrc }}/zlogout-bottom.zsh"
-
-
-# ------------------------------------------------------------------------------
-
+    # zshenv
+    zsh_zshenv_bottom: '{{ zsh_dynrc }}/zshenv-bottom.zsh'
+    # zprofile
+    zsh_zprofile_top: '{{ zsh_dynrc }}/zprofile-top.zsh'
+    zsh_zprofile_middle: '{{ zsh_dynrc }}/zprofile-middle.zsh'
+    zsh_zprofile_bottom: '{{ zsh_dynrc }}/zprofile-bottom.zsh'
+    # zshrc
+    zsh_zshrc_top_interactive: '{{ zsh_dynrc }}/zshrc-top-interactive.zsh'
+    zsh_zshrc_top_non_interactive: '{{ zsh_dynrc }}/zshrc-top-non-interactive.zsh'
+    zsh_zshrc_middle: '{{ zsh_dynrc }}/zshrc-middle.zsh'
+    zsh_zshrc_bottom_before_comp_init: '{{ zsh_dynrc }}/zshrc-bottom-before-comp-init.zsh'
+    zsh_zshrc_bottom_after_comp_init: '{{ zsh_dynrc }}/zshrc-bottom-after-comp-init.zsh'
+    # zlogin
+    zsh_zlogin_bottom: '{{ zsh_dynrc }}/zlogin-bottom.zsh'
+    # zlogout
+    zsh_zlogout_bottom: '{{ zsh_dynrc }}/zlogout-bottom.zsh'
 
 - name: Create directories
   ansible.builtin.shell: |
     mkdir -p ~/.cache/zsh
-
     mkdir -p {{ zsh_dynrc }}
     mkdir -p {{ zsh_modules }}
     mkdir -p {{ zsh_completions }}
     mkdir -p {{ zsh_functions }}
-  args: {warn: false} 
+    mkdir -p {{ zsh_scripts }}
+  args: { warn: false }
   changed_when: false
 
 - name: Create rc files
@@ -68,18 +59,20 @@
 
     >> {{ zsh_zlogin_bottom }}
     >> {{ zsh_zlogout_bottom }}
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
 
+- name: Place scripts
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '{{ zsh_scripts }}/'
+    mode: u=rwx,g=r,o=r
+    force: true
+  with_fileglob: scripts/*.zsh
+  changed_when: false
 
-# ------------------------------------------------------------------------------
-
-
-- name: RCs
-  import_tasks: run-configurations.yaml
+- name: Run Configuration
+  import_tasks: run-configuration.yaml
 
 - name: Modules
   import_tasks: modules.yaml
-
-
-# ------------------------------------------------------------------------------

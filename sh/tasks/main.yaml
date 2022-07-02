@@ -7,7 +7,7 @@
 - name: Create necessary directories
   ansible.builtin.shell: |
     mkdir -p $HOME/.config/sh
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
 
 - name: Create necessary files
@@ -15,7 +15,7 @@
     >> {{ sh_profile_top }}
     >> {{ sh_profile_middle }}
     >> {{ sh_profile_bottom }}
-  args: {warn: false} 
+  args: { warn: false }
   changed_when: false
 
 - name: Place $HOME/.profile
