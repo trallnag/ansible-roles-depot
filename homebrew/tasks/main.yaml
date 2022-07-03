@@ -76,5 +76,4 @@
       - gh
       - hugo
       - zellij
-      - pipx
     state: present
