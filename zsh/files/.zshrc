@@ -407,7 +407,7 @@ function _zsh_title__precmd() {
 # called just before a command is executed
 function _zsh_title__preexec() {
   local -a cmd
-  
+
   # Escape '\'
   1=${1//\\/\\\\\\\\}
 

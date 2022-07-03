@@ -16,7 +16,7 @@ Versions and updates of pipx are not managed via Ansible. Must be done manually.
 
     brew update && brew upgrade
 
-Versions and updates of the tools installed with pipx within this role are
-also not managed via Ansible. Must be done manually.
+Versions and updates of the tools installed with pipx within this role are also
+not managed via Ansible. Must be done manually.
 
     pipx upgrade-all

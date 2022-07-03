@@ -34,7 +34,7 @@
     export PATH=$PATH:$HOME/.cargo/bin && source $HOME/.cargo/env
 
     fcargo=$HOME/.local/share/bash-completion/completions/cargo.bash
-    frustup=$HOME/.local/share/bash-completion/completions/rustup.bash    
+    frustup=$HOME/.local/share/bash-completion/completions/rustup.bash
 
     hash_before=$( ( cat $fcargo $frustup || true ) | sha256sum )
 

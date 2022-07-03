@@ -1,4 +1,5 @@
 dependencies:
+  - role: bash
+  - role: foundation
   - role: sh
   - role: zsh
-  - role: bash

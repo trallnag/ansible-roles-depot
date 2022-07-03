@@ -9,8 +9,8 @@ Role that installs and configures Zsh.
 Includes [powerlevel10k][p10k]. Powerlevel10k is a theme for Zsh. It emphasizes
 speed, flexibility and out-of-the-box experience.
 
-Cloned and placed. From the main config file used by p10k I source two
-custom files where I place my own settings for p10k. I might switch to Starship.
+Cloned and placed. From the main config file used by p10k I source two custom
+files where I place my own settings for p10k. I might switch to Starship.
 Problem with p10k is that the project is extremly complex and run by a single
 (albeit highly competent) person.
 
@@ -35,17 +35,18 @@ Cloned, compiled, sourced, and configured manually.
 
 ### zsh-history-substring-search
 
-Includes [zsh-history-substring-search][zsh-history-substring-search]. This
-is a clean-room implementation of the Fish shell's history search feature,
-where you can type in any part of any command from history and then press
-chosen keys, such as the UP and DOWN arrows, to cycle through matches.
+Includes [zsh-history-substring-search][zsh-history-substring-search]. This is a
+clean-room implementation of the Fish shell's history search feature, where you
+can type in any part of any command from history and then press chosen keys,
+such as the UP and DOWN arrows, to cycle through matches.
 
 Cloned, compiled, sourced, and configured manually.
 
 If you want to use zsh-syntax-highlighting along with this script, then make
 sure that you load it before you load this script.
 
-[zsh-history-substring-search]: https://github.com/zsh-users/zsh-history-substring-search
+[zsh-history-substring-search]:
+  https://github.com/zsh-users/zsh-history-substring-search
 
 ### zsh-autosuggestions
 
@@ -63,11 +64,11 @@ Must be setup after both `zsh-syntax-highlighting` and
 
 ## Links
 
-* [Oh My Zsh][omz]
-* [Powerlevel10k][p10k]
-* [Prezto][prezto]
-* [Starship Prompt][starship]
-* [Zsh][zsh]
+- [Oh My Zsh][omz]
+- [Powerlevel10k][p10k]
+- [Prezto][prezto]
+- [Starship Prompt][starship]
+- [Zsh][zsh]
 
 [omz]: https://github.com/ohmyzsh/ohmyzsh
 [p10k]: https://github.com/romkatv/powerlevel10k

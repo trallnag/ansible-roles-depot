@@ -1,0 +1,41 @@
+- name: Install
+  ansible.builtin.script: install.bash
+  register: task
+  changed_when: '"status=changed" in task.stdout'
+
+- { name: "Debug", debug: { var: task.stdout_lines } }
+
+- name: 'sh : Add block to sh_profile_middle'
+  blockinfile:
+    path: '{{ sh_profile_middle }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      if [ -d ~/.krew ]; then
+        export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+      fi
+
+- name: 'bash : Add block to bash_bashrc_middle'
+  ansible.builtin.blockinfile:
+    path: '{{ bash_bashrc_middle }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      alias krew='kubectl krew'
+
+- name: 'zsh : Add block to zsh_zshrc_middle'
+  ansible.builtin.blockinfile:
+    path: '{{ zsh_zshrc_middle }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      alias krew='kubectl krew'
+
+- name: Upgrade plugins
+  ansible.builtin.script: upgrade-plugins.bash
+  register: task
+  changed_when: '"status=changed" in task.stdout'
+
+- name: Install plugins
+  ansible.builtin.script: install-plugins.bash
+  register: task
+  changed_when: '"status=changed" in task.stdout'
+
+- { name: "Debug", debug: {var: task.stdout_lines}}

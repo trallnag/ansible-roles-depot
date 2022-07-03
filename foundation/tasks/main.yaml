@@ -1,0 +1,27 @@
+- name: Install various packages
+  ansible.builtin.apt:
+    name:
+      - graphviz
+      - python-is-python3
+      - python3-pip
+      - python3-venv
+      - pwgen
+      - nmap
+      - dos2unix
+      - libpq-dev
+    state: present
+  become: true
+
+- name: Create necessary directories
+  ansible.builtin.shell: |
+    mkdir -p ~/.cache
+    mkdir -p ~/.config
+    mkdir -p ~/.local
+    mkdir -p ~/.local/bin
+    mkdir -p ~/.local/share
+    mkdir -p ~/tmp
+
+    sudo mkdir -p /usr/share/bash-completion/completions
+    sudo mkdir -p /usr/local/share/zsh/site-functions
+  args: {warn: false}
+  changed_when: false

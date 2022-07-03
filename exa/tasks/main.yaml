@@ -7,7 +7,7 @@
   ansible.builtin.set_fact:
     exa_aliases: |
       alias ls='exa'
-      alias l='exa --all --oneline --group-directories-first'    
+      alias l='exa --all --oneline --group-directories-first'
       alias ll='exa --all --long --time-style=long-iso --links --classify --color-scale --group-directories-first'
       alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --color-scale'
       alias lt='exa --all --tree --group-directories-first'

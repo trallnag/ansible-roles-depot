@@ -4,14 +4,14 @@
 
 - name: Install dependencies for compiling and running
   ansible.builtin.apt:
-    name: 
+    name:
       - tmux
-      - libevent-dev 
+      - libevent-dev
       - ncurses-dev
       - build-essential
       - bison
       - pkg-config
-      - autoconf 
+      - autoconf
       - automake
       - pkg-config
     state: present
@@ -55,7 +55,7 @@
 - name: Create necessary directories
   ansible.builtin.shell: |
     mkdir -p ~/.config/tmux
-  args: {warn: false} 
+  args: {warn: false}
   changed_when: false
 
 - name: Place ~/.tmux.conf

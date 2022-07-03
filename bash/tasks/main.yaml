@@ -9,18 +9,14 @@
     bash_profile_bottom: $HOME/.config/bash/bash-profile-bottom.bash
 
     bash_completions: $HOME/.local/share/bash-completion/completions
-    bash_functions: $HOME/.local/share/functions
+    bash_functions: $HOME/.config/bash/functions
 
-- name: Create necessary directories
+- name: Create dirs and files
   ansible.builtin.shell: |
     mkdir -p $HOME/.config/bash
     mkdir -p {{ bash_completions }}
     mkdir -p {{ bash_functions }}
-  args: { warn: false }
-  changed_when: false
 
-- name: Create necessary files
-  ansible.builtin.shell: |
     >> {{ bash_bashrc_top }}
     >> {{ bash_bashrc_middle }}
     >> {{ bash_bashrc_bottom }}
@@ -31,23 +27,36 @@
   args: { warn: false }
   changed_when: false
 
+- name: 'sh : Add block to sh_profile_middle'
+  blockinfile:
+    path: '{{ sh_profile_middle }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      export BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
+      export BASH_BASHRC_MIDDLE="{{ bash_bashrc_middle }}"
+      export BASH_BASHRC_BOTTOM="{{ bash_bashrc_bottom }}"
+
+      export BASH_PROFILE_TOP="{{ bash_profile_top }}"
+      export BASH_PROFILE_MIDDLE="{{ bash_profile_middle }}"
+      export BASH_PROFILE_BOTTOM="{{ bash_profile_bottom }}"
+
+      export BASH_COMPLETIONS="{{ bash_completions }}"
+      export BASH_FUNCTIONS="{{ bash_functions }}"
+
 - name: Place $HOME/.bashrc
   ansible.builtin.template:
     src: .bashrc
     dest: $HOME/.bashrc
     mode: u=rw,g=r,o=r
-    force: true
 
 - name: Place $HOME/.bash_profile
   ansible.builtin.template:
     src: .bash_profile
     dest: $HOME/.bash_profile
     mode: u=rw,g=r,o=r
-    force: true
 
 - name: Place misc-functions.bash
   ansible.builtin.copy:
     src: misc-functions.bash
     dest: '{{ bash_functions }}/misc-functions.bash'
     mode: u=rw,g=r,o=r
-    force: true

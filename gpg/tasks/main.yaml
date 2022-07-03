@@ -70,4 +70,3 @@
 #     src: gpg-agent-sign-temporary-file.sh
 #     dest: ~/.local/bin/gpg-agent-sign-temporary-file
 #     mode: "0744"
-

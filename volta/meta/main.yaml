@@ -1,3 +1,4 @@
 dependencies:
+  - role: foundation
   - role: homebrew
   - role: sh
