@@ -22,3 +22,21 @@
     block: |
       source ~/.asdf/asdf.sh
       fpath=($ASDF_DIR/completions $fpath)
+
+- name: Install shfmt
+  ansible.builtin.import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: shfmt
+    asdf_plugin_git_url: https://github.com/luizm/asdf-shfmt
+    asdf_plugin_package_versions: ['3.5.1']
+    asdf_plugin_package_version_global: '3.5.1'
+
+- name: Install shellcheck
+  ansible.builtin.import_role:
+    name: trallnag.asdf_plugin
+  vars:
+    asdf_plugin_name: shellcheck
+    asdf_plugin_git_url: https://github.com/luizm/asdf-shellcheck
+    asdf_plugin_package_versions: ['0.8.0']
+    asdf_plugin_package_version_global: '0.8.0'
