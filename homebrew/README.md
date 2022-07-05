@@ -6,9 +6,22 @@ This role installs Homebrew and several formulaes.
 
 ## Included Formulae
 
-- [`gh`: GitHub’s official command line tool](https://github.com/cli/cli)
-- [`hugo`: Framework for building websites](https://github.com/gohugoio/hugo)
-- [`zellij`: Terminal workspace with batteries](https://github.com/zellij-org/zellij)
+- [**gh**: GitHub’s official command line tool](https://github.com/cli/cli)
+- [**hugo**: Framework for building websites](https://github.com/gohugoio/hugo)
+- [**kubectx**: Switch between clusters and namespaces](https://github.com/ahmetb/kubectx)
+- [**zellij**: Terminal workspace with batteries](https://github.com/zellij-org/zellij)
+
+## Unlinked Formulae
+
+Why do I install some formulae but keep them unlinked? Unlinked formulae satisfy
+formulae dependencies while allowing me to maintain such dependencies outside of
+Homebrew. This comes in handy whenever I need multiple versions of the same
+package. A scenario not well supported by Homebrew.
+
+Here is an example: The `kubectx` formula depends on kubectl within the
+`kubernetes-cli` formula. I can't use `kubernetes-cli` because I need multiple
+versions of kubectl at the same time. I need to manage the installations myself.
+Therefore I unlink `kubernetes-cli`.
 
 ## Version Management
 

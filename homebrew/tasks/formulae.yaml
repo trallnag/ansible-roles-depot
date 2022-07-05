@@ -1,0 +1,14 @@
+- name: Install formulae (present)
+  community.general.homebrew:
+    name:
+      - gh
+      - hugo
+      - kubectx
+      - zellij
+    state: present
+
+- name: Install formulae (unlinked)
+  community.general.homebrew:
+    name:
+      - kubernetes-cli
+    state: unlinked

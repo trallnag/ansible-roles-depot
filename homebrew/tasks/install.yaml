@@ -1,0 +1,59 @@
+- name: Install OS requirements
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - procps
+      - curl
+      - file
+      - git
+    state: present
+  become: true
+
+- name: Install Homebrew
+  ansible.builtin.shell: |
+    sudo -v || exit 1
+
+    if ! test -d /home/linuxbrew/.linuxbrew; then
+      unset INTERACTIVE && export NONINTERACTIVE=1
+      bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  args: { warn: false }
+  changed_when: false
+  register: task
+
+- { name: Debug, debug: { var: task.stdout_lines } }
+
+- name: 'bash : Add init block to {{ bash_profile_top }}'
+  blockinfile:
+    path: '{{ bash_profile_top }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+      if type brew &>/dev/null
+      then
+        HOMEBREW_PREFIX="$(brew --prefix)"
+        if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
+        then
+          source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+        else
+          for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*
+          do
+            [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
+          done
+        fi
+      fi
+
+- name: 'zsh : Add init block to {{ zsh_zprofile_top }}'
+  blockinfile:
+    path: '{{ zsh_zprofile_top }}'
+    marker: '# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}'
+    block: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+      FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  register: task
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    brew_path: '/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:'
