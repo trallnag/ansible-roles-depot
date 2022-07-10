@@ -2,6 +2,7 @@
   community.general.homebrew:
     name:
       - gh
+      - helm
       - hugo
       - kubectx
       - zellij

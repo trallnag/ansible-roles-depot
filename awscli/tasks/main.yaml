@@ -2,7 +2,7 @@
   import_role:
     name: trallnag.awscli
   vars:
-    awscli_version: '2.7.12'
+    awscli_version: '2.7.14'
 
 - name: 'sh : Add block to sh_profile_middle'
   blockinfile:

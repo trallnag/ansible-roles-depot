@@ -7,6 +7,7 @@ This role installs Homebrew and several formulaes.
 ## Included Formulae
 
 - [**gh**: GitHub’s official command line tool](https://github.com/cli/cli)
+- [**helm**: The Kubernetes Package Manager](https://github.com/helm/helm)
 - [**hugo**: Framework for building websites](https://github.com/gohugoio/hugo)
 - [**kubectx**: Switch between clusters and namespaces](https://github.com/ahmetb/kubectx)
 - [**zellij**: Terminal workspace with batteries](https://github.com/zellij-org/zellij)
