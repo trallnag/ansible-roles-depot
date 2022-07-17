@@ -8,8 +8,9 @@
       - zellij
     state: present
 
-- name: Install formulae (unlinked)
-  community.general.homebrew:
-    name:
-      - kubernetes-cli
-    state: unlinked
+- name: Add formulae to unlink file
+  ansible.builtin.lineinfile:
+    path: "{{ homebrew_unliked }}"
+    line: "{{ item }}"
+  with_items:
+    - kubernetes-cli

@@ -1,5 +1,38 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    homebrew_unliked: $HOME/.config/homebrew/unlinked-formulae.txt
+
+- name: Create directories
+  ansible.builtin.shell: |
+    mkdir -p ~/.config/homebrew
+  args: { warn: false }
+  changed_when: false
+
+- name: Create files
+  ansible.builtin.shell: |
+    >> {{ homebrew_unliked }}
+  args: { warn: false }
+  changed_when: false
+
+# Helper script to unlink stuff. Useful, because `brew upgrade` will link
+# unlinked formulae if they are upgraded as well. Best to run this after
+# every upgrade just to make sure.
+- name: Place ~/.local/bin/brew-unlink
+  ansible.builtin.template:
+    src: brew-unlink.sh
+    dest: ~/.local/bin/brew-unlink
+    mode: u=rwx,g=r,o=r
+
 - name: Install
   import_tasks: install.yaml
 
 - name: Formulae
   import_tasks: formulae.yaml
+
+- name: Execute brew-unlink
+  ansible.builtin.command: sh ~/.local/bin/brew-unlink
+  args: { warn: false }
+  changed_when: false
+  register: task
+
+# - { name: Debug, debug: { var: task.stderr_lines } }

@@ -34,3 +34,9 @@ Versions and updates of installed formulaes are not managed via Ansible. Can be
 done like this:
 
     brew upgrade
+
+Also execute the following script to relink formula. Why? For example if
+`kubernetes-cli` is unlinked and `brew upgrade` upgrades `kubernetes-cli`,
+`kubernetes-cli` will now be linked again.
+
+    brew-unlink
