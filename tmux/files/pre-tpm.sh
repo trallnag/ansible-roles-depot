@@ -66,7 +66,7 @@ tmux set-option -as terminal-features ",xterm*:RGB"
 # Don't perform login shell on new tabs and windows. The default is to start
 # a login shell (for good reasons). Maybe I will switch back to the default.
 # The default value is '' (empty string).
-# tmux set-option -g default-command $(basename $SHELL)
+tmux set-option -g default-command $(basename $SHELL)
 
 # ------------------------------------------------------------------------------
 # Styling variable declarations
