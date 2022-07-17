@@ -57,7 +57,7 @@ tmux set-option -g @trallnag_mouse_mode_on 1
 # Full sRGB colors
 
 # Enable sRGB support. The terminal must support this for it to work.
-tmux set-option -g default-terminal screen-256color
+# tmux set-option -g default-terminal screen-256color
 tmux set-option -as terminal-features ",xterm*:RGB"
 
 # ------------------------------------------------------------------------------
