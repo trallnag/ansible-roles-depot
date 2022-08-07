@@ -6,6 +6,7 @@
 
 - name: Create rc files
   ansible.builtin.shell: |
+    mkdir -p $HOME/.config/shell
     >> {{ shell_login_bash }}
     >> {{ shell_login_fish }}
     >> {{ shell_login_zsh }}

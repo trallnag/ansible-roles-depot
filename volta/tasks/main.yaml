@@ -1,6 +1,7 @@
 - name: Install
   community.general.homebrew:
     name: volta
+    path: "{{ homebrew_path }}"
 
 - name: Install and set node@18 as default
   ansible.builtin.shell: |

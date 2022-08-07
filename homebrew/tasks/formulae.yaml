@@ -15,6 +15,7 @@
 
       # https://github.com/koalaman/shellcheck
       - shellcheck
+    path: "{{ homebrew_path }}"
 
 # - name: Add formulae to unlink file
 #   ansible.builtin.lineinfile:

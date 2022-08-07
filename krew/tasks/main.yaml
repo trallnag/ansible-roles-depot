@@ -1,6 +1,7 @@
 - name: Install
   community.general.homebrew:
     name: krew
+    path: "{{ homebrew_path }}"
 
 # ------------------------------------------------------------------------------
 

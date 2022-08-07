@@ -5,6 +5,7 @@
 - name: Install
   community.general.homebrew:
     name: ripgrep
+    path: "{{ homebrew_path }}"
 
 - name: Create directory
   ansible.builtin.shell: |

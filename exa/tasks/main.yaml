@@ -1,6 +1,7 @@
 - name: Install
   community.general.homebrew:
     name: exa
+    path: "{{ homebrew_path }}"
 
 - name: Set facts
   ansible.builtin.set_fact:

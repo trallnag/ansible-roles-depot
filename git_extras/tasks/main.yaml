@@ -1,6 +1,7 @@
 - name: Install
   community.general.homebrew:
     name: git-extras
+    path: "{{ homebrew_path }}"
 
 # Necessary due to caveat in formula. For some reason completion for Zsh is
 # not being setup automatically. For Bash it works fine out of the box.

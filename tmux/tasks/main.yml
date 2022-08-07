@@ -2,7 +2,7 @@
   community.general.homebrew:
     name:
       - tmux
-    state: present
+    path: "{{ homebrew_path }}"
 
 # ------------------------------------------------------------------------------
 # Place files and stuff.
