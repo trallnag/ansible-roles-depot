@@ -21,7 +21,6 @@ typeset -g POWERLEVEL9K_TOP_RIGHT_PROMPT_ELEMENTS=(
   command_execution_time
   background_jobs
   direnv
-  asdf
   virtualenv
   anaconda
   pyenv
