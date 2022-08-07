@@ -1,6 +1,21 @@
 # ------------------------------------------------------------------------------
 # Install Homebrew and dependencies.
 
+- name: Set fact
+  ansible.builtin.set_fact:
+    # Used within the playbook to enable installation of Homebrew and usage of
+    # Homebrew to do stuff like installing formulae in the same run.
+    homebrew_path: /home/linuxbrew/.linuxbrew/bin
+
+- name: Create a directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - $HOME/.config/homebrew
+    - $HOME/.config/homebrew/scripts
+    - $HOME/.local/bin
+
 - name: Install dependencies
   ansible.builtin.apt:
     name:
@@ -19,13 +34,6 @@
       unset INTERACTIVE && export NONINTERACTIVE=1
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-  args: { warn: false }
-  changed_when: false
-
-- name: Create directories
-  ansible.builtin.shell: |
-    mkdir -p $HOME/.config/homebrew
-    mkdir -p $HOME/.config/homebrew/scripts
   args: { warn: false }
   changed_when: false
 
@@ -106,7 +114,7 @@
   ansible.builtin.set_fact:
     homebrew_unliked: $HOME/.config/homebrew/unlinked-formulae.txt
 
-- name: Create file
+- name: Create files and directories
   ansible.builtin.shell: |
     >> {{ homebrew_unliked }}
   args: { warn: false }
