@@ -28,3 +28,4 @@
     - oderwat.indent-rainbow
     - redhat.ansible
     - redhat.vscode-yaml
+    - bungcip.better-toml
