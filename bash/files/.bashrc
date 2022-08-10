@@ -1,6 +1,5 @@
 # ------------------------------------------------------------------------------
 
-
 # If not running interactively, don't do anything.
 case $- in
   *i*) ;;
@@ -20,10 +19,10 @@ shopt -s extglob
 shopt -s globstar
 shopt -s nocaseglob
 
+alias c=alias
 
 # ------------------------------------------------------------------------------
 # History
-
 
 HISTIGNORE='&:[ ]*:exit:ls:bg:fg:history:clear'
 HISTCONTROL='erasedups:ignoreboth'
@@ -42,10 +41,8 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-
 # ------------------------------------------------------------------------------
 # More or less copied from default bashrc on Ubuntu.
-
 
 # Make less more friendly for non-text input files.
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -95,12 +92,10 @@ fi
 # Path for humans.
 alias path='echo -e ${PATH//:/\\n}'
 
-
 # ------------------------------------------------------------------------------
 # Cherry pick from Bash Sensible
 #
 # https://github.com/mrzool/bash-sensible/blob/master/sensible.bash
-
 
 # Enable history expansion with space.
 # E.g. typing !!<space> will replace the !! with your last command.
@@ -118,11 +113,8 @@ bind "set show-all-if-ambiguous on"
 # Immediately add a trailing slash when autocompleting symlinks to directories.
 bind "set mark-symlinked-directories on"
 
-
 # ------------------------------------------------------------------------------
 
-
 source "$DOT_BASH_BASHRC"
-
 
 # ------------------------------------------------------------------------------
