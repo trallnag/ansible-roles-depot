@@ -77,6 +77,8 @@ fpath=("$DOT_ZSH_FUNCTIONS" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
+alias c=clear
+
 
 # ------------------------------------------------------------------------------
 # History
