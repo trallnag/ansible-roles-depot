@@ -9,6 +9,7 @@
       - terraform
       - zellij
       - terragrunt
+      - fd # https://github.com/sharkdp/fd
 
       # https://github.com/mvdan/sh
       - shfmt
