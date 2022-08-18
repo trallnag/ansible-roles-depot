@@ -20,6 +20,7 @@
     - GitHub.vscode-pull-request-github
     - Tyriar.sort-lines
     - VisualStudioExptTeam.vscodeintellicode
+    - bungcip.better-toml
     - eamodio.gitlens
     - formulahendry.code-runner
     - mhutchie.git-graph
@@ -28,4 +29,4 @@
     - oderwat.indent-rainbow
     - redhat.ansible
     - redhat.vscode-yaml
-    - bungcip.better-toml
+    - yzhang.markdown-all-in-one
