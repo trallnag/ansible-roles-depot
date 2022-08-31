@@ -7,6 +7,7 @@
       - kubectx
       - kubernetes-cli
       - terraform
+      - tflint # https://github.com/terraform-linters/tflint
       - zellij
       - terragrunt
       - fd # https://github.com/sharkdp/fd
