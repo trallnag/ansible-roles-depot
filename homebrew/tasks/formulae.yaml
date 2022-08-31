@@ -8,6 +8,7 @@
       - kubernetes-cli
       - terraform
       - tflint # https://github.com/terraform-linters/tflint
+      - tfsec # https://github.com/aquasecurity/tfsec
       - zellij
       - terragrunt
       - fd # https://github.com/sharkdp/fd
