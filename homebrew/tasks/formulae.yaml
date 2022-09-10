@@ -3,6 +3,7 @@
     name:
       - age # https://github.com/FiloSottile/age
       - gh
+      - go # https://go.dev/doc/devel/release
       - helm
       - hugo
       - kubectx
