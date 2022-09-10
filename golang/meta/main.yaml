@@ -1,0 +1,5 @@
+dependencies:
+  - { role: asdf, tags: [asdf] }
+  - { role: bash, tags: [bash] }
+  - { role: homebrew, tags: [homebrew] }
+  - { role: zsh, tags: [zsh] }

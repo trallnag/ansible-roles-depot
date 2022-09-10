@@ -1,0 +1,37 @@
+- name: "bash : Integration"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export GOPATH=$HOME/go
+      export GOBIN=$GOPATH/bin
+      export PATH="$PATH:$GOBIN"
+
+- name: "zsh : Integration"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export GOPATH=$HOME/go
+      export GOBIN=$GOPATH/bin
+      path=($path $GOBIN)
+
+- name: Create directory
+  ansible.builtin.shell: |
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+
+    export GOPATH=$HOME/go
+    export GOBIN=$GOPATH/bin
+    export PATH="$PATH:$GOBIN"
+
+    if ! command -v {{ item['cmd'] }}; then
+      go install {{ item['pkg'] }}
+      echo status=changed
+    fi
+  args: { executable: "{{ bash_executable }}" }
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+  loop:
+    - { cmd: air, pkg: github.com/cosmtrek/air@latest }
+    - { cmd: go-global-update, pkg: github.com/Gelio/go-global-update@latest }
