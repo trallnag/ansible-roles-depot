@@ -2,18 +2,19 @@
   community.general.homebrew:
     name:
       - age # https://github.com/FiloSottile/age
+      - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
       - helm
       - hugo
       - kubectx
       - kubernetes-cli
+      - nginx
       - terraform
+      - terragrunt
       - tflint # https://github.com/terraform-linters/tflint
       - tfsec # https://github.com/aquasecurity/tfsec
       - zellij
-      - terragrunt
-      - fd # https://github.com/sharkdp/fd
 
       # https://github.com/mvdan/sh
       - shfmt
