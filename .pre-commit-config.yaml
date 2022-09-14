@@ -24,7 +24,6 @@ repos:
           - --binary-next-line
           - --diff
           - --indent=2
-          - --keep-padding
           - --list
           - --simplify
           - --case-indent
