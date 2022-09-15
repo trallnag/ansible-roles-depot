@@ -10,6 +10,7 @@
       - kubectx
       - kubernetes-cli
       - nginx
+      - optipng # http://optipng.sourceforge.net/
       - terraform
       - terragrunt
       - tflint # https://github.com/terraform-linters/tflint
