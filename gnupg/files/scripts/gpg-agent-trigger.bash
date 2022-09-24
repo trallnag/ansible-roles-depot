@@ -16,7 +16,7 @@ keygrip=AB71BEAEBFAEAC0B76F9C5D4E619CBF25F9A74F6
 
 trap "" INT
 
-if ! gpg-connect-agent "keyinfo --list" /bye | grep -q "$keygrip D - - 1 P"; then
+if ! gpg-connect-agent --quiet "keyinfo --list" /bye | grep -q "$keygrip D - - 1 P"; then
   (
     trap - INT
 
