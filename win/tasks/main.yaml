@@ -1,0 +1,39 @@
+- name: Determine win_env_userprofile
+  ansible.builtin.command: wslvar USERPROFILE
+  register: task
+  changed_when: false
+
+# - { name: "Debug win_env_userprofile", debug: {var: task.stdout_lines}}
+
+- name: Set win_env_userprofile
+  ansible.builtin.set_fact:
+    win_env_userprofile: "{{ task.stdout }}"
+
+# ------------------------------------------------------------------------------
+
+- name: Determine win_home
+  ansible.builtin.command: wslpath "{{ win_env_userprofile }}"
+  register: task
+  changed_when: false
+
+# - { name: "Debug win_home", debug: {var: task.stdout_lines}}
+
+- name: Set win_home
+  ansible.builtin.set_fact:
+    win_home: "{{ task.stdout }}"
+
+# ------------------------------------------------------------------------------
+
+- name: Link $HOME/.kube between Windows and WSL
+  ansible.builtin.shell: |
+    mkdir -p "{{ win_home }}/.kube"
+    ln -s "{{ win_home }}/.kube" $HOME/.kube || true
+  register: task
+  changed_when: false
+
+- name: Link $HOME/.aws between Windows and WSL
+  ansible.builtin.shell: |
+    mkdir -p "{{ win_home }}/.aws"
+    ln -s "{{ win_home }}/.kube" $HOME/.aws || true
+  register: task
+  changed_when: false
