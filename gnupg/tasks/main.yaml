@@ -46,17 +46,17 @@
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      # Required in any case.
-      export GPG_TTY=$(tty)
-      # Prompt key unlock.
-      {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
+      # # Required in any case.
+      # export GPG_TTY=$(tty)
+      # # Prompt key unlock.
+      # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      # Required in any case.
-      export GPG_TTY=$(tty)
-      # Prompt key unlock.
-      {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
+      # # Required in any case.
+      # export GPG_TTY=$(tty)
+      # # Prompt key unlock.
+      # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
