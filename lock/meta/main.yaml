@@ -1,0 +1,5 @@
+dependencies:
+  - { role: bash, tags: [bash] }
+  - { role: gnupg, tags: [gnupg] }
+  - { role: ssh, tags: [ssh] }
+  - { role: zsh, tags: [zsh] }

@@ -1,0 +1,48 @@
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - $HOME/.config/lock
+
+- name: Place files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "$HOME/.config/lock/{{ item | basename }}"
+    mode: preserve
+  with_fileglob: "*"
+
+- name: Symlink script
+  ansible.builtin.file:
+    src: $HOME/.config/lock/lock.bash
+    dest: $HOME/.local/bin/lock
+    state: link
+    force: true
+
+- name: "bash : Symlink completion script"
+  ansible.builtin.file:
+    src: $HOME/.config/lock/completion.bash
+    dest: "{{ bash_completions_dir }}/lock.bash"
+    state: link
+
+- name: "zsh : Symlink completion script"
+  ansible.builtin.file:
+    src: $HOME/.config/lock/completion.zsh
+    dest: "{{ zsh_completions_dir }}/_lock"
+    state: link
+
+- name: "bash : Aliases"
+  blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+    block: |
+      alias lockc="lock close"
+      alias locko="lock open"
+
+- name: "zsh : Aliases"
+  blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+    block: |
+      alias lockc="lock close"
+      alias locko="lock open"
