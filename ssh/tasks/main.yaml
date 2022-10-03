@@ -44,11 +44,11 @@
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: ssh-add"
     block: |
-      {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash
+      # {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash
 
 - name: "zsh : Add block to zsh_zprofile to add key to ssh-agent"
   blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: ssh-add"
     block: |
-      {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash
+      # {{ ssh_config_dir }}/scripts/ssh-agent-trigger.bash
