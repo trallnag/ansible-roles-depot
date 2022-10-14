@@ -24,16 +24,16 @@
 
 # ------------------------------------------------------------------------------
 
-- name: Link $HOME/.kube between Windows and WSL
-  ansible.builtin.shell: |
-    mkdir -p "{{ win_home }}/.kube"
-    ln -s "{{ win_home }}/.kube" $HOME/.kube || true
-  register: task
-  changed_when: false
+# - name: Link $HOME/.kube between Windows and WSL
+#   ansible.builtin.shell: |
+#     mkdir -p "{{ win_home }}/.kube"
+#     ln -s "{{ win_home }}/.kube" $HOME/.kube || true
+#   register: task
+#   changed_when: false
 
-- name: Link $HOME/.aws between Windows and WSL
-  ansible.builtin.shell: |
-    mkdir -p "{{ win_home }}/.aws"
-    ln -s "{{ win_home }}/.kube" $HOME/.aws || true
-  register: task
-  changed_when: false
+# - name: Link $HOME/.aws between Windows and WSL
+#   ansible.builtin.shell: |
+#     mkdir -p "{{ win_home }}/.aws"
+#     ln -s "{{ win_home }}/.kube" $HOME/.aws || true
+#   register: task
+#   changed_when: false
