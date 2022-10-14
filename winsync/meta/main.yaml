@@ -1,0 +1,4 @@
+dependencies:
+  - { role: bash, tags: [bash] }
+  - { role: win, tags: [win] }
+  - { role: zsh, tags: [zsh] }

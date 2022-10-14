@@ -1,0 +1,53 @@
+- name: Install rsync
+  ansible.builtin.package:
+    name: rsync
+  become: true
+
+- name: Create directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+  loop:
+    - $HOME/.local/share/winsync
+    - $HOME/.kube
+    - "{{ win_home }}/.kube"
+
+- name: Template files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME/.local/share/winsync/{{ item }}
+    mode: "744"
+  loop:
+    - winsync-kube.sh
+
+- name: "bash : Integration"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      ((
+        seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
+        sleep ${seconds}s
+        if ! pgrep -f winsync-kube.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-kube.sh
+        fi
+      ) & disown)
+
+- name: "zsh : Integration"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {{ '{{' }}
+        seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
+        sleep ${seconds}s
+        if ! pgrep -f winsync-kube.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-kube.sh
+        fi
+      } &!}
+
+- name: Kill and restart sync
+  ansible.builtin.shell: |
+    killall winsync-kube.sh
+    $HOME/.local/share/winsync/winsync-kube.sh & disown
+  args: { executable: "{{ bash_executable }}" }
