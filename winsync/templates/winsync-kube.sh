@@ -14,7 +14,7 @@ fi
 
 while inotifywait -q -q -e modify,move,create,delete $HOME/.kube; do
   if [ -d $HOME/.kube ] && [ -d "{{ win_home }}/.kube" ]; then
-    rsync -qavu \
+    rsync --ignore-missing-args -qavu \
       $HOME/.kube/kubens/ \
       $HOME/.kube/config \
       $HOME/.kube/kubectx \
