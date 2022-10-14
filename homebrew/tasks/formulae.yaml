@@ -15,6 +15,7 @@
       - terragrunt
       - tflint # https://github.com/terraform-linters/tflint
       - tfsec # https://github.com/aquasecurity/tfsec
+      - watchexec # https://github.com/watchexec/watchexec
       - zellij
 
       # https://github.com/mvdan/sh
