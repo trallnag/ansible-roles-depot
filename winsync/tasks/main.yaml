@@ -11,6 +11,8 @@
     - $HOME/.local/share/winsync
     - $HOME/.kube
     - "{{ win_home }}/.kube"
+    - $HOME/.aws
+    - "{{ win_home }}/.aws"
 
 - name: Template files
   ansible.builtin.template:
@@ -19,6 +21,7 @@
     mode: "744"
   loop:
     - winsync-kube.sh
+    - winsync-aws.sh
 
 - name: "bash : Integration"
   blockinfile:
@@ -28,8 +31,13 @@
       ((
         seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
         sleep ${seconds}s
+
         if ! pgrep -f winsync-kube.sh > /dev/null; then
           $HOME/.local/share/winsync/winsync-kube.sh
+        fi
+
+        if ! pgrep -f winsync-aws.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-aws.sh
         fi
       ) & disown)
 
@@ -41,13 +49,27 @@
       {{ '{{' }}
         seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
         sleep ${seconds}s
+
         if ! pgrep -f winsync-kube.sh > /dev/null; then
           $HOME/.local/share/winsync/winsync-kube.sh
+        fi
+
+        if ! pgrep -f winsync-aws.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-aws.sh
         fi
       } &!}
 
 - name: Kill and restart sync
   ansible.builtin.shell: |
-    killall winsync-kube.sh
+    killall winsync-kube.sh || true
     $HOME/.local/share/winsync/winsync-kube.sh & disown
+
+    killall winsync-aws.sh || true
+    $HOME/.local/share/winsync/winsync-aws.sh & disown
+  args: { executable: "{{ bash_executable }}" }
+
+- name: Trigger
+  ansible.builtin.shell: |
+    date > $HOME/.kube/date.txt
+    date > $HOME/.aws/date.txt
   args: { executable: "{{ bash_executable }}" }
