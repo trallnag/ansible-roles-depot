@@ -5,6 +5,7 @@
       - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
+      - golangci-lint # https://golangci-lint.run/
       - helm
       - hugo
       - kubectx
