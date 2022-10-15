@@ -4,6 +4,10 @@ if ! command -v inotifywait > /dev/null; then
   echo "inotifywait not installed." && exit 1
 fi
 
+if ! command -v rsync > /dev/null; then
+  echo "rsync not installed." && exit 1
+fi
+
 if ! [ -d $HOME/.kube ]; then
   echo "Directory not found: \$HOME/.kube" && exit 1
 fi
