@@ -1,6 +1,8 @@
-- name: Install rsync
+- name: Install tools
   ansible.builtin.package:
-    name: rsync
+    name:
+      - inotify-tools
+      - rsync
   become: true
 
 - name: Create directories
