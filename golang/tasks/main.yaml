@@ -35,4 +35,5 @@
   loop:
     - { cmd: air, pkg: github.com/cosmtrek/air@latest }
     - { cmd: go-global-update, pkg: github.com/Gelio/go-global-update@latest }
+    - { cmd: godoc, pkg: golang.org/x/tools/cmd/godoc@latest }
     - { cmd: oauth2-proxy, pkg: github.com/Gelio/go-global-update@latest } # https://github.com/oauth2-proxy/oauth2-proxy
