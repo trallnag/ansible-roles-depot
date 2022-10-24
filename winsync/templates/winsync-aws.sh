@@ -18,8 +18,6 @@ fi
 
 while inotifywait -q -q -e modify,move,create,delete $HOME/.aws; do
   if [ -d $HOME/.aws ] && [ -d "{{ win_home }}/.aws" ]; then
-    rsync --ignore-missing-args -qavu \
-      $HOME/.aws/ \
-      "{{ win_home }}/.aws"
+    rsync --ignore-missing-args -qavu $HOME/.aws/ "{{ win_home }}/.aws"
   fi
 done
