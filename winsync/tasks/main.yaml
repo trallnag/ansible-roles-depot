@@ -34,12 +34,17 @@
         seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
         sleep ${seconds}s
 
-        if ! pgrep -f winsync-kube.sh > /dev/null; then
-          $HOME/.local/share/winsync/winsync-kube.sh
-        fi
-
         if ! pgrep -f winsync-aws.sh > /dev/null; then
           $HOME/.local/share/winsync/winsync-aws.sh
+        fi
+      ) & disown)
+
+      ((
+        seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
+        sleep ${seconds}s
+
+        if ! pgrep -f winsync-kube.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-kube.sh
         fi
       ) & disown)
 
@@ -52,9 +57,14 @@
         seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
         sleep ${seconds}s
 
-        if ! pgrep -f winsync-kube.sh > /dev/null; then
-          $HOME/.local/share/winsync/winsync-kube.sh
+        if ! pgrep -f winsync-aws.sh > /dev/null; then
+          $HOME/.local/share/winsync/winsync-aws.sh
         fi
+      } &!}
+
+      {{ '{{' }}
+        seconds="$(echo "$(shuf -i 0-50 -n 1) / 10.0" | bc -l | xargs printf "%.2f")"
+        sleep ${seconds}s
 
         if ! pgrep -f winsync-aws.sh > /dev/null; then
           $HOME/.local/share/winsync/winsync-aws.sh
