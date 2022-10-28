@@ -1,6 +1,6 @@
-- name: Clone trallnag/ohmyzsh
+- name: Clone ohmyzsh/ohmyzsh
   ansible.builtin.git:
-    repo: https://github.com/trallnag/ohmyzsh.git
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
     dest: "{{ zsh_plugins }}/oh-my-zsh"
 
 - name: Clone zsh-completions
