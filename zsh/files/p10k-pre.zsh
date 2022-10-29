@@ -10,13 +10,6 @@ typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION=''
 typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
   dir
   vcs
-)
-
-typeset -g POWERLEVEL9K_BOTTOM_LEFT_PROMPT_ELEMENTS=(
-  prompt_char
-)
-
-typeset -g POWERLEVEL9K_TOP_RIGHT_PROMPT_ELEMENTS=(
   status
   command_execution_time
   background_jobs
@@ -53,5 +46,11 @@ typeset -g POWERLEVEL9K_TOP_RIGHT_PROMPT_ELEMENTS=(
   xplr
   midnight_commander
 )
+
+typeset -g POWERLEVEL9K_BOTTOM_LEFT_PROMPT_ELEMENTS=(
+  prompt_char
+)
+
+typeset -g POWERLEVEL9K_TOP_RIGHT_PROMPT_ELEMENTS=()
 
 typeset -g POWERLEVEL9K_BOTTOM_RIGHT_PROMPT_ELEMENTS=()
