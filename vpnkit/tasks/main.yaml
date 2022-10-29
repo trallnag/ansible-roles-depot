@@ -3,16 +3,15 @@
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      wsl.exe -d wsl-vpnkit service wsl-vpnkit start || true
+      (wsl.exe -d wsl-vpnkit service wsl-vpnkit start &> /dev/null & disown)
 
 - name: "zsh : Integration"
   blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      wsl.exe -d wsl-vpnkit service wsl-vpnkit start || true
+      {wsl.exe -d wsl-vpnkit service wsl-vpnkit start &> /dev/null &!}
 
 - name: Start
   ansible.builtin.shell: |
     wsl.exe -d wsl-vpnkit service wsl-vpnkit start || true
-  args: { executable: "{{ bash_executable }}" }
