@@ -15,3 +15,4 @@
 - name: Start
   ansible.builtin.shell: |
     wsl.exe -d wsl-vpnkit service wsl-vpnkit start || true
+  changed_when: false
