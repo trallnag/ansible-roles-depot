@@ -9,11 +9,12 @@
   ansible.builtin.apt:
     name: fish
   become: true
+  register: task
 
 - name: Init Fish
   ansible.builtin.shell: fish & sleep 1 & exit
   args: { warn: false }
-  changed_when: false
+  when: task.changed
 
 - import_tasks: facts.yaml
 
@@ -21,11 +22,13 @@
   ansible.builtin.copy:
     src: config.fish
     dest: $HOME/.config/fish/config.fish
+    mode: 0644
 
 - name: Place $HOME/.config/fish/fish_plugins
   ansible.builtin.copy:
     src: fish_plugins
     dest: $HOME/.config/fish/fish_plugins
+    mode: 0644
 
 - name: Install Fisher
   ansible.builtin.shell: |
