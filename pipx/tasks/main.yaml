@@ -61,6 +61,7 @@
   community.general.pipx:
     name: "{{ item }}"
   loop:
-    - checkov # https://github.com/bridgecrewio/checkov
-    - pre-commit # https://github.com/pre-commit/pre-commit
     - bpython # https://github.com/bpython/bpython
+    - checkov # https://github.com/bridgecrewio/checkov
+    - mdformat # https://github.com/executablebooks/mdformat
+    - pre-commit # https://github.com/pre-commit/pre-commit
