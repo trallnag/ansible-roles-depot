@@ -1,3 +1,8 @@
+# - name: Tap a Homebrew repository using url, state present
+#   community.general.homebrew_tap:
+#     name: go-task/tap
+#     url: https://github.com/go-task/homebrew-tap
+
 - name: Install formulae
   community.general.homebrew:
     name:
@@ -5,6 +10,7 @@
       - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
+      - go-task/tap/go-task # https://taskfile.dev
       - golangci-lint # https://golangci-lint.run/
       - helm
       - hugo
