@@ -8,6 +8,7 @@
       - golangci-lint # https://golangci-lint.run/
       - helm
       - hugo
+      - just # https://github.com/casey/just
       - kubectx
       - kubernetes-cli
       - nginx
