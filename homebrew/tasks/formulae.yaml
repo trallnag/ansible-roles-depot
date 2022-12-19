@@ -17,7 +17,6 @@
       - just # https://github.com/casey/just
       - kubectx
       - kubernetes-cli
-      - nginx
       - optipng # http://optipng.sourceforge.net/
       - terraform
       - terragrunt
