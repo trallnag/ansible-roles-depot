@@ -9,6 +9,11 @@
     content: |
       plugin_cache_dir = "$HOME/.cache/terraform-plugin-cache"
 
+- name: Create plugin cache dir
+  file:
+    path: ~/.cache/terraform-plugin-cache
+    state: directory
+
 - name: Set facts
   ansible.builtin.set_fact:
     terraform_aliases:
