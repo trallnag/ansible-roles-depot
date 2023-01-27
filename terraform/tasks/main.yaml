@@ -1,0 +1,34 @@
+- name: Install
+  community.general.homebrew:
+    name: terraform
+    path: "{{ homebrew_path }}"
+
+- name: Create .terraformrc
+  ansible.builtin.copy:
+    dest: ~/.terraformrc
+    content: |
+      plugin_cache_dir = "$HOME/.cache/terraform-plugin-cache"
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    terraform_aliases:
+      - word: tf
+        subst: terraform
+
+- name: "bash : Integration"
+  blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in terraform_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}
+
+- name: "zsh : Integration"
+  blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in terraform_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}
