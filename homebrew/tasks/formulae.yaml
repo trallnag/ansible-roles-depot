@@ -10,7 +10,7 @@
       - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
-      - go-task/tap/go-task # https://taskfile.dev
+      # - go-task/tap/go-task # https://taskfile.dev
       - golangci-lint # https://golangci-lint.run/
       - helm
       - hugo
@@ -18,7 +18,6 @@
       - kubectx
       - kubernetes-cli
       - optipng # http://optipng.sourceforge.net/
-      - terraform
       - terragrunt
       - tflint # https://github.com/terraform-linters/tflint
       - tfsec # https://github.com/aquasecurity/tfsec
