@@ -10,7 +10,6 @@
 - name: Create directory
   ansible.builtin.shell: |
     mkdir -p {{ bat_config_path | dirname }}
-  args: { warn: false }
   changed_when: false
 
 - name: Place config

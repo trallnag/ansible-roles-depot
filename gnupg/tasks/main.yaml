@@ -6,7 +6,6 @@
   ansible.builtin.shell: |
     mkdir -p {{ gnupg_config_dir }}
     mkdir -p {{ gnupg_config_dir }}/scripts
-  args: { warn: false }
   changed_when: false
 
 - name: Install dependencies

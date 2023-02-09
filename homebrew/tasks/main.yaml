@@ -34,7 +34,6 @@
       unset INTERACTIVE && export NONINTERACTIVE=1
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-  args: { warn: false }
   changed_when: false
 
 # ------------------------------------------------------------------------------
@@ -117,7 +116,6 @@
 - name: Create files and directories
   ansible.builtin.shell: |
     >> {{ homebrew_unliked }}
-  args: { warn: false }
   changed_when: false
 
 - name: Place $HOME/.config/homebrew/scripts/unlink.bash

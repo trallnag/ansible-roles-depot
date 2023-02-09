@@ -16,7 +16,6 @@
     mkdir -p {{ zsh_functions }}
     mkdir -p {{ zsh_plugins }}
     mkdir -p {{ zsh_scripts }}
-  args: { warn: false }
   changed_when: false
 
 - name: Set facts
@@ -48,7 +47,6 @@
     >> {{ zsh_zlogout }}
 
     >> {{ zsh_p10k }}
-  args: { warn: false }
   changed_when: false
 
 - name: "shell : Add block to $HOME/.config/shell/login.bash"

@@ -4,7 +4,6 @@
     rm -rf $HOME/.zshrc
     rm -rf $HOME/.zsh_history
     rm -rf $HOME/.zcompdump
-  args: { warn: false }
   changed_when: false
 
 - name: Place $HOME/.zshenv

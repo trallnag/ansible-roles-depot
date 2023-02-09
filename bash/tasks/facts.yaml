@@ -14,7 +14,6 @@
 
     >> {{ bash_profile }}
     >> {{ bash_bashrc }}
-  args: { warn: false }
   changed_when: false
 
 - name: "shell : Add block to shell_login_bash"

@@ -10,7 +10,6 @@
 
     >> {{ fish_login }}
     >> {{ fish_interactive }}
-  args: { warn: false }
   changed_when: false
 
 - name: "shell : Add block to shell_login_bash"
