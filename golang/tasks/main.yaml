@@ -16,7 +16,7 @@
       export GOBIN=$GOPATH/bin
       path=($path $GOBIN)
 
-- name: Create directory
+- name: Install packages
   ansible.builtin.shell: |
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
@@ -36,4 +36,5 @@
     - { cmd: air, pkg: github.com/cosmtrek/air@latest }
     - { cmd: go-global-update, pkg: github.com/Gelio/go-global-update@latest }
     - { cmd: godoc, pkg: golang.org/x/tools/cmd/godoc@latest }
+    - { cmd: gofumpt, pkg: mvdan.cc/gofumpt@latest } # https://github.com/mvdan/gofumpt
     - { cmd: oauth2-proxy, pkg: github.com/Gelio/go-global-update@latest } # https://github.com/oauth2-proxy/oauth2-proxy
