@@ -1,0 +1,3 @@
+dependencies:
+  - { role: bash, tags: [bash] }
+  - { role: zsh, tags: [zsh] }
