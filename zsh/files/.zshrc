@@ -265,8 +265,8 @@ alias sftp='noglob sftp'
 # OMZ libary scripts
 
 
-source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/functions.zsh
-source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/termsupport.zsh
+# source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/functions.zsh
+# source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/termsupport.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/clipboard.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/key-bindings.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/spectrum.zsh
