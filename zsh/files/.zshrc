@@ -265,8 +265,8 @@ alias sftp='noglob sftp'
 # OMZ libary scripts
 
 
-# source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/functions.zsh
-# source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/termsupport.zsh
+source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/functions.zsh
+source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/termsupport.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/clipboard.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/key-bindings.zsh
 source $DOT_ZSH_PLUGINS/oh-my-zsh/lib/spectrum.zsh
@@ -325,140 +325,6 @@ ZSH_AUTOSUGGEST_HISTORY_IGNORE="?(#c100,)|*/mnt/c/*"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="?(#c100,)|*/mnt/c/*"
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-
-# ------------------------------------------------------------------------------
-# Terminal Title. Taken from:
-# https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
-
-
-# Copyright 2015 John Reese
-# Licensed under the MIT license
-#
-# Update terminal/tmux window titles based on location/command
-
-# function update_title() {
-#   local a
-#   # escape '%' in $1, make nonprintables visible
-#   a=${(V)1//\%/\%\%}
-#   print -nz "%20>...>$a"
-#   read -rz a
-#   # remove newlines
-#   a=${a//$'\n'/}
-#   if [[ -n "$TMUX" ]] && [[ $TERM == screen* || $TERM == tmux* ]]; then
-#     print -n "\ek${(%)a}:${(%)2}\e\\"
-#   elif [[ "$TERM" =~ "screen*" ]]; then
-#     print -n "\ek${(%)a}:${(%)2}\e\\"
-#   elif [[ "$TERM" =~ "xterm*" || "$TERM" = "alacritty" || "$TERM" =~ "st*" ]]; then
-#     print -n "\e]0;${(%)a}:${(%)2}\a"
-#   elif [[ "$TERM" =~ "^rxvt-unicode.*" ]]; then
-#     printf '\33]2;%s:%s\007' ${(%)a} ${(%)2}
-#   fi
-# }
-
-# # called just before the prompt is printed
-# function _zsh_title__precmd() {
-#   update_title "zsh" "%20<...<%~"
-# }
-
-# # called just before a command is executed
-# function _zsh_title__preexec() {
-#   local -a cmd
-
-#   # Escape '\'
-#   1=${1//\\/\\\\\\\\}
-
-#   cmd=(${(z)1})             # Re-parse the command line
-
-#   # Construct a command that will output the desired job number.
-#   case $cmd[1] in
-#     fg)	cmd="${(z)jobtexts[${(Q)cmd[2]:-%+}]}" ;;
-#     %*)	cmd="${(z)jobtexts[${(Q)cmd[1]:-%+}]}" ;;
-#   esac
-#   update_title "$cmd" "%20<...<%~"
-# }
-
-# autoload -Uz add-zsh-hook
-# add-zsh-hook precmd _zsh_title__precmd
-# add-zsh-hook preexec _zsh_title__preexec
-
-
-# ------------------------------------------------------------------------------
-# https://github.com/pawel-slowik/zsh-term-title
-
-
-: ${TERM_TITLE_SET_MULTIPLEXER:=1}
-
-function term_set_title() {
-	emulate -L zsh
-	local term_is_known=0 term_is_multi=0
-	if [[ \
-		$TERM == rxvt-unicode*
-		|| $TERM == xterm*
-		|| ! -z $TMUX
-	]] then
-		term_is_known=1
-	fi
-	if [[ ! -z $TMUX ]] then
-		term_is_multi=1
-	fi
-	if [[ $term_is_known -ne 1 ]] then
-		return
-	fi
-	printf '\033]0;%s\007' ${1//[^[:print:]]/}
-	if [[ \
-		$TERM_TITLE_SET_MULTIPLEXER -eq 1
-		&& $term_is_multi -eq 1
-	]] then
-		printf '\033k%s\033\\' ${1//[^[:print:]]/}
-	fi
-}
-
-function term_title_get_command() {
-	emulate -L zsh
-	local job_text job_key
-	typeset -g RETURN_COMMAND
-	RETURN_COMMAND=$1
-	# Since ~4.3.5, patch:
-	# "users/11818: allow non-numeric keys for job status parameters"
-	# it is possible to use the `fg ...` or `%...` description as a key
-	# in $jobtexts.
-	case $1 in
-		%*) job_key=$1 ;;
-		fg) job_key=%+ ;;
-		fg*) job_key=${(Q)${(z)1}[2,-1]} ;;
-		*) job_key='' ;;
-	esac
-	if [[ -z $job_key ]] then
-		# not a "job to foreground" command - use it as is
-		return
-	fi
-	job_text=${jobtexts[$job_key]} 2> /dev/null
-	if [[ -z $job_text ]] then
-		# job lookup failed - use the original command
-		return
-	fi
-	RETURN_COMMAND=$job_text
-}
-
-function term_title_precmd() {
-	emulate -L zsh
-	local cmd='zsh'
-	local dir='%~'
-	term_set_title $cmd:${(%)dir}
-}
-
-function term_title_preexec() {
-	emulate -L zsh
-	term_title_get_command $1
-	local cmd=$RETURN_COMMAND
-	local dir='%~'
-	term_set_title $cmd:${(%)dir}
-}
-
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd term_title_precmd
-add-zsh-hook preexec term_title_preexec
 
 
 # ------------------------------------------------------------------------------
