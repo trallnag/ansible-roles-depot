@@ -18,8 +18,9 @@ shopt -s expand_aliases
 shopt -s extglob
 shopt -s globstar
 shopt -s nocaseglob
+shopt -s checkwinsize
 
-alias c=alias
+alias c=clear
 
 # ------------------------------------------------------------------------------
 # History
