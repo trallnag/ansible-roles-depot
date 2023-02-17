@@ -10,7 +10,7 @@
       - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
-      # - go-task/tap/go-task # https://taskfile.dev
+      - go-task # https://taskfile.dev
       - golangci-lint # https://golangci-lint.run/
       - helm
       - hugo
