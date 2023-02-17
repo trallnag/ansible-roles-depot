@@ -46,7 +46,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       # # Required in any case.
-      # export GPG_TTY=$(tty)
+      export GPG_TTY=$(tty)
       # # Prompt key unlock.
       # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
 
@@ -56,6 +56,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       # # Required in any case.
-      # export GPG_TTY=$(tty)
+      export GPG_TTY=$(tty)
       # # Prompt key unlock.
       # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
