@@ -10,6 +10,7 @@
     block: |
       export VOLTA_HOME="$HOME/.volta"
       PATH="$VOLTA_HOME/bin:$PATH"
+  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -18,6 +19,7 @@
     block: |
       export VOLTA_HOME="$HOME/.volta"
       path=($VOLTA_HOME/bin $path)
+  changed_when: false
 
 - name: Install and set node@19 as default
   ansible.builtin.shell: |

@@ -20,6 +20,7 @@
         unset odir
         unset oeval
       fi
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -33,3 +34,4 @@
         unset odir
         unset oeval
       fi
+  changed_when: false

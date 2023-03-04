@@ -49,6 +49,7 @@
       export GPG_TTY=$(tty)
       # # Prompt key unlock.
       # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -59,3 +60,4 @@
       export GPG_TTY=$(tty)
       # # Prompt key unlock.
       # {{ gnupg_config_dir }}/scripts/gpg-agent-trigger.bash
+  changed_when: false

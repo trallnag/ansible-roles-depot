@@ -6,6 +6,7 @@
       export GOPATH=$HOME/go
       export GOBIN=$GOPATH/bin
       export PATH="$PATH:$GOBIN"
+  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -15,6 +16,7 @@
       export GOPATH=$HOME/go
       export GOBIN=$GOPATH/bin
       path=($path $GOBIN)
+  changed_when: false
 
 - name: Install packages
   ansible.builtin.shell: |
@@ -37,5 +39,4 @@
     - { cmd: go-global-update, pkg: github.com/Gelio/go-global-update@latest }
     - { cmd: godoc, pkg: golang.org/x/tools/cmd/godoc@latest }
     - { cmd: gofumpt, pkg: mvdan.cc/gofumpt@latest } # https://github.com/mvdan/gofumpt
-    - { cmd: oauth2-proxy, pkg: github.com/Gelio/go-global-update@latest } # https://github.com/oauth2-proxy/oauth2-proxy
     - { cmd: go-mod-upgrade, pkg: github.com/oligot/go-mod-upgrade@latest } # https://github.com/oligot/go-mod-upgrade

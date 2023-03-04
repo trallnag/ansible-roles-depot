@@ -16,6 +16,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: e5294c6c-b966-4027-9361-dc1d726f72ee"
     block: |
       PATH=$PATH:$HOME/.cargo/bin
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -23,6 +24,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 721e1f10-0360-43c3-b354-b9a65d6303e0"
     block: |
       path=($path $HOME/.cargo/bin)
+  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Environment script.
@@ -33,6 +35,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 3b463e3c-12ce-4d40-ad22-c51b1a012139"
     block: |
       test -f $HOME/.cargo/env && source $HOME/.cargo/env
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zshrc that sources env file"
   blockinfile:
@@ -40,6 +43,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: 9ebad7e5-bf71-46d6-a934-256aa6d79fc3"
     block: |
       test -f $HOME/.cargo/env && source $HOME/.cargo/env
+  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Completions.

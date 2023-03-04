@@ -4,6 +4,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       (wsl.exe -d wsl-vpnkit service wsl-vpnkit start &> /dev/null & disown)
+  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -11,6 +12,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       {wsl.exe -d wsl-vpnkit service wsl-vpnkit start &> /dev/null &!}
+  changed_when: false
 
 - name: Start
   ansible.builtin.shell: |

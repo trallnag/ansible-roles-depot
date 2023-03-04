@@ -12,8 +12,8 @@
     mkdir -p $HOME/.config/bash/dynrc
     mkdir -p {{ bash_completions_dir }}
 
-    >> {{ bash_profile }}
-    >> {{ bash_bashrc }}
+    > {{ bash_profile }}
+    > {{ bash_bashrc }}
   changed_when: false
 
 - name: "shell : Add block to shell_login_bash"

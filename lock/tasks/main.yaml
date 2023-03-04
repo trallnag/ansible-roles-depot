@@ -38,6 +38,7 @@
     block: |
       alias lockc="lock close"
       alias locko="lock open"
+  changed_when: false
 
 - name: "zsh : Aliases"
   blockinfile:
@@ -46,3 +47,4 @@
     block: |
       alias lockc="lock close"
       alias locko="lock open"
+  changed_when: false

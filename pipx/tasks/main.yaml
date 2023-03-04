@@ -29,6 +29,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   ansible.builtin.blockinfile:
@@ -36,6 +37,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Setup completions.
@@ -46,6 +48,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       eval "$(register-python-argcomplete pipx)"
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zshrc_compinit_post"
   ansible.builtin.blockinfile:
@@ -53,6 +56,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       eval "$(register-python-argcomplete pipx)"
+  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Install packages with Pipx.

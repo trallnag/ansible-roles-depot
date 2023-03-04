@@ -11,6 +11,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       PATH="$PATH:$HOME/.krew/bin"
+  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -18,6 +19,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       path=($path $HOME/.krew/bin)
+  changed_when: false
 
 # ------------------------------------------------------------------------------
 

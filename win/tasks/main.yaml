@@ -30,6 +30,8 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 4b92c219-046b-4993-80b9-7ec7f85667d0"
     block: |
       PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+  changed_when: false
+
 
 - name: "zsh : Windows Terminal split pane same directory"
   blockinfile:
@@ -40,3 +42,4 @@
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
       }
       precmd_functions+=(keep_current_path)
+  changed_when: false

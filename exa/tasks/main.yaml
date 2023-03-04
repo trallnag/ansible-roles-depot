@@ -27,6 +27,7 @@
       {% for alias in exa_aliases %}
       alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
+  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -36,3 +37,4 @@
       {% for alias in exa_aliases %}
       alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
+  changed_when: false
