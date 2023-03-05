@@ -40,3 +40,4 @@
     - { cmd: godoc, pkg: golang.org/x/tools/cmd/godoc@latest }
     - { cmd: gofumpt, pkg: mvdan.cc/gofumpt@latest } # https://github.com/mvdan/gofumpt
     - { cmd: go-mod-upgrade, pkg: github.com/oligot/go-mod-upgrade@latest } # https://github.com/oligot/go-mod-upgrade
+    - { cmd: gopls, pkg: golang.org/x/tools/gopls@latest }
