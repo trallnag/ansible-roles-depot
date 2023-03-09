@@ -20,7 +20,7 @@
       - word: tf
         subst: terraform
 
-- name: "bash : Integration"
+- name: "bash : bash_bashrc : Integration"
   blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -30,7 +30,7 @@
       {% endfor %}
   changed_when: false
 
-- name: "zsh : Integration"
+- name: "zsh : zsh_zshrc : Integration"
   blockinfile:
     path: "{{ zsh_zshrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
