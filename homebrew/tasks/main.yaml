@@ -46,7 +46,6 @@
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-  changed_when: false
 
 - name: "fish : Add block to fish_login"
   blockinfile:
@@ -55,7 +54,6 @@
     block: |
       eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
       set -x HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
-  changed_when: false
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -64,7 +62,6 @@
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Setup completion.
@@ -87,7 +84,6 @@
           unset COMPLETION
         fi
       fi
-  changed_when: false
 
 - name: "fish : Add block to fish_interactive"
   blockinfile:
@@ -103,7 +99,6 @@
         && test -d $dir \
         && not contains $dir $fish_complete_path \
         && set -g fish_complete_path $fish_complete_path $dir
-  changed_when: false
 
 - name: "zsh : Add init block to zsh_zshrc_compinit_pre"
   blockinfile:
@@ -111,7 +106,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
-  changed_when: false
 
 # ------------------------------------------------------------------------------
 

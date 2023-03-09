@@ -35,18 +35,18 @@
 
 - name: Create files
   ansible.builtin.shell: |
-    > {{ zsh_zprofile }}
+    >> {{ zsh_zprofile }}
 
-    > {{ zsh_zshrc_interactive }}
-    > {{ zsh_zshrc }}
-    > {{ zsh_zshrc_compinit_pre }}
-    > {{ zsh_zshrc_compinit_post }}
+    >> {{ zsh_zshrc_interactive }}
+    >> {{ zsh_zshrc }}
+    >> {{ zsh_zshrc_compinit_pre }}
+    >> {{ zsh_zshrc_compinit_post }}
 
-    > {{ zsh_zlogin }}
+    >> {{ zsh_zlogin }}
 
-    > {{ zsh_zlogout }}
+    >> {{ zsh_zlogout }}
 
-    > {{ zsh_p10k }}
+    >> {{ zsh_p10k }}
   changed_when: false
 
 - name: "shell : Add block to $HOME/.config/shell/login.bash"

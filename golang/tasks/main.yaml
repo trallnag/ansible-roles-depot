@@ -6,7 +6,6 @@
       export GOPATH=$HOME/go
       export GOBIN=$GOPATH/bin
       export PATH="$PATH:$GOBIN"
-  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -16,7 +15,6 @@
       export GOPATH=$HOME/go
       export GOBIN=$GOPATH/bin
       path=($path $GOBIN)
-  changed_when: false
 
 - name: Install packages
   ansible.builtin.shell: |

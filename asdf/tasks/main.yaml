@@ -25,7 +25,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
     block: |
       source {{ asdf_dir }}/asdf.sh
-  changed_when: false
 
 - name: "zsh : Add init block to zsh_zshrc to setup environment"
   ansible.builtin.blockinfile:
@@ -33,7 +32,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
     block: |
       source {{ asdf_dir }}/asdf.sh
-  changed_when: false
 
 # ------------------------------------------------------------------------------
 # Completions.
@@ -44,7 +42,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completions"
     block: |
       source {{ asdf_dir }}/completions/asdf.bash
-  changed_when: false
 
 - name: "zsh : Add init block to zsh_zshrc_compinit_pre to setup completions"
   ansible.builtin.blockinfile:
@@ -52,7 +49,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completions"
     block: |
       fpath=({{ asdf_dir }}/completions $fpath)
-  changed_when: false
 
 # ------------------------------------------------------------------------------
 

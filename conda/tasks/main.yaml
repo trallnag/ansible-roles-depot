@@ -27,7 +27,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       eval "$(~/miniconda3/bin/conda shell.bash hook)"
-  changed_when: false
 
 - name: "bash : Clone tartansandal/conda-bash-completion"
   ansible.builtin.git:
@@ -52,7 +51,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       eval "$(~/miniconda3/bin/conda shell.zsh hook)"
-  changed_when: false
 
 - name: "zsh : Clone esc/conda-zsh-completion to ~/.local/share/conda-zsh-completion"
   ansible.builtin.git:
@@ -78,4 +76,3 @@
       zstyle ":conda_zsh_completion:*" show-unnamed true
       zstyle ":conda_zsh_completion:*" sort-envs-by-time true
       zstyle ":conda_zsh_completion:*" show-global-envs-first true
-  changed_when: false

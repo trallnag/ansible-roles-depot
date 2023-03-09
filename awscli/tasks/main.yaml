@@ -10,7 +10,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       PATH="/usr/local/aws/bin:$PATH"
-  changed_when: false
+      # export AWS_PAGER=
 
 - name: "zsh : Add block to zsh_zprofile"
   blockinfile:
@@ -18,7 +18,7 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       path=(/usr/local/aws/bin $path)
-  changed_when: false
+      # export AWS_PAGER=
 
 - name: "bash : Add block to bash_bashrc"
   blockinfile:
@@ -26,7 +26,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       complete -C /usr/local/bin/aws_completer aws
-  changed_when: false
 
 - name: "zsh : Add block to zsh_zshrc_compinit_post"
   blockinfile:
@@ -34,4 +33,3 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       complete -C /usr/local/bin/aws_completer aws
-  changed_when: false

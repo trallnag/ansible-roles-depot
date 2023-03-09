@@ -28,7 +28,6 @@
       {% for alias in terraform_aliases %}
       alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
-  changed_when: false
 
 - name: "zsh : zsh_zshrc : Integration"
   blockinfile:
@@ -38,4 +37,3 @@
       {% for alias in terraform_aliases %}
       alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
-  changed_when: false

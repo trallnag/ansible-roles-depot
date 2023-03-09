@@ -16,10 +16,10 @@
 
     mkdir -p {{ bash_completions_dir }}
 
-    > {{ bash_completion }}
-    > {{ bash_complete_alias }}
-    > {{ bash_profile }}
-    > {{ bash_bashrc }}
+    >> {{ bash_completion }}
+    >> {{ bash_complete_alias }}
+    >> {{ bash_profile }}
+    >> {{ bash_bashrc }}
   changed_when: false
 
 - name: "shell : Add block to shell_login_bash"

@@ -23,7 +23,6 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export RIPGREP_CONFIG_PATH={{ ripgrep_config_path }}
-  changed_when: false
 
 - name: "zsh : Integration"
   blockinfile:
@@ -31,4 +30,3 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export RIPGREP_CONFIG_PATH={{ ripgrep_config_path }}
-  changed_when: false

@@ -14,4 +14,3 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: ecd4a7a0-f22a-4406-a5a3-1427870330b4"
     block: |
       eval "$(starship init bash)"
-  changed_when: false
