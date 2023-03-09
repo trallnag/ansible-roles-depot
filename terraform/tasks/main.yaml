@@ -14,26 +14,30 @@
     path: ~/.cache/terraform-plugin-cache
     state: directory
 
-- name: Set facts
-  ansible.builtin.set_fact:
-    terraform_aliases:
-      - word: tf
-        subst: terraform
-
 - name: "bash : bash_bashrc : Integration"
   blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      {% for alias in terraform_aliases %}
-      alias {{ alias.word }}="{{ alias.subst }}"
-      {% endfor %}
+      alias tf=terraform
+
+- name: "bash : bash_completion : Integration"
+  blockinfile:
+    path: "{{ bash_completion }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      complete -C terraform terraform
 
 - name: "zsh : zsh_zshrc : Integration"
   blockinfile:
     path: "{{ zsh_zshrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      {% for alias in terraform_aliases %}
-      alias {{ alias.word }}="{{ alias.subst }}"
-      {% endfor %}
+      alias tf=terraform
+
+- name: "zsh : zsh_zshrc_compinit_post : Integration"
+  blockinfile:
+    path: "{{ zsh_zshrc_compinit_post }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      complete -C terraform terraform
