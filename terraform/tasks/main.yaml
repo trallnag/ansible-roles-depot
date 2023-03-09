@@ -1,8 +1,8 @@
-- name: Install Terraform
+- name: Install
   community.general.homebrew:
     name:  terraform
 
-- name: Install related apps
+- name: Install related
   community.general.homebrew:
     name:
       - terragrunt # https://github.com/gruntwork-io/terragrunt
