@@ -1,6 +1,9 @@
 - name: Install
   ansible.builtin.apt:
-    name: bash
+    name:
+      - bash
+      # Necessary for cykerway/complete-alias.
+      - bash-completion
   become: true
 
 - import_tasks: cleanup.yaml
@@ -26,3 +29,14 @@
   ansible.builtin.copy:
     src: .bash_logout
     dest: $HOME/.bash_logout
+
+- name: Place {{ bash_completion }}
+  ansible.builtin.copy:
+    src: bash_completion.bash
+    dest: "{{ bash_completion }}"
+  changed_when: false
+
+- name: Clone cykerway/complete-alias to $HOME/.local/complete-alias
+  ansible.builtin.git:
+    repo: https://github.com/cykerway/complete-alias.git
+    dest: $HOME/.local/complete-alias
