@@ -1,6 +1,14 @@
-- name: Install
+- name: Install Terraform
   community.general.homebrew:
-    name: terraform
+    name:  terraform
+    path: "{{ homebrew_path }}"
+
+- name: Install related apps
+  community.general.homebrew:
+    name:
+      - terragrunt # https://github.com/gruntwork-io/terragrunt
+      - tflint # https://github.com/terraform-linters/tflint
+      - tfsec # https://github.com/aquasecurity/tfsec
     path: "{{ homebrew_path }}"
 
 - name: Create .terraformrc
