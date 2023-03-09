@@ -2,7 +2,6 @@
   ansible.builtin.apt:
     name:
       - bash
-      # Necessary for cykerway/complete-alias.
       - bash-completion
   become: true
 
@@ -30,11 +29,15 @@
     src: .bash_logout
     dest: $HOME/.bash_logout
 
-- name: Place {{ bash_completion }}
-  ansible.builtin.copy:
-    src: bash_completion.bash
-    dest: "{{ bash_completion }}"
-  changed_when: false
+- name: "bash_completion : Integration"
+  ansible.builtin.blockinfile:
+    path: "{{ bash_completion }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    insertbefore: BOF
+    block: |
+      # Bootstrap cykerway/complete-alias.
+      source "$HOME/.local/complete-alias/complete_alias"
+      source "$HOME/.config/complete_alias"
 
 - name: Clone cykerway/complete-alias to $HOME/.local/complete-alias
   ansible.builtin.git:
