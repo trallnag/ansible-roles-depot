@@ -1,0 +1,10 @@
+- name: Create directory
+  ansible.builtin.shell: |
+    mkdir -p $HOME/.config/ansible/scripts
+  changed_when: false
+
+- name: Place $HOME/.config/ansible/scripts/cleanup-{{ role_name | replace('_', '-') }}.bash
+  ansible.builtin.copy:
+    src: cleanup.bash
+    dest: $HOME/.config/ansible/scripts/cleanup-{{ role_name | replace('_', '-') }}.bash
+    mode: u=rwx,g=r,o=r
