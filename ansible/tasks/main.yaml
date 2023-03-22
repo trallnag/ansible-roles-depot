@@ -1,0 +1,19 @@
+- name: Install packages with apt
+  ansible.builtin.apt:
+    name:
+      - libffi-dev
+      - git
+  become: true
+
+- name: Install packages with pip
+  ansible.builtin.pip:
+    name:
+      - ansible
+      - ansible-core
+      - ansible-lint
+      - molecule
+      - molecule
+      - molecule-plugins[docker]
+      - molecule-plugins[podman]
+      - setuptools
+      - yamllint
