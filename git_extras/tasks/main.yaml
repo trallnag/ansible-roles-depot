@@ -11,3 +11,27 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       source /home/linuxbrew/.linuxbrew/opt/git-extras/share/git-extras/git-extras-completion.zsh
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    git_extras_aliases:
+      - word: gitb
+        subst: git browse
+
+- name: "bash : Integration : Aliases"
+  blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+    block: |
+      {% for alias in git_extras_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}
+
+- name: "zsh : Integration : Aliases"
+  blockinfile:
+    path: "{{ zsh_zshrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+    block: |
+      {% for alias in git_extras_aliases %}
+      alias {{ alias.word }}="{{ alias.subst }}"
+      {% endfor %}
