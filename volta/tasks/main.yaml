@@ -19,13 +19,13 @@
       export VOLTA_HOME="$HOME/.volta"
       path=($VOLTA_HOME/bin $path)
 
-- name: Install and set node@19 as default
+- name: Install and set node@20 as default
   ansible.builtin.shell: |
     export VOLTA_HOME="$HOME/.volta"
     PATH="$VOLTA_HOME/bin:$PATH"
 
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    volta install node@19
+    volta install node@20
   changed_when: false
 
 - name: Install a few tools
