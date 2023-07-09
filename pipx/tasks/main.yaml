@@ -64,5 +64,6 @@
     - black # https://github.com/psf/black
     - bpython # https://github.com/bpython/bpython
     - checkov # https://github.com/bridgecrewio/checkov
+    - git-filter-repo # https://github.com/newren/git-filter-repo
     - mdformat # https://github.com/executablebooks/mdformat
     - pre-commit # https://github.com/pre-commit/pre-commit
