@@ -21,7 +21,6 @@
     - Tyriar.sort-lines
     - VisualStudioExptTeam.vscodeintellicode
     - bungcip.better-toml
-    - eamodio.gitlens
     - formulahendry.code-runner
     - mhutchie.git-graph
     - ms-python.python
