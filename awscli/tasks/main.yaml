@@ -1,6 +1,9 @@
 - name: Import role trallnag.awscli
   import_role:
     name: trallnag.awscli
+  vars:
+    awscli_version: "2.13.27"
+    awscli_ssm_version: "1.2.497.0"
 
 - name: "bash : Add block to bash_profile"
   blockinfile:
