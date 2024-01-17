@@ -1,5 +1,3 @@
-- import_tasks: cleanup.yaml
-
 - name: Add repo
   ansible.builtin.apt_repository:
     repo: ppa:fish-shell/release-3
@@ -22,22 +20,3 @@
     src: config.fish
     dest: $HOME/.config/fish/config.fish
     mode: 0644
-
-- name: Place $HOME/.config/fish/fish_plugins
-  ansible.builtin.copy:
-    src: fish_plugins
-    dest: $HOME/.config/fish/fish_plugins
-    mode: 0644
-
-- name: Install Fisher
-  ansible.builtin.shell: |
-    if ! type --query fisher
-      curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-    end
-  args: { executable: "{{ fish_executable }}" }
-  changed_when: false
-
-- name: Fisher update
-  ansible.builtin.shell: fisher update
-  args: { executable: "{{ fish_executable }}" }
-  changed_when: false
