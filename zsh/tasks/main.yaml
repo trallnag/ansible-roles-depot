@@ -4,8 +4,6 @@
 
 - import_tasks: facts.yaml
 
-- import_tasks: cleanup.yaml
-
 - import_tasks: runcmds.yaml
 
 - import_tasks: modules.yaml

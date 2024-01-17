@@ -1,13 +1,11 @@
-# Whenever you add or remove tasks from this file, adjust cleanup.bash script.
-
 - name: Create Crontab entry for zcompile-zcompdump.zsh
   ansible.builtin.cron:
-    name: "zsh-18aea1da-85af-46e0-8b00-869fdfc45442"
+    name: zsh-zcompile-zcompdump
     special_time: hourly
     job: "nice -n 19 {{ zsh_scripts }}/zcompile-zcompdump.zsh"
 
 - name: Create Crontab entry for zcompile-stuff.zsh
   ansible.builtin.cron:
-    name: "zsh-e9bacf1d-72f2-4de2-967c-4c2f14cb3a35"
+    name: zsh-zcompile-stuff
     special_time: hourly
     job: "nice -n 19 {{ zsh_scripts }}/zcompile-zcompdump.zsh"
