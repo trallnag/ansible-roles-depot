@@ -5,8 +5,6 @@
       - bash-completion
   become: true
 
-- import_tasks: cleanup.yaml
-
 - import_tasks: facts.yaml
 
 - name: Delete $HOME/.bash_profile
@@ -33,13 +31,11 @@
   ansible.builtin.blockinfile:
     path: "{{ bash_completion }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    insertbefore: BOF
+    insertbefore: EOF
     block: |
-      # Bootstrap cykerway/complete-alias.
-      source "$HOME/.local/complete-alias/complete_alias"
-      source "$HOME/.config/complete_alias"
+      source $HOME/.local/share/complete-alias/complete_alias
 
-- name: Clone cykerway/complete-alias to $HOME/.local/complete-alias
+- name: Clone cykerway/complete-alias to $HOME/.local/share/complete-alias
   ansible.builtin.git:
     repo: https://github.com/cykerway/complete-alias.git
-    dest: $HOME/.local/complete-alias
+    dest: $HOME/.local/share/complete-alias

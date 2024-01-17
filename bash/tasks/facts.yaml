@@ -5,19 +5,16 @@
     bash_completions_dir: $HOME/.local/share/bash-completion/completions
 
     bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
-    bash_complete_alias: $HOME/.config/complete_alias
     bash_completion: $HOME/.config/bash_completion
     bash_profile: $HOME/.config/bash/dynrc/profile.bash
 
 - name: Create dirs and files
   ansible.builtin.shell: |
-    mkdir -p $HOME/.local/share/complete-alias
     mkdir -p $HOME/.config/bash/dynrc
 
     mkdir -p {{ bash_completions_dir }}
 
     >> {{ bash_completion }}
-    >> {{ bash_complete_alias }}
     >> {{ bash_profile }}
     >> {{ bash_bashrc }}
   changed_when: false
@@ -30,7 +27,6 @@
       export DOT_BASH_COMPLETIONS_DIR={{ bash_completions_dir }}
 
       export DOT_BASH_BASHRC={{ bash_bashrc }}
-      export DOT_BASH_COMPLETE_ALIAS={{ bash_complete_alias }}
       export DOT_BASH_COMPLETION={{ bash_completion }}
       export DOT_BASH_PROFILE={{ bash_profile }}
 
@@ -42,7 +38,6 @@
       set -x DOT_BASH_COMPLETIONS_DIR {{ bash_completions_dir }}
 
       set -x DOT_BASH_BASHRC {{ bash_bashrc }}
-      set -x DOT_BASH_COMPLETE_ALIAS {{ bash_complete_alias }}
       set -x DOT_BASH_COMPLETION {{ bash_completion }}
       set -x DOT_BASH_PROFILE {{ bash_profile }}
 
@@ -54,6 +49,5 @@
       export DOT_BASH_COMPLETIONS_DIR={{ bash_completions_dir }}
 
       export DOT_BASH_BASHRC={{ bash_bashrc }}
-      export DOT_BASH_COMPLETE_ALIAS={{ bash_complete_alias }}
       export DOT_BASH_COMPLETION={{ bash_completion }}
       export DOT_BASH_PROFILE={{ bash_profile }}
