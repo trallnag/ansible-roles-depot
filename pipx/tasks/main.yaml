@@ -1,6 +1,7 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    pipx_default_python: /usr/bin/python
+    pipx_default_python: /usr/bin/python3
+    pipx_executable: /usr/bin/pipx
 
 # ------------------------------------------------------------------------------
 # Install Pipx.
@@ -9,11 +10,6 @@
   ansible.builtin.apt:
     name:
       - pipx
-      - python-is-python3
-      - python3-argcomplete
-      - python3-pip
-      - python3-setuptools
-      - python3-venv
   become: true
 
 # ------------------------------------------------------------------------------
@@ -24,14 +20,14 @@
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+      #export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
 
 - name: "zsh : Add block to zsh_zprofile"
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+      #export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
 
 # ------------------------------------------------------------------------------
 # Setup completions.
@@ -41,6 +37,7 @@
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
+      source "$HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d/_python-argcomplete"
       eval "$(register-python-argcomplete pipx)"
 
 - name: "zsh : Add block to zsh_zshrc_compinit_post"
@@ -48,6 +45,7 @@
     path: "{{ zsh_zshrc_compinit_post }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
+      fpath=( $HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
       eval "$(register-python-argcomplete pipx)"
 
 # ------------------------------------------------------------------------------
@@ -56,10 +54,7 @@
 - name: Install packages
   community.general.pipx:
     name: "{{ item }}"
+    executable: "{{ pipx_executable }}"
   loop:
-    - black # https://github.com/psf/black
     - bpython # https://github.com/bpython/bpython
-    - checkov # https://github.com/bridgecrewio/checkov
-    - git-filter-repo # https://github.com/newren/git-filter-repo
-    - mdformat # https://github.com/executablebooks/mdformat
     - pre-commit # https://github.com/pre-commit/pre-commit
