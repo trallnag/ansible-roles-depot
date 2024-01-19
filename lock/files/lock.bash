@@ -13,12 +13,15 @@ case $1 in
   *) help && exit 1 ;;
 esac
 
+GPG_AGENT=~/.config/gnupg/scripts/gpg-agent-trigger.bash
+SSH_AGENT=~/.config/ssh/scripts/ssh-agent-trigger.bash
+
 if [[ $cmd == open ]]; then
-  ~/.config/gnupg/scripts/gpg-agent-trigger.bash
-  ~/.config/ssh/scripts/ssh-agent-trigger.bash
+  [[ -f $GPG_AGENT]] && $GPG_AGENT
+  [[ -f $SSH_AGENT]] && $SSH_AGENT
 fi
 
 if [[ $cmd == close ]]; then
-  killall gpg-agent &> /dev/null || true
-  ssh-add -D &> /dev/null || true
+  [[ -f $GPG_AGENT]] && killall gpg-agent &> /dev/null || true
+  [[ -f $SSH_AGENT]] && ssh-add -D &> /dev/null || true
 fi
