@@ -1,0 +1,28 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    ssh_data_dir: $HOME/.local/share/ssh
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - socat
+  become: true
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ ssh_data_dir }}"
+
+- name: "bash : Add block to bash_profile to init ssh-agent"
+  blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: init-ssh-agent"
+    block: "{{ lookup('ansible.builtin.template', 'init-ssh-agent.bash') }}"
+
+- name: "zsh : Add block to zsh_zprofile to init ssh-agent"
+  blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: init-ssh-agent"
+    block: "{{ lookup('ansible.builtin.template', 'init-ssh-agent.zsh') }}"
