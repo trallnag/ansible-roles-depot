@@ -14,6 +14,8 @@
         subst: eza -1a --group-directories-first
       - word: el
         subst: eza -ahl --time-style=long-iso --links --classify --color-scale --group-directories-first
+      - word: ll
+        subst: eza -ahl --time-style=long-iso --links --classify --color-scale --group-directories-first
       - word: ex
         subst: eza -lbhHigUmuSa@ --time-style=long-iso --color-scale
       - word: et
