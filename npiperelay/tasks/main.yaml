@@ -1,0 +1,26 @@
+- name: Create dir
+  ansible.builtin.file:
+    dest: $HOME/.local/share/npiperelay
+    state: directory
+
+- name: Create dir
+  ansible.builtin.file:
+    dest: /mnt/c/npiperelay
+    state: directory
+
+- name: Download archive
+  ansible.builtin.get_url:
+    url: https://github.com/jstarks/npiperelay/releases/latest/download/npiperelay_windows_amd64.zip
+    dest: $HOME/.local/share/npiperelay
+
+- name: Unarchive
+  ansible.builtin.unarchive:
+    src: $HOME/.local/share/npiperelay/npiperelay_windows_amd64.zip
+    dest: /mnt/c/npiperelay
+    remote_src: true
+
+- name: Install socat
+  ansible.builtin.apt:
+    name: socat
+    state: present
+  become: true
