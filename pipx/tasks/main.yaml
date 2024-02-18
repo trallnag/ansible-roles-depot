@@ -37,16 +37,24 @@
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      source "$HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d/_python-argcomplete"
-      eval "$(register-python-argcomplete pipx)"
+      #source "$HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d/_python-argcomplete"
+      if command -v register-python-argcomplete &> /dev/null; then
+        eval "$(register-python-argcomplete pipx)"
+      else
+        eval "$(register-python-argcomplete3 pipx)"
+      fi
 
 - name: "zsh : Add block to zsh_zshrc_compinit_post"
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_post }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      fpath=( $HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
-      eval "$(register-python-argcomplete pipx)"
+      #fpath=( $HOME/.local/pipx/venvs/argcomplete/lib/python3.10/site-packages/argcomplete/bash_completion.d "${fpath[@]}" )
+      if command -v register-python-argcomplete &> /dev/null; then
+        eval "$(register-python-argcomplete pipx)"
+      else
+        eval "$(register-python-argcomplete3 pipx)"
+      fi
 
 # ------------------------------------------------------------------------------
 # Install packages with Pipx.
