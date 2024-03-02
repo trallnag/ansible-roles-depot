@@ -1,41 +1,24 @@
-- name: Install
-  ansible.builtin.apt:
-    name:
-      - bash
-      - bash-completion
+- name: Set facts
+  ansible.builtin.set_fact:
+    bash_executable: /usr/bin/bash
+
+    bash_completions_dir: $HOME/.local/share/bash-completion/completions
+
+    bash_aliases: $HOME/.config/bash/dynrc/aliases.bash
+    bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
+    bash_completion: $HOME/.config/bash_completion
+    bash_profile: $HOME/.config/bash/dynrc/profile.bash
+
+- name: Set up for trallnag
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: trallnag
   become: true
+  vars:
+    user: trallnag
 
-- import_tasks: facts.yaml
-
-- name: Delete $HOME/.bash_profile
-  ansible.builtin.file:
-    path: $HOME/.bash_profile
-    state: absent
-
-- name: Place $HOME/.profile
-  ansible.builtin.copy:
-    src: .profile
-    dest: $HOME/.profile
-
-- name: Place $HOME/.bashrc
-  ansible.builtin.copy:
-    src: .bashrc
-    dest: $HOME/.bashrc
-
-- name: Place $HOME/.bash_logout
-  ansible.builtin.copy:
-    src: .bash_logout
-    dest: $HOME/.bash_logout
-
-- name: "bash_completion : Integration"
-  ansible.builtin.blockinfile:
-    path: "{{ bash_completion }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    insertbefore: EOF
-    block: |
-      source $HOME/.local/share/complete-alias/complete_alias
-
-- name: Clone cykerway/complete-alias to $HOME/.local/share/complete-alias
-  ansible.builtin.git:
-    repo: https://github.com/cykerway/complete-alias.git
-    dest: $HOME/.local/share/complete-alias
+- name: Set up for root
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: root
+  become: true
+  vars:
+    user: root

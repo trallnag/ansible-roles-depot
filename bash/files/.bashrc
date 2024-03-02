@@ -1,5 +1,3 @@
-# ------------------------------------------------------------------------------
-
 # If not running interactively, don't do anything.
 case $- in
   *i*) ;;
@@ -20,10 +18,10 @@ shopt -s globstar
 shopt -s nocaseglob
 shopt -s checkwinsize
 
-alias c=clear
 
 # ------------------------------------------------------------------------------
 # History
+
 
 HISTIGNORE='&:[ ]*:exit:ls:bg:fg:history:clear'
 HISTCONTROL='erasedups:ignoreboth'
@@ -42,8 +40,10 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
+
 # ------------------------------------------------------------------------------
 # More or less copied from default bashrc on Ubuntu.
+
 
 # Make less more friendly for non-text input files.
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -90,13 +90,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Path for humans.
-alias path='echo -e ${PATH//:/\\n}'
 
 # ------------------------------------------------------------------------------
-# Cherry pick from Bash Sensible
-#
+# Cherry pick from Bash Sensible:
 # https://github.com/mrzool/bash-sensible/blob/master/sensible.bash
+
 
 # Enable history expansion with space.
 # E.g. typing !!<space> will replace the !! with your last command.
@@ -114,8 +112,29 @@ bind "set show-all-if-ambiguous on"
 # Immediately add a trailing slash when autocompleting symlinks to directories.
 bind "set mark-symlinked-directories on"
 
+
 # ------------------------------------------------------------------------------
+# Aliases.
+
+
+# Path for humans.
+alias path='echo -e ${PATH//:/\\n}'
+
+# Misc.
+alias c='clear'
+
+# Aliases even with sudo.
+alias sudo='sudo '
+alias s='sudo '
+
+# Commands without sudo.
+alias apt='sudo apt'
+alias systemctl='sudo systemctl'
+
+source "$DOT_BASH_ALIASES"
+
+
+# ------------------------------------------------------------------------------
+
 
 source "$DOT_BASH_BASHRC"
-
-# ------------------------------------------------------------------------------
