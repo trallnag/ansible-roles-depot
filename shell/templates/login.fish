@@ -28,6 +28,6 @@ set -gx VISUAL nano
 set -gx PAGER less
 
 # This.
-set -gx DOT_SHELL_LOGIN_BASH $HOME/.config/shell/login.bash
-set -gx DOT_SHELL_LOGIN_FISH $HOME/.config/shell/login.fish
-set -gx DOT_SHELL_LOGIN_ZSH $HOME/.config/shell/login.zsh
+set -gx DOT_SHELL_LOGIN_BASH "{{ shell_login_bash }}"
+set -gx DOT_SHELL_LOGIN_FISH "{{ shell_login_fish }}"
+set -gx DOT_SHELL_LOGIN_ZSH "{{ shell_login_zsh }}"
