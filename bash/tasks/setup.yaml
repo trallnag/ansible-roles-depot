@@ -1,6 +1,6 @@
 - name: "{{ user }} : Create dirs and files"
   ansible.builtin.shell: |
-    mkdir -p $HOME/.config/bash/dynrc
+    mkdir -p "$HOME/.config/bash/dynrc"
 
     mkdir -p "{{ bash_completions_dir }}"
 
