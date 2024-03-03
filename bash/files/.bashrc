@@ -1,3 +1,9 @@
+source "$DOT_BASH_BASHRC_TOP"
+
+
+# ------------------------------------------------------------------------------
+
+
 # If not running interactively, don't do anything.
 case $- in
   *i*) ;;

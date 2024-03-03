@@ -4,10 +4,14 @@
 
     bash_completions_dir: $HOME/.local/share/bash-completion/completions
 
-    bash_aliases: $HOME/.config/bash/dynrc/aliases.bash
-    bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
     bash_completion: $HOME/.config/bash_completion
+
     bash_profile: $HOME/.config/bash/dynrc/profile.bash
+
+    bash_bashrc_top: $HOME/.config/bash/dynrc/bashrc-top.bash
+    bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
+
+    bash_aliases: $HOME/.config/bash/dynrc/aliases.bash
 
 - name: Set up for trallnag
   ansible.builtin.import_tasks: setup.yaml

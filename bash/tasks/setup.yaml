@@ -4,10 +4,14 @@
 
     mkdir -p "{{ bash_completions_dir }}"
 
-    >> "{{ bash_aliases }}"
-    >> "{{ bash_bashrc }}"
     >> "{{ bash_completion }}"
+
     >> "{{ bash_profile }}"
+
+    >> "{{ bash_bashrc_top }}"
+    >> "{{ bash_bashrc }}"
+
+    >> "{{ bash_aliases }}"
   changed_when: false
 
 
@@ -21,10 +25,14 @@
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
 
-      export DOT_BASH_ALIASES="{{ bash_aliases }}"
-      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
       export DOT_BASH_COMPLETION="{{ bash_completion }}"
+
       export DOT_BASH_PROFILE="{{ bash_profile }}"
+
+      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
+      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
+
+      export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
 - name: "{{ user }} : shell : Add block to {{ shell_login_fish }}"
   blockinfile:
@@ -33,10 +41,14 @@
     block: |
       set -x DOT_BASH_COMPLETIONS_DIR "{{ bash_completions_dir }}"
 
-      set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
-      set -x DOT_BASH_BASHRC "{{ bash_bashrc }}"
       set -x DOT_BASH_COMPLETION "{{ bash_completion }}"
+
       set -x DOT_BASH_PROFILE "{{ bash_profile }}"
+
+      set -x DOT_BASH_BASHRC_TOP "{{ bash_bashrc_top }}"
+      set -x DOT_BASH_BASHRC "{{ bash_bashrc }}"
+
+      set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
 
 - name: "{{ user }} : shell : Add block to {{ shell_login_zsh }}"
   blockinfile:
@@ -45,10 +57,14 @@
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
 
-      export DOT_BASH_ALIASES="{{ bash_aliases }}"
-      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
       export DOT_BASH_COMPLETION="{{ bash_completion }}"
+
       export DOT_BASH_PROFILE="{{ bash_profile }}"
+
+      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
+      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
+
+      export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
 
 # ------------------------------------------------------------------------------
