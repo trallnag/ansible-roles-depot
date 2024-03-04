@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
-# Install Homebrew and dependencies.
-
 - name: Set fact
   ansible.builtin.set_fact:
-    # Used within the playbook to enable installation of Homebrew and usage of
-    # Homebrew to do stuff like installing formulae in the same run.
     homebrew_path: /home/linuxbrew/.linuxbrew/bin
 
-- name: Create a directories
+- name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
   loop:
-    - $HOME/.config/homebrew
-    - $HOME/.config/homebrew/scripts
     - $HOME/.local/bin
 
 - name: Install dependencies
@@ -28,110 +21,70 @@
 
 - name: Install
   ansible.builtin.shell: |
-    sudo -v || exit 1
-
     if ! test -d /home/linuxbrew/.linuxbrew; then
+      if ! sudo -n true; then
+        echo "Sudo requires password"
+        exit 1
+      fi
       unset INTERACTIVE && export NONINTERACTIVE=1
       bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      echo status=changed
     fi
-  changed_when: false
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
 
 # ------------------------------------------------------------------------------
-# Setup environment.
+# Environment.
 
-- name: "bash : Add block to bash_profile"
+
+- name: "bash : Add environment integration to bash_profile"
   blockinfile:
     path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: "fish : Add block to fish_login"
-  blockinfile:
-    path: "{{ fish_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-      set -x HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
-
-- name: "zsh : Add block to zsh_zprofile"
+- name: "zsh : Add environment integration to zsh_zprofile"
   blockinfile:
     path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: environment"
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-# ------------------------------------------------------------------------------
-# Setup completion.
 
-- name: "bash : Add block to bash_bashrc"
+# ------------------------------------------------------------------------------
+# Completion.
+
+
+- name: "bash : Add completion integration to bash_bashrc"
   blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
     block: |
-      if type brew &>/dev/null
-      then
-        if [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]]
-        then
+      if type brew &>/dev/null; then
+        if [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]]; then
           source "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
         else
-          for COMPLETION in "$HOMEBREW_PREFIX/etc/bash_completion.d/"*
-          do
+          for COMPLETION in "$HOMEBREW_PREFIX/etc/bash_completion.d/"*; do
             [[ -r "$COMPLETION" ]] && source "$COMPLETION"
           done
           unset COMPLETION
         fi
       fi
 
-- name: "fish : Add block to fish_interactive"
-  blockinfile:
-    path: "{{ fish_interactive }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      set -l dir $HOMEBREW_PREFIX/share/fish/completions \
-        && test -d $dir \
-        && not contains $dir $fish_complete_path \
-        && set -g fish_complete_path $fish_complete_path $dir
-
-      set -l dir $HOMEBREW_PREFIX/share/fish/vendor_completions.d \
-        && test -d $dir \
-        && not contains $dir $fish_complete_path \
-        && set -g fish_complete_path $fish_complete_path $dir
-
-- name: "zsh : Add init block to zsh_zshrc_compinit_pre"
+- name: "zsh : Add completion integration to zsh_zshrc_compinit_pre"
   blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
 
+
 # ------------------------------------------------------------------------------
 
-- name: Set fact
-  ansible.builtin.set_fact:
-    homebrew_unliked: $HOME/.config/homebrew/unlinked-formulae.txt
 
-- name: Create files and directories
-  ansible.builtin.shell: |
-    >> {{ homebrew_unliked }}
-  changed_when: false
-
-- name: Place $HOME/.config/homebrew/scripts/unlink.bash
-  ansible.builtin.template:
-    src: unlink.bash
-    dest: $HOME/.config/homebrew/scripts/unlink.bash
-    mode: u=rwx,g=r,o=r
-
-- name: Create symlink to $HOME/.config/homebrew/scripts/unlink.bash
-  ansible.builtin.file:
-    src: $HOME/.config/homebrew/scripts/unlink.bash
-    dest: $HOME/.local/bin/brew-unlink
-    state: link
-
-- import_tasks: formulae.yaml
-
-- name: Run unlink.bash
-  ansible.builtin.command: $HOME/.config/homebrew/scripts/unlink.bash
-  changed_when: false
+- name: Set fact used for deduplication
+  set_fact: "{{ role_name }}_done=1"

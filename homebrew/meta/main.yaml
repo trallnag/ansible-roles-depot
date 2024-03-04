@@ -1,4 +1,3 @@
 dependencies:
   - { role: bash, tags: [bash] }
-  - { role: fish, tags: [fish] }
   - { role: zsh, tags: [zsh] }
