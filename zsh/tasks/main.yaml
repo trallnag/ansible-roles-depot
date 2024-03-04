@@ -64,3 +64,10 @@
     chsh --shell /usr/bin/zsh trallnag
   changed_when: false
   become: true
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Set fact used for deduplication
+  set_fact: "{{ role_name }}_done=1"
