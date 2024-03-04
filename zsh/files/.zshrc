@@ -59,9 +59,6 @@ unsetopt \
     check_jobs \
 ;
 
-# Path for humans.
-alias path='echo -e ${PATH//:/\\n}'
-
 # Plugin zsh-completions.
 fpath=("$DOT_ZSH_PLUGINS_DIR/zsh-completions/src" $fpath)
 
@@ -72,8 +69,6 @@ fpath=("$DOT_ZSH_COMPLETIONS_DIR" $fpath)
 fpath=("$DOT_ZSH_FUNCTIONS_DIR" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
-
-alias c=clear
 
 
 # ------------------------------------------------------------------------------
@@ -349,6 +344,18 @@ source "$DOT_ZSH_ZSHRC_COMPINIT_POST"
 
 
 # ------------------------------------------------------------------------------
+# Aliases.
 
+
+# Misc.
+alias c='clear'
+
+# Aliases even with sudo.
+alias sudo='sudo '
+alias s='sudo '
+
+# Commands without sudo.
+alias apt='sudo apt'
+alias systemctl='sudo systemctl'
 
 source "$DOT_ZSH_ALIASES"
