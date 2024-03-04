@@ -17,3 +17,10 @@
   become: true
   vars:
     user: root
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Set fact used for deduplication
+  set_fact: "{{ role_name }}_done=1"
