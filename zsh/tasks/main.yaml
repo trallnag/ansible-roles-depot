@@ -62,4 +62,5 @@
   ansible.builtin.shell: |
     chsh --shell /usr/bin/zsh root
     chsh --shell /usr/bin/zsh trallnag
+  changed_when: false
   become: true
