@@ -1,20 +1,65 @@
-- name: Install
-  ansible.builtin.apt: { name: zsh }
+- name: Set directory facts
+  ansible.builtin.set_fact:
+    zsh_completions_dir: $HOME/.config/zsh/completions
+    zsh_dynrc_dir: $HOME/.config/zsh/dynrc
+    zsh_functions_dir: $HOME/.config/zsh/functions
+    zsh_plugins_dir: /srv/zsh/plugins
+    zsh_scripts_dir: $HOME/.config/zsh/scripts
+
+- name: Set file facts
+  ansible.builtin.set_fact:
+    zsh_zprofile: "{{ zsh_dynrc_dir }}/zprofile.zsh"
+
+    zsh_zshrc_interactive: "{{ zsh_dynrc_dir }}/zshrc-interactive.zsh"
+    zsh_zshrc: "{{ zsh_dynrc_dir }}/zshrc.zsh"
+    zsh_zshrc_compinit_pre: "{{ zsh_dynrc_dir }}/zshrc-compinit-pre.zsh"
+    zsh_zshrc_compinit_post: "{{ zsh_dynrc_dir }}/zshrc-compinit-post.zsh"
+
+    zsh_aliases: "{{ zsh_dynrc_dir }}/aliases.zsh"
+
+    zsh_zlogin: "{{ zsh_dynrc_dir }}/zlogin.zsh"
+
+    zsh_zlogout: "{{ zsh_dynrc_dir }}/zlogout.zsh"
+
+    zsh_p10k: "{{ zsh_dynrc_dir }}/p10k.zsh"
+
+- name: Create directory /srv/zsh/plugins
+  ansible.builtin.shell: mkdir -p /srv/zsh/plugins
+  changed_when: false
   become: true
 
-- import_tasks: facts.yaml
-
-- import_tasks: runcmds.yaml
-
-- import_tasks: modules.yaml
-
-- name: Place scripts
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ zsh_scripts }}/{{ item | basename }}"
-    mode: u=rwx,g=r,o=r
+- name: "Clone plugins"
+  ansible.builtin.git:
+    repo: "{{ item.src }}"
+    dest: "/srv/zsh/plugins/{{ item.name }}"
+    umask: "022"
     force: true
-  with_fileglob: scripts/*.zsh
-  changed_when: false
+    single_branch: true
+  become: true
+  loop:
+    - { name: ohmyzsh, src: https://github.com/ohmyzsh/ohmyzsh.git }
+    - { name: powerlevel10k, src: https://github.com/romkatv/powerlevel10k.git }
+    - { name: zsh-autosuggestions, src: https://github.com/zsh-users/zsh-autosuggestions.git }
+    - { name: zsh-completions, src: https://github.com/zsh-users/zsh-completions.git }
+    - { name: zsh-history-substring-search, src: https://github.com/zsh-users/zsh-history-substring-search.git }
+    - { name: zsh-syntax-highlighting, src: https://github.com/zsh-users/zsh-syntax-highlighting.git }
 
-- import_tasks: cron.yaml
+- name: Set up for trallnag
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: trallnag
+  become: true
+  vars:
+    user: trallnag
+
+- name: Set up for root
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: root
+  become: true
+  vars:
+    user: root
+
+- name: Set default shell
+  ansible.builtin.shell: |
+    chsh --shell /usr/bin/zsh root
+    chsh --shell /usr/bin/zsh trallnag
+  become: true

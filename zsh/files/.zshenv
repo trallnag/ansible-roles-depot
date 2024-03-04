@@ -1,6 +1,3 @@
-# ------------------------------------------------------------------------------
-# Fileinfo
-
 # This file '.zshenv' is sourced on all invocations of the shell, unless the
 # -f option is set. It should contain commands to set the command search path,
 # plus other important environment variables. '.zshenv' should not contain
@@ -17,12 +14,10 @@
 
 # Online man page regarding Zsh options: https://linux.die.net/man/1/zshoptions
 
+
 # ------------------------------------------------------------------------------
 
 
 # Specific to the global configuration provided by the Zsh installation on
 # Ubuntu. Check /etc/z* files for more information on this.
 skip_global_compinit=1
-
-
-# ------------------------------------------------------------------------------

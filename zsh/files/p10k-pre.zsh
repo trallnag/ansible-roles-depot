@@ -1,3 +1,5 @@
+typeset -g POWERLEVEL9K_CONTEXT_PREFIX=
+
 typeset -g POWERLEVEL9K_HOME_ICON=
 typeset -g POWERLEVEL9K_HOME_SUB_ICON=
 typeset -g POWERLEVEL9K_FOLDER_ICON=
@@ -8,15 +10,16 @@ typeset -g POWERLEVEL9K_ANACONDA_PREFIX='%fin '
 typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION=''
 
 typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
+  context
   dir
   vcs
   status
   command_execution_time
   background_jobs
-  direnv
-  virtualenv
-  anaconda
-  pyenv
+  # direnv
+  # virtualenv
+  # anaconda
+  # pyenv
 #  goenv
 #  nodenv
 #  nvm
@@ -37,14 +40,14 @@ typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
 #  phpenv
 #  scalaenv
   kubecontext
-  terraform
-  aws
-  azure
-  gcloud
-  ranger
-  nnn
-  xplr
-  midnight_commander
+#  terraform
+#  aws
+#  azure
+#  gcloud
+#  ranger
+#  nnn
+#  xplr
+#  midnight_commander
 )
 
 typeset -g POWERLEVEL9K_BOTTOM_LEFT_PROMPT_ELEMENTS=(
