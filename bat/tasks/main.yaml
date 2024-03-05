@@ -17,16 +17,23 @@
     src: bat.conf
     dest: "{{ bat_config_path }}"
 
-- name: "bash : Integration"
+- name: "bash : Add integration to bash_profile"
   blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export BAT_CONFIG_PATH={{ bat_config_path }}
 
-- name: "zsh : Integration"
+- name: "zsh : Add integration to zsh_zprofile"
   blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export BAT_CONFIG_PATH={{ bat_config_path }}
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Set fact used for deduplication
+  set_fact: "{{ role_name }}_done=1"

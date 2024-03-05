@@ -1,5 +1,7 @@
 # Ansible Role `bat`
 
-Installs Bat with Homebrew and configures it.
+Installs and configures bat.
+
+## References
 
 - <https://github.com/sharkdp/bat>
