@@ -333,7 +333,7 @@ source "$DOT_ZSH_ZSHRC_COMPINIT_PRE"
 
 
 autoload -Uz compinit bashcompinit
-compinit -d ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
+compinit -u -d ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
 bashcompinit
 
 
