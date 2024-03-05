@@ -1,32 +1,33 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    ripgrep_config_path: $HOME/.config/ripgrep/ripgrep.conf
+    ripgrep_config: $HOME/.config/ripgrep/ripgrep.conf
 
 - name: Install
   community.general.homebrew:
     name: ripgrep
     path: "{{ homebrew_path }}"
 
-- name: Create directory
-  ansible.builtin.shell: |
-    mkdir -p {{ ripgrep_config_path | dirname }}
-  changed_when: false
 
-- name: Place config
-  ansible.builtin.copy:
-    src: ripgrep.conf
-    dest: "{{ ripgrep_config_path }}"
+# ------------------------------------------------------------------------------
 
-- name: "bash : Integration"
-  blockinfile:
-    path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      export RIPGREP_CONFIG_PATH={{ ripgrep_config_path }}
 
-- name: "zsh : Integration"
-  blockinfile:
-    path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      export RIPGREP_CONFIG_PATH={{ ripgrep_config_path }}
+- name: Set up for trallnag
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: trallnag
+  become: true
+  vars:
+    user: trallnag
+
+- name: Set up for root
+  ansible.builtin.import_tasks: setup.yaml
+  become_user: root
+  become: true
+  vars:
+    user: root
+
+
+# ------------------------------------------------------------------------------
+
+
+- name: Set fact used for deduplication
+  set_fact: "{{ role_name }}_done=1"
