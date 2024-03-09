@@ -70,13 +70,6 @@
 # ------------------------------------------------------------------------------
 
 
-- name: "{{ user }} : Install packages with APT"
-  ansible.builtin.apt:
-    name:
-      - bash
-      - bash-completion
-      - git
-
 - name: "{{ user }} : Delete $HOME/.bash_profile"
   ansible.builtin.file:
     path: $HOME/.bash_profile

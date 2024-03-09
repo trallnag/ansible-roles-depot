@@ -13,6 +13,14 @@
 
     bash_aliases: $HOME/.config/bash/dynrc/aliases.bash
 
+- name: Install packages with APT
+  ansible.builtin.apt:
+    name:
+      - bash
+      - bash-completion
+      - git
+  become: true
+
 
 # ------------------------------------------------------------------------------
 
