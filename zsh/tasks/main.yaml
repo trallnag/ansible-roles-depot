@@ -44,6 +44,23 @@
     - { name: zsh-history-substring-search, src: https://github.com/zsh-users/zsh-history-substring-search.git }
     - { name: zsh-syntax-highlighting, src: https://github.com/zsh-users/zsh-syntax-highlighting.git }
 
+- name: Install packages with APT
+  ansible.builtin.apt:
+    name:
+      - zsh
+  become: true
+
+- name: Set default shell
+  ansible.builtin.shell: |
+    chsh --shell /usr/bin/zsh root
+    chsh --shell /usr/bin/zsh trallnag
+  changed_when: false
+  become: true
+
+
+# ------------------------------------------------------------------------------
+
+
 - name: Set up for trallnag
   ansible.builtin.import_tasks: setup.yaml
   become_user: trallnag
@@ -57,13 +74,6 @@
   become: true
   vars:
     user: root
-
-- name: Set default shell
-  ansible.builtin.shell: |
-    chsh --shell /usr/bin/zsh root
-    chsh --shell /usr/bin/zsh trallnag
-  changed_when: false
-  become: true
 
 
 # ------------------------------------------------------------------------------
