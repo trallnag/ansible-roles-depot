@@ -1,0 +1,35 @@
+- name: "{{ systemd_unit }} : Place"
+  ansible.builtin.copy:
+    content: "{{ systemd_unit_content }}"
+    dest: "/etc/systemd/system/{{ systemd_unit }}"
+    mode: u=rw,g=r,o=r
+  register: copy
+
+- name: "{{ systemd_unit }} : Verify"
+  ansible.builtin.command: systemd-analyze verify {{ systemd_unit }}
+  changed_when: false
+
+- name: "{{ systemd_unit }} : Reload daemon"
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: copy.changed
+
+- block:
+    - name: "{{ systemd_unit }} : Check activity"
+      ansible.builtin.command: systemctl is-active --quiet {{ systemd_unit }}
+      changed_when: false
+      failed_when: false
+      register: active
+
+    - name: "{{ systemd_unit }} : Start and enable"
+      ansible.builtin.systemd_service:
+        name: "{{ systemd_unit }}"
+        state: started
+        enabled: true
+
+    - name: "{{ systemd_unit }} : Restart"
+      ansible.builtin.systemd_service:
+        name: "{{ systemd_unit }}"
+        state: restarted
+      when: copy.changed and active.rc == 0
+  when: systemd_unit_activate

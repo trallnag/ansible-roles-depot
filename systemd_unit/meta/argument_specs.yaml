@@ -1,0 +1,23 @@
+argument_specs:
+  main:
+    short_description: Main entry point
+    options:
+      systemd_unit:
+        type: str
+        required: true
+        description: >-
+          Full name of the systemd unit.
+          For example "rclone-sync.timer".
+      systemd_unit_content:
+        type: str
+        required: true
+        description: >-
+          The systemd unit itself.
+          For example the content of the "rclone-sync.timer" file.
+      systemd_unit_activate:
+        type: bool
+        required: false
+        default: false
+        description: >-
+          Should the unit be activated? Activation means: Unmask, enable, start,
+          and restart if already active.
