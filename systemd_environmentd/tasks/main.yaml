@@ -1,0 +1,22 @@
+- name: Create directory $HOME/.config/environment.d
+  ansible.builtin.file:
+    state: directory
+    path: $HOME/.config/environment.d
+
+- name: Place skeleton $HOME/.config/environment.d/10-core.conf
+  ansible.builtin.blockinfile:
+    path: $HOME/.config/environment.d/10-core.conf
+    create: true
+    insertbefore: BOF
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      SYSTEMD_ENVIRONMENTD_ACTIVE=1
+
+- name: Validate environment can be generated
+  ansible.builtin.shell:
+    cmd: |
+      set -euo pipefail
+      environment=$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
+      if [[ "$environment" != "SYSTEMD_ENVIRONMENTD_ACTIVE=1" ]]; then exit 1; fi
+    executable: /usr/bin/bash
+  changed_when: false
