@@ -1,11 +1,14 @@
-- name: Create directory $HOME/.config/environment.d
+- ansible.builtin.set_fact:
+    systemd_environmentd_core: $HOME/.config/environment.d/10-core.conf
+
+- name: Create directory {{ systemd_environmentd_core | dirname }}
   ansible.builtin.file:
     state: directory
-    path: $HOME/.config/environment.d
+    path: "{{ systemd_environmentd_core | dirname }}"
 
-- name: Place skeleton $HOME/.config/environment.d/10-core.conf
+- name: Place skeleton {{ systemd_environmentd_core }}
   ansible.builtin.blockinfile:
-    path: $HOME/.config/environment.d/10-core.conf
+    path: "{{ systemd_environmentd_core }}"
     create: true
     insertbefore: BOF
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
