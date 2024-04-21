@@ -1,13 +1,16 @@
 - name: Set fact
   ansible.builtin.set_fact:
+    homebrew_user: brewmaster
     homebrew_path: /home/linuxbrew/.linuxbrew/bin
 
-- name: Create directories
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-  loop:
-    - $HOME/.local/bin
+- name: Add user 'homebrew_user'
+  ansible.builtin.user:
+    name: "{{ homebrew_user }}"
+    password: "{{ brewmaster_password | password_hash(hashtype='sha512', salt=brewmaster_password_salt) }}"
+    groups: sudo
+    append: true
+    shell: /usr/bin/bash
+  become: true
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -20,40 +23,83 @@
   become: true
 
 - name: Install
-  ansible.builtin.shell: |
-    if ! test -d /home/linuxbrew/.linuxbrew; then
-      if ! sudo -n true; then
-        echo "Sudo requires password"
-        exit 1
+  ansible.builtin.shell:
+    cmd: |
+      set -euo pipefail
+
+      sudo -u {{ homebrew_user }} /usr/bin/bash <<- "EOT"
+        if ! test -d "{{ homebrew_path }}"; then
+          if ! sudo -n true 2>/dev/null; then
+            printf '%s' "{{ brewmaster_password }}" | sudo -S whoami &>/dev/null
+          fi
+
+          if sudo -n true 2>/dev/null; then
+            unset INTERACTIVE && export NONINTERACTIVE=1
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo status=changed
+          else
+            echo "Sudo still not working."
+            exit 1
+          fi
+        fi
+      EOT
+    executable: /usr/bin/bash
+  register: homebrew_installation
+  changed_when: "'status=changed' in homebrew_installation.stdout"
+  become: true
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: For user 'homebrew_user', add integration block to $HOME/.profile
+  ansible.builtin.blockinfile:
+    path: /home/{{ homebrew_user }}/.profile
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+  become: true
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Add integration block to 'bash_profile'
+  ansible.builtin.blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+
+- name: Add integration block to 'bash_bashrc'
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
+    block: |
+      if type brew &>/dev/null; then
+        if [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]]; then
+          source "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+        else
+          for COMPLETION in "$HOMEBREW_PREFIX/etc/bash_completion.d/"*; do
+            [[ -r "$COMPLETION" ]] && source "$COMPLETION"
+          done
+          unset COMPLETION
+        fi
       fi
-      unset INTERACTIVE && export NONINTERACTIVE=1
-      bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      echo status=changed
-    fi
-  register: task
-  changed_when: "'status=changed' in task.stdout"
 
+- name: Add integration block to 'zsh_zprofile'
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-# ------------------------------------------------------------------------------
-
-
-- name: Set up for trallnag
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: trallnag
-  become: true
-  vars:
-    user: trallnag
-
-- name: Set up for root
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: root
-  become: true
-  vars:
-    user: root
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
+- name: Add integration block to 'zsh_zshrc_compinit_pre'
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_compinit_pre }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
+    block: |
+      FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
