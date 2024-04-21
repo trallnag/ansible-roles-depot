@@ -1,4 +1,4 @@
-source "$HOME/.config/shell/login.bash"
+source "{{ shell_bash_login }}"
 
 source "$DOT_BASH_PROFILE"
 

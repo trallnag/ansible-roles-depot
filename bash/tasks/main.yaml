@@ -1,19 +1,44 @@
-- name: Set facts
+- name: Set directory facts
   ansible.builtin.set_fact:
-    bash_executable: /usr/bin/bash
+    bash_dynrc_dir: $HOME/.config/bash
 
     bash_completions_dir: $HOME/.local/share/bash-completion/completions
 
+- name: Set file facts
+  ansible.builtin.set_fact:
     bash_completion: $HOME/.config/bash_completion
 
-    bash_profile: $HOME/.config/bash/dynrc/profile.bash
+    bash_profile: "{{ bash_dynrc_dir }}/profile.bash"
 
-    bash_bashrc_top: $HOME/.config/bash/dynrc/bashrc-top.bash
-    bash_bashrc: $HOME/.config/bash/dynrc/bashrc.bash
+    bash_bashrc_top: "{{ bash_dynrc_dir }}/bashrc-top.bash"
+    bash_bashrc: "{{ bash_dynrc_dir }}/bashrc.bash"
 
-    bash_aliases: $HOME/.config/bash/dynrc/aliases.bash
+    bash_aliases: "{{ bash_dynrc_dir }}/aliases.bash"
 
-- name: Install packages with APT
+- name: Create directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{ bash_dynrc_dir }}"
+    - "{{ bash_completions_dir }}"
+
+- name: Create files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ bash_completion }}"
+    - "{{ bash_profile }}"
+    - "{{ bash_bashrc_top }}"
+    - "{{ bash_bashrc }}"
+    - "{{ bash_aliases }}"
+
+- name: Install packages
   ansible.builtin.apt:
     name:
       - bash
@@ -21,27 +46,73 @@
       - git
   become: true
 
-
+#
 # ------------------------------------------------------------------------------
+#
 
+- name: Shell / Add block to {{ shell_bash_login }}
+  ansible.builtin.blockinfile:
+    path: "{{ shell_bash_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
 
-- name: Set up for trallnag
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: trallnag
-  become: true
-  vars:
-    user: trallnag
+      export DOT_BASH_COMPLETION="{{ bash_completion }}"
 
-- name: Set up for root
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: root
-  become: true
-  vars:
-    user: root
+      export DOT_BASH_PROFILE="{{ bash_profile }}"
 
+      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
+      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
 
+      export DOT_BASH_ALIASES="{{ bash_aliases }}"
+
+- name: Shell / Add block to {{ shell_fish_login }}
+  ansible.builtin.blockinfile:
+    path: "{{ shell_fish_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      set -x DOT_BASH_COMPLETIONS_DIR "{{ bash_completions_dir }}"
+
+      set -x DOT_BASH_COMPLETION "{{ bash_completion }}"
+
+      set -x DOT_BASH_PROFILE "{{ bash_profile }}"
+
+      set -x DOT_BASH_BASHRC_TOP "{{ bash_bashrc_top }}"
+      set -x DOT_BASH_BASHRC "{{ bash_bashrc }}"
+
+      set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
+
+- name: Shell / Add block to {{ shell_zsh_login }}
+  ansible.builtin.blockinfile:
+    path: "{{ shell_zsh_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
+
+      export DOT_BASH_COMPLETION="{{ bash_completion }}"
+
+      export DOT_BASH_PROFILE="{{ bash_profile }}"
+
+      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
+      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
+
+      export DOT_BASH_ALIASES="{{ bash_aliases }}"
+
+#
 # ------------------------------------------------------------------------------
+#
 
+- name: Delete $HOME/.bash_profile
+  ansible.builtin.file:
+    path: $HOME/.bash_profile
+    state: absent
 
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
+- name: Render and place files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "$HOME/{{ item }}"
+    mode: u=rw,g=,o=
+  loop:
+    - .profile
+    - .bashrc
+    - .bash_logout
