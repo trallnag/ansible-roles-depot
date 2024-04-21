@@ -9,15 +9,15 @@
 
 # Online man page regarding Zsh options: https://linux.die.net/man/1/zshoptions
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZSHRC_INTERACTIVE"
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -29,9 +29,9 @@ fi
 source "$DOT_ZSH_PLUGINS_DIR/powerlevel10k/powerlevel10k.zsh-theme"
 source "$ZDOTDIR/.p10k.zsh"
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 # Job Control.
 setopt LONG_LIST_JOBS
@@ -70,9 +70,10 @@ fpath=("$DOT_ZSH_FUNCTIONS_DIR" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
-
+#
 # ------------------------------------------------------------------------------
 # History
+#
 
 # Loaded into memory from the history file.
 export HISTSIZE=987654
@@ -102,13 +103,14 @@ export HISTORY_IGNORE="(history(| *)|cd(| *)|ls(| *))|mkdir(| *))"
 
 alias history='fc -il 1'
 
+#
 # ------------------------------------------------------------------------------
 # Completion
 #
 # This block is based on:
 #   - f1e24d3 https://github.com/sorin-ionescu/prezto/blob/master/modules/completion/init.zsh
 #   - 02d07f3 https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/completion.zsh
-
+#
 
 zmodload -i zsh/complist
 
@@ -216,10 +218,10 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
-
+#
 # ------------------------------------------------------------------------------
 # Correction
-
+#
 
 setopt correct
 
@@ -251,10 +253,10 @@ alias rsync='noglob rsync'
 alias scp='noglob scp'
 alias sftp='noglob sftp'
 
-
+#
 # ------------------------------------------------------------------------------
 # zsh-syntax-highlighting
-
+#
 
 source "$DOT_ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
@@ -266,13 +268,13 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 ZSH_HIGHLIGHT_MAXLENGTH=512
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
 
-
+#
 # ------------------------------------------------------------------------------
 # zsh-history-substring-search
 #
 # If you want to use zsh-syntax-highlighting along with this script, then make
 # sure that you load it before you load this script.
-
+#
 
 source "$DOT_ZSH_PLUGINS_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
@@ -286,13 +288,13 @@ if [[ -n "$terminfo[kcud1]" ]]; then
   bindkey -M viins "$terminfo[kcud1]" history-substring-search-down
 fi
 
-
+#
 # ------------------------------------------------------------------------------
 # zsh-autosuggestions
 #
 # Must be setup after both zsh-syntax-highlighting and
 # zsh-history-substring-search to work properly.
-
+#
 
 source "$DOT_ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -306,24 +308,24 @@ ZSH_AUTOSUGGEST_COMPLETION_IGNORE="?(#c100,)|*/mnt/c/*"
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-
+#
 # ------------------------------------------------------------------------------
 # ohmyzsh
+#
 
+source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/functions.zsh"
+source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/key-bindings.zsh"
+source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/termsupport.zsh"
 
-source "/srv/zsh/plugins/ohmyzsh/lib/functions.zsh"
-source "/srv/zsh/plugins/ohmyzsh/lib/key-bindings.zsh"
-source "/srv/zsh/plugins/ohmyzsh/lib/termsupport.zsh"
-
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZSHRC"
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZSHRC_COMPINIT_PRE"
 
@@ -336,26 +338,17 @@ autoload -Uz compinit bashcompinit
 compinit -u -d ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
 bashcompinit
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZSHRC_COMPINIT_POST"
 
-
+#
 # ------------------------------------------------------------------------------
 # Aliases.
+#
 
-
-# Misc.
-alias c='clear'
-
-# Aliases even with sudo.
-alias sudo='sudo '
-alias s='sudo '
-
-# Commands without sudo.
-alias apt='sudo apt'
-alias systemctl='sudo systemctl'
+alias rmi='rm -I'
 
 source "$DOT_ZSH_ALIASES"

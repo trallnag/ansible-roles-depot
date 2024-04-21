@@ -7,7 +7,8 @@
 
 # Online man page: https://linux.die.net/man/1/zshoptions
 
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZLOGOUT"

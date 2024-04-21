@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
 # Logging utilities.
 _log() { printf '%b[%s] %s%b\n' "$3" "$2" "$1" '\033[0m' >&2; }
@@ -28,4 +28,4 @@ files=(
 
 compile $files
 
-compile $HOME/.config/**/*.zsh
+compile $HOME/.config/zsh/*.zsh

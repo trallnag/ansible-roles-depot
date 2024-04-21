@@ -16,22 +16,22 @@
 
 # Online man page: https://linux.die.net/man/1/zshoptions
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 {
   sleep 3
 
-  nice -n 19 $ZDOTDIR/scripts/zcompile-zcompdump.zsh > /dev/null 2>&1
+  nice -n 19 $DOT_ZSH_SCRIPTS_DIR/zcompile-zcompdump.zsh > /dev/null 2>&1
 
   sleep 1
 
-  nice -n 19 $ZDOTDIR/scripts/zcompile-stuff.zsh > /dev/null 2>&1
+  nice -n 19 $DOT_ZSH_SCRIPTS_DIR/zcompile-stuff.zsh > /dev/null 2>&1
 } &!
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZLOGIN"

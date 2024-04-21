@@ -1,10 +1,11 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
-    zsh_completions_dir: $HOME/.config/zsh/completions
     zsh_dynrc_dir: $HOME/.config/zsh/dynrc
-    zsh_functions_dir: $HOME/.config/zsh/functions
-    zsh_plugins_dir: /srv/zsh/plugins
-    zsh_scripts_dir: $HOME/.config/zsh/scripts
+
+    zsh_completions_dir: $HOME/.local/share/zsh/completions
+    zsh_functions_dir: $HOME/.local/share/zsh/functions
+    zsh_plugins_dir: $HOME/.local/share/zsh/plugins
+    zsh_scripts_dir: $HOME/.local/share/zsh/scripts
 
 - name: Set file facts
   ansible.builtin.set_fact:
@@ -23,19 +24,56 @@
 
     zsh_p10k: "{{ zsh_dynrc_dir }}/p10k.zsh"
 
-- name: Create directory /srv/zsh/plugins
-  ansible.builtin.shell: mkdir -p /srv/zsh/plugins
-  changed_when: false
+- name: Create directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    mode: u=rwx,g=,o=
+  loop:
+    - $HOME/.cache/zsh
+    - $HOME/.config/zsh
+
+    - "{{ zsh_dynrc_dir }}"
+    - "{{ zsh_completions_dir }}"
+    - "{{ zsh_functions_dir }}"
+    - "{{ zsh_plugins_dir }}"
+    - "{{ zsh_scripts_dir }}"
+
+- name: Create files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ zsh_zprofile }}"
+
+    - "{{ zsh_zshrc_interactive }}"
+    - "{{ zsh_zshrc }}"
+    - "{{ zsh_zshrc_compinit_pre }}"
+    - "{{ zsh_zshrc_compinit_post }}"
+
+    - "{{ zsh_aliases }}"
+
+    - "{{ zsh_zlogin }}"
+
+    - "{{ zsh_zlogout }}"
+
+    - "{{ zsh_p10k }}"
+
+- name: Install zsh
+  ansible.builtin.apt:
+    name: zsh
   become: true
 
-- name: "Clone plugins"
+- name: Clone plugins
   ansible.builtin.git:
     repo: "{{ item.src }}"
-    dest: "/srv/zsh/plugins/{{ item.name }}"
-    umask: "022"
+    dest: "{{ zsh_plugins_dir }}/{{ item.name }}"
+    umask: "077"
     force: true
     single_branch: true
-  become: true
   loop:
     - { name: ohmyzsh, src: https://github.com/ohmyzsh/ohmyzsh.git }
     - { name: powerlevel10k, src: https://github.com/romkatv/powerlevel10k.git }
@@ -44,40 +82,144 @@
     - { name: zsh-history-substring-search, src: https://github.com/zsh-users/zsh-history-substring-search.git }
     - { name: zsh-syntax-highlighting, src: https://github.com/zsh-users/zsh-syntax-highlighting.git }
 
-- name: Install packages with APT
-  ansible.builtin.apt:
-    name:
-      - zsh
-  become: true
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Shell / Add block to {{ shell_bash_login }}
+  blockinfile:
+    path: "{{ shell_bash_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
+
+      export DOT_ZSH_COMPLETIONS_DIR="{{ zsh_completions_dir }}"
+      export DOT_ZSH_FUNCTIONS_DIR="{{ zsh_functions_dir }}"
+      export DOT_ZSH_PLUGINS_DIR="{{ zsh_plugins_dir }}"
+      export DOT_ZSH_SCRIPTS_DIR="{{ zsh_scripts_dir }}"
+
+      export DOT_ZSH_ZPROFILE="{{ zsh_zprofile }}"
+
+      export DOT_ZSH_ZSHRC_INTERACTIVE="{{ zsh_zshrc_interactive }}"
+      export DOT_ZSH_ZSHRC="{{ zsh_zshrc }}"
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE="{{ zsh_zshrc_compinit_pre }}"
+      export DOT_ZSH_ZSHRC_COMPINIT_POST="{{ zsh_zshrc_compinit_post }}"
+
+      export DOT_ZSH_ALIASES="{{ zsh_aliases }}"
+
+      export DOT_ZSH_ZLOGIN="{{ zsh_zlogin }}"
+
+      export DOT_ZSH_ZLOGOUT="{{ zsh_zlogout }}"
+
+      export DOT_ZSH_P10K="{{ zsh_p10k }}"
+
+- name: Shell / Add block to {{ shell_fish_login }}
+  blockinfile:
+    path: "{{ shell_fish_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      set -x DOT_ZSH_DYNRC_DIR "{{ zsh_dynrc_dir }}"
+
+      set -x DOT_ZSH_COMPLETIONS_DIR "{{ zsh_completions_dir }}"
+      set -x DOT_ZSH_FUNCTIONS_DIR "{{ zsh_functions_dir }}"
+      set -x DOT_ZSH_PLUGINS_DIR "{{ zsh_plugins_dir }}"
+      set -x DOT_ZSH_SCRIPTS_DIR "{{ zsh_scripts_dir }}"
+
+      set -x DOT_ZSH_ZPROFILE "{{ zsh_zprofile }}"
+
+      set -x DOT_ZSH_ZSHRC_INTERACTIVE "{{ zsh_zshrc_interactive }}"
+      set -x DOT_ZSH_ZSHRC "{{ zsh_zshrc }}"
+      set -x DOT_ZSH_ZSHRC_COMPINIT_PRE "{{ zsh_zshrc_compinit_pre }}"
+      set -x DOT_ZSH_ZSHRC_COMPINIT_POST "{{ zsh_zshrc_compinit_post }}"
+
+      set -x DOT_ZSH_ALIASES "{{ zsh_aliases }}"
+
+      set -x DOT_ZSH_ZLOGIN "{{ zsh_zlogin }}"
+
+      set -x DOT_ZSH_ZLOGOUT "{{ zsh_zlogout }}"
+
+      set -x DOT_ZSH_P10K "{{ zsh_p10k }}"
+
+- name: Shell / Add block to {{ shell_zsh_login }}
+  blockinfile:
+    path: "{{ shell_zsh_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
+
+      export DOT_ZSH_COMPLETIONS_DIR="{{ zsh_completions_dir }}"
+      export DOT_ZSH_FUNCTIONS_DIR="{{ zsh_functions_dir }}"
+      export DOT_ZSH_PLUGINS_DIR="{{ zsh_plugins_dir }}"
+      export DOT_ZSH_SCRIPTS_DIR="{{ zsh_scripts_dir }}"
+
+      export DOT_ZSH_ZPROFILE="{{ zsh_zprofile }}"
+
+      export DOT_ZSH_ZSHRC_INTERACTIVE="{{ zsh_zshrc_interactive }}"
+      export DOT_ZSH_ZSHRC="{{ zsh_zshrc }}"
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE="{{ zsh_zshrc_compinit_pre }}"
+      export DOT_ZSH_ZSHRC_COMPINIT_POST="{{ zsh_zshrc_compinit_post }}"
+
+      export DOT_ZSH_ALIASES="{{ zsh_aliases }}"
+
+      export DOT_ZSH_ZLOGIN="{{ zsh_zlogin }}"
+
+      export DOT_ZSH_ZLOGOUT="{{ zsh_zlogout }}"
+
+      export DOT_ZSH_P10K="{{ zsh_p10k }}"
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Delete files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - $HOME/.zshrc
+    - $HOME/.zsh_history
+    - $HOME/.zcompdump
+
+- name: Place $HOME/.zshenv
+  ansible.builtin.copy:
+    dest: $HOME/.zshenv
+    content: ZDOTDIR=$HOME/.config/zsh
+    mode: u=rw,g=,o=
+
+- name: Render and place files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME/.config/zsh/
+    mode: u=rw,g=,o=
+  loop:
+    - .zprofile
+
+- name: Place files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: $HOME/.config/zsh/
+    mode: u=rw,g=,o=
+  loop:
+    - .zshenv
+    - .zshrc
+    - .zlogin
+    - .zlogout
+
+    - .p10k.zsh
+    - p10k-pre.zsh
+    - p10k-post.zsh
+
+- name: Place scripts
+  ansible.builtin.copy:
+    src: "scripts/{{ item }}"
+    dest: "{{ zsh_scripts_dir }}/"
+    mode: u=rwx,g=,o=
+  loop:
+    - zcompile-stuff.zsh
+    - zcompile-zcompdump.zsh
 
 - name: Set default shell
-  ansible.builtin.shell: |
-    chsh --shell /usr/bin/zsh root
-    chsh --shell /usr/bin/zsh trallnag
-  changed_when: false
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    shell: /bin/zsh
   become: true
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set up for trallnag
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: trallnag
-  become: true
-  vars:
-    user: trallnag
-
-- name: Set up for root
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: root
-  become: true
-  vars:
-    user: root
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"

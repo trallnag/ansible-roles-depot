@@ -14,15 +14,15 @@
 
 # Online man page regarding Zsh options: https://linux.die.net/man/1/zshoptions
 
-
+#
 # ------------------------------------------------------------------------------
+#
 
+source "{{ shell_zsh_login }}"
 
-source "$HOME/.config/shell/login.zsh"
-
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 # Ensure arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path
@@ -33,8 +33,8 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-
+#
 # ------------------------------------------------------------------------------
-
+#
 
 source "$DOT_ZSH_ZPROFILE"
