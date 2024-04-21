@@ -1,34 +1,38 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
-    shell_login_bash: $HOME/.config/shell/login.bash
-    shell_login_fish: $HOME/.config/shell/login.fish
-    shell_login_zsh: $HOME/.config/shell/login.zsh
+    shell_bash_login: $HOME/.config/shell/login.bash
+    shell_fish_login: $HOME/.config/shell/login.fish
+    shell_zsh_login: $HOME/.config/shell/login.zsh
 
-- name: Create rc files
-  ansible.builtin.shell: |
-    mkdir -p $HOME/.config/shell
-    >> {{ shell_login_bash }}
-    >> {{ shell_login_fish }}
-    >> {{ shell_login_zsh }}
-  changed_when: false
+- name: Touch files
+  ansible.builtin.file:
+    path: /etc/foo.conf
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ shell_bash_login }}"
+    - "{{ shell_fish_login }}"
+    - "{{ shell_zsh_login }}"
 
-- name: Add block to shell_login_bash
+- name: Add block to {{ shell_bash_login }}
   ansible.builtin.blockinfile:
-    path: "{{ shell_login_bash }}"
+    path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.bash') }}"
 
-- name: Add block to shell_login_fish
+- name: Add block to {{ shell_fish_login }}
   ansible.builtin.blockinfile:
-    path: "{{ shell_login_fish }}"
+    path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.fish') }}"
 
-- name: Add block to shell_login_zsh
+- name: Add block to {{ shell_zsh_login }}
   ansible.builtin.blockinfile:
-    path: "{{ shell_login_zsh }}"
+    path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.zsh') }}"

@@ -28,6 +28,6 @@ export VISUAL=nano
 export PAGER=less
 
 # This.
-export DOT_SHELL_LOGIN_BASH="{{ shell_login_bash }}"
-export DOT_SHELL_LOGIN_FISH="{{ shell_login_fish }}"
-export DOT_SHELL_LOGIN_ZSH="{{ shell_login_zsh }}"
+export DOT_SHELL_BASH_LOGIN="{{ shell_bash_login }}"
+export DOT_SHELL_FISH_LOGIN="{{ shell_fish_login }}"
+export DOT_SHELL_ZSH_LOGIN="{{ shell_zsh_login }}"
