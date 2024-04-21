@@ -2,13 +2,13 @@
   community.general.homebrew:
     name:
       - age # https://github.com/FiloSottile/age
+      - awscli
       - fd # https://github.com/sharkdp/fd
       - gh
       - go # https://go.dev/doc/devel/release
       - go-task # https://taskfile.dev
       - golangci-lint # https://golangci-lint.run/
       - helm
-      - hugo
       - just # https://github.com/casey/just
       - kubectx
       - kubernetes-cli
@@ -18,10 +18,21 @@
       - watchexec # https://github.com/watchexec/watchexec
       - zellij
     path: "{{ homebrew_path }}"
+  become_user: brewmaster
+  become: true
 
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
+- name: Create symbolic links
+  ansible.builtin.file:
+    src: "{{ homebrew_path }}/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+  loop:
+    - aws
+    - helm
+    - kubectl
+    - shellcheck
+    - shfmt
+  become: true
