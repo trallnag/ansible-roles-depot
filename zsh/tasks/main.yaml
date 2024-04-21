@@ -67,13 +67,14 @@
     name: zsh
   become: true
 
-- name: Clone plugins
+- name: Clone plugins # noqa: latest
   ansible.builtin.git:
     repo: "{{ item.src }}"
     dest: "{{ zsh_plugins_dir }}/{{ item.name }}"
     umask: "077"
     force: true
     single_branch: true
+    update: true
   loop:
     - { name: ohmyzsh, src: https://github.com/ohmyzsh/ohmyzsh.git }
     - { name: powerlevel10k, src: https://github.com/romkatv/powerlevel10k.git }

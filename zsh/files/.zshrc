@@ -349,6 +349,9 @@ source "$DOT_ZSH_ZSHRC_COMPINIT_POST"
 # Aliases.
 #
 
+# Path for humans.
+alias path='echo -e ${PATH//:/\\n}'
+
 alias rmi='rm -I'
 
 source "$DOT_ZSH_ALIASES"
