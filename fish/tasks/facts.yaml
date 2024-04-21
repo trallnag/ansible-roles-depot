@@ -14,23 +14,23 @@
 
 - name: "shell : Add block to shell_login_bash"
   blockinfile:
-    path: "{{ shell_login_bash }}"
+    path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export DOT_FISH_LOGIN={{ fish_login }}
       export DOT_FISH_INTERACTIVE={{ fish_interactive }}
 
-- name: "shell : Add block to shell_login_fish"
+- name: "shell : Add block to shell_fish_login"
   blockinfile:
-    path: "{{ shell_login_fish }}"
+    path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       set -x DOT_FISH_LOGIN {{ fish_login }}
       set -x DOT_FISH_INTERACTIVE {{ fish_interactive }}
 
-- name: "shell : Add block to shell_login_zsh"
+- name: "shell : Add block to shell_zsh_login"
   blockinfile:
-    path: "{{ shell_login_zsh }}"
+    path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export DOT_FISH_LOGIN={{ fish_login }}
