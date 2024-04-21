@@ -1,30 +1,49 @@
-- name: Install dependencies
+- name: Set facts
+  ansible.builtin.set_fact:
+    gnupg_pinentry_program: "/mnt/c/Program Files/Git/usr/bin/pinentry.exe"
+
+- name: Ensure pinentry.exe exists
+  ansible.builtin.command: stat "{{ gnupg_pinentry_program }}"
+  changed_when: false
+
+- name: Install packages
   ansible.builtin.apt:
     name:
       - pinentry-curses
       - pinentry-gnome3
   become: true
 
-- name: Place $HOME/.gnupg/gpg-agent.conf
-  ansible.builtin.copy:
-    src: gpg-agent.conf
-    dest: $HOME/.gnupg/gpg-agent.conf
+- name: Render and place files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME/.gnupg/
+    mode: u=rw,g=,o=
+  loop:
+    - gpg-agent.conf
+    - gpg.conf
+  register: files
 
-- name: Place $HOME/.gnupg/gpg.conf
-  ansible.builtin.copy:
-    src: gpg.conf
-    dest: $HOME/.gnupg/gpg.conf
-
-- name: "bash : Add block to bash_profile"
-  blockinfile:
-    path: "{{ bash_profile }}"
+- name: Add integration block to {{ bash_bashrc_top }}
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc_top }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export GPG_TTY=$(tty)
+  register: bash_bashrc_top
 
-- name: "zsh : Add block to zsh_zprofile"
-  blockinfile:
-    path: "{{ zsh_zprofile }}"
+
+- name: Add integration block to {{ zsh_zshrc_interactive }}
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_interactive }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export GPG_TTY=$(tty)
+  register: zsh_zshrc_interactive
+
+- name: Reload GPG agent
+  when: >-
+    files | json_query('results[*].changed') is any
+    or bash_bashrc_top.changed
+    or zsh_zshrc_interactive.changed
+  ansible.builtin.command: gpg-connect-agent reloadagent /bye
+  changed_when: false
