@@ -1,11 +1,10 @@
 - name: Set fact
   ansible.builtin.set_fact:
-    homebrew_user: brewmaster
     homebrew_path: /home/linuxbrew/.linuxbrew/bin
 
-- name: Add user 'homebrew_user'
+- name: Add user brewmaster
   ansible.builtin.user:
-    name: "{{ homebrew_user }}"
+    name: brewmaster
     password: "{{ brewmaster_password | password_hash(hashtype='sha512', salt=brewmaster_password_salt) }}"
     groups: sudo
     append: true
@@ -27,7 +26,7 @@
     cmd: |
       set -euo pipefail
 
-      sudo -u {{ homebrew_user }} /usr/bin/bash <<- "EOT"
+      sudo -u brewmaster /usr/bin/bash <<- "EOT"
         if ! test -d "{{ homebrew_path }}"; then
           if ! sudo -n true 2>/dev/null; then
             printf '%s' "{{ brewmaster_password }}" | sudo -S whoami &>/dev/null
@@ -52,9 +51,9 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: For user 'homebrew_user', add integration block to $HOME/.profile
+- name: For user brewmaster, add integration block to $HOME/.profile
   ansible.builtin.blockinfile:
-    path: /home/{{ homebrew_user }}/.profile
+    path: /home/brewmaster/.profile
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -65,7 +64,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Add integration block to 'bash_profile'
+- name: Add integration block to { bash_profile }
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -73,7 +72,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add integration block to 'bash_bashrc'
+- name: Add integration block to { bash_bashrc }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
@@ -89,7 +88,7 @@
         fi
       fi
 
-- name: Add integration block to 'zsh_zprofile'
+- name: Add integration block to { zsh_zprofile }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -97,7 +96,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add integration block to 'zsh_zshrc_compinit_pre'
+- name: Add integration block to { zsh_zshrc_compinit_pre }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
