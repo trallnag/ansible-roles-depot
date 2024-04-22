@@ -4,9 +4,15 @@
     shell_fish_login: $HOME/.config/shell/login.fish
     shell_zsh_login: $HOME/.config/shell/login.zsh
 
+- name: Create directory $HOME/.config/shell
+  ansible.builtin.file:
+    state: directory
+    path: $HOME/.config/shell
+    mode: u=rwx,g=,o=
+
 - name: Touch files
   ansible.builtin.file:
-    path: /etc/foo.conf
+    path: "{{ item }}"
     state: touch
     mode: u=rw,g=,o=
     modification_time: preserve
