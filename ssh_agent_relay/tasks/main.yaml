@@ -1,0 +1,40 @@
+- name: Install socat
+  ansible.builtin.apt:
+    name: socat
+  become: true
+
+- name: Get full path to npiperelay.exe
+  ansible.builtin.command: which npiperelay.exe
+  changed_when: false
+  register: npiperelay
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    ssh_agent_relay_socket_dir: /run/user/{{ ansible_facts.user_id }}
+    ssh_agent_relay_socket: /run/user/{{ ansible_facts.user_id }}/ssh-agent-relay.sock
+    npiperelay_exe: "{{ npiperelay.stdout }}"
+
+- ansible.builtin.include_role:
+    name: systemd_unit
+    apply:
+      become: true
+  vars:
+    systemd_unit: "{{ item }}"
+    systemd_unit_content: "{{ lookup('ansible.builtin.template', item) }}"
+    systemd_unit_activate: true
+  loop:
+    - ssh-agent-relay.service
+
+- name: Add integration block to {{ shell_bash_login }}
+  ansible.builtin.blockinfile:
+    path: "{{ shell_bash_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export SSH_AUTH_SOCK="{{ ssh_agent_relay_socket }}"
+
+- name: Add integration block to {{ shell_zsh_login }}
+  ansible.builtin.blockinfile:
+    path: "{{ shell_zsh_login }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export SSH_AUTH_SOCK="{{ ssh_agent_relay_socket }}"
