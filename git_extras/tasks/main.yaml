@@ -1,16 +1,8 @@
-- name: Install
-  community.general.homebrew:
+- name: Install with APT
+  ansible.builtin.apt:
     name: git-extras
-    path: "{{ homebrew_path }}"
-
-# Necessary due to caveat in formula. For some reason completion for Zsh is
-# not being setup automatically. For Bash it works fine out of the box.
-- name: "zsh : Add block to zsh_zshrc_compinit_post"
-  ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_compinit_post }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      source /home/linuxbrew/.linuxbrew/opt/git-extras/share/git-extras/git-extras-completion.zsh
+    state: present
+  become: true
 
 - name: Set facts
   ansible.builtin.set_fact:
@@ -18,20 +10,20 @@
       - word: gitb
         subst: git browse
 
-- name: "bash : Integration : Aliases"
-  blockinfile:
-    path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+- name: Add block to { bash_aliases }
+  ansible.builtin.blockinfile:
+    path: "{{ bash_aliases }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}
-      alias {{ alias.word }}="{{ alias.subst }}"
+      alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
 
-- name: "zsh : Integration : Aliases"
-  blockinfile:
-    path: "{{ zsh_zshrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: aliases"
+- name: Add block to { zsh_aliases }
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_aliases }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}
-      alias {{ alias.word }}="{{ alias.subst }}"
+      alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
