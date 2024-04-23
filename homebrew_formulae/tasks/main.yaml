@@ -21,10 +21,10 @@
   become_user: brewmaster
   become: true
 
-- name: Create symbolic links
+- name: Link to /usr/local/bin
   ansible.builtin.file:
     src: "{{ homebrew_path }}/{{ item }}"
-    dest: /usr/bin/{{ item }}
+    dest: /usr/local/bin/{{ item }}
     state: link
     owner: root
     group: root
