@@ -1,4 +1,4 @@
 dependencies:
-  - { role: bash, tags: [bash], when: bash_done is not defined }
-  - { role: homebrew, tags: [homebrew], when: homebrew_done is not defined }
-  - { role: zsh, tags: [zsh], when: zsh_done is not defined }
+  - { role: bash, tags: [bash] }
+  - { role: homebrew, tags: [homebrew] }
+  - { role: zsh, tags: [zsh] }

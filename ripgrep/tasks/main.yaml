@@ -6,28 +6,42 @@
   community.general.homebrew:
     name: ripgrep
     path: "{{ homebrew_path }}"
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set up for trallnag
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: trallnag
+  become_user: brewmaster
   become: true
-  vars:
-    user: trallnag
 
-- name: Set up for root
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: root
+- name: Link to /usr/local/bin
+  ansible.builtin.file:
+    src: "{{ homebrew_path }}/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
   become: true
-  vars:
-    user: root
+  loop:
+    - rg
 
+- name: Create directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ripgrep_config | dirname }}"
+    mode: u=rwx,g=,o=
 
-# ------------------------------------------------------------------------------
+- name: Place config
+  ansible.builtin.copy:
+    src: ripgrep.conf
+    dest: "{{ ripgrep_config }}"
 
+- name: Add block to { bash_profile }
+  ansible.builtin.blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
 
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
+- name: Add block to { zsh_zprofile }
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
