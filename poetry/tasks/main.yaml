@@ -4,55 +4,70 @@
   ansible.builtin.package:
     name:
       - python3-venv
+      - python-is-python3
   become: true
 
 - name: Fetch and run Poetry installer script
-  shell: curl -sSL https://install.python-poetry.org | python
-  register: task
-  changed_when: "'already installed' not in task.stdout"
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
 
-- name: "bash : Place completion file"
-  ansible.builtin.shell: |
-    file={{ bash_completions_dir }}/poetry.bash-completion
-
-    >> $file
-
-    hash_before=$(cat $file | sha256sum)
-
-    $HOME/.local/bin/poetry completions bash > $file
-
-    hash_after=$(cat $file | sha256sum)
-
-    if [[ $hash_before != $hash_after ]]; then
-      echo status=changed
-    fi
-  args: { executable: "{{ bash_executable }}" }
+      if ! command -v poetry; then
+        curl -sSL https://install.python-poetry.org | python
+        echo status=changed
+      fi
+    executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
 
-- name: "zsh : Place completion file"
-  ansible.builtin.shell: |
-    file={{ zsh_completions_dir }}/_poetry
+- name: Place completion file for Bash
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
 
-    >> $file
+      file={{ bash_completions_dir }}/poetry.bash-completion
 
-    hash_before=$(cat $file | sha256sum)
+      >> $file
 
-    $HOME/.local/bin/poetry completions zsh > $file
+      hash_before=$(cat $file | sha256sum)
 
-    hash_after=$(cat $file | sha256sum)
+      $HOME/.local/bin/poetry completions bash > $file
 
-    if [ $hash_before != $hash_after ]; then
-      echo status=changed
+      hash_after=$(cat $file | sha256sum)
 
-      if command -v zsh; then
-        zcd=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
-
-        rm -rf $zcd
-        zsh -c "autoload -Uz compinit bashcompinit && compinit -d $zcd && bashcompinit"
-        zsh -c "zcompile $zcd"
+      if [[ $hash_before != $hash_after ]]; then
+        echo status=changed
       fi
-    fi
-  args: { executable: "{{ bash_executable }}" }
+    executable: /usr/bin/bash
+  register: task
+  changed_when: '"status=changed" in task.stdout'
+
+- name: Place completion file for Zsh
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
+
+      file={{ zsh_completions_dir }}/_poetry
+
+      >> $file
+
+      hash_before=$(cat $file | sha256sum)
+
+      $HOME/.local/bin/poetry completions zsh > $file
+
+      hash_after=$(cat $file | sha256sum)
+
+      if [ $hash_before != $hash_after ]; then
+        echo status=changed
+
+        if command -v zsh; then
+          zcd=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
+
+          rm -rf $zcd
+          zsh -c "autoload -Uz compinit bashcompinit && compinit -d $zcd && bashcompinit"
+          zsh -c "zcompile $zcd"
+        fi
+      fi
+    executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
