@@ -2,6 +2,20 @@
   community.general.homebrew:
     name: eza
     path: "{{ homebrew_path }}"
+  become_user: brewmaster
+  become: true
+
+- name: Link to /usr/local/bin
+  ansible.builtin.file:
+    src: "{{ homebrew_path }}/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+  loop:
+    - eza
+  become: true
 
 - name: Set facts
   ansible.builtin.set_fact:
@@ -21,27 +35,20 @@
       - word: et
         subst: eza -aT --group-directories-first
 
+- name: Add block to { bash_aliases }
+  ansible.builtin.blockinfile:
+    path: "{{ bash_aliases }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in eza_aliases %}
+      alias {{ alias.word }}='{{ alias.subst }}'
+      {% endfor %}
 
-# ------------------------------------------------------------------------------
-
-
-- name: Set up for trallnag
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: trallnag
-  become: true
-  vars:
-    user: trallnag
-
-- name: Set up for root
-  ansible.builtin.import_tasks: setup.yaml
-  become_user: root
-  become: true
-  vars:
-    user: root
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
+- name: Add integration to { zsh_aliases }
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_aliases }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      {% for alias in eza_aliases %}
+      alias {{ alias.word }}='{{ alias.subst }}'
+      {% endfor %}
