@@ -11,6 +11,9 @@ typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION=''
 
 typeset -g POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE='%Bperun@%m'
 
+typeset -g POWERLEVEL9K_VIRTUALENV_PREFIX='%fin '
+typeset -g POWERLEVEL9K_VIRTUALENV_VISUAL_IDENTIFIER_EXPANSION='󰌠'
+
 typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
   context
   dir
@@ -19,7 +22,7 @@ typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
   command_execution_time
   background_jobs
   # direnv
-  # virtualenv
+  virtualenv
   # anaconda
   # pyenv
 #  goenv
