@@ -18,6 +18,8 @@
     src: "{{ item }}"
     dest: $HOME/.gnupg/
     mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop:
     - gpg-agent.conf
     - gpg.conf
