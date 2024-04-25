@@ -16,8 +16,17 @@
 - name: Install with pip
   ansible.builtin.pip:
     name: pipx
-    state: latest
     executable: /usr/bin/pip
+
+- name: Upgrade
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
+      type pip
+      exit 1
+    executable: /usr/bin/bash
+  register: task
+  changed_when: '"status=changed" in task.stdout'
 
 # ------------------------------------------------------------------------------
 # Set up environment.
@@ -64,41 +73,10 @@
 # ------------------------------------------------------------------------------
 # Install packages with Pipx.
 
-- name: Install Ansible
-  ansible.builtin.shell:
-    cmd: |
-      set -euxo pipefail
-
-      installed=$(pipx --global list --include-injected)
-
-      if ! echo "$installed" | grep -q 'ansible$'; then
-        pipx --global install --include-deps ansible
-        echo status=changed
-      fi
-
-      if ! echo "$installed" | grep -q 'ansible-lint$'; then
-        pipx --global inject --include-apps ansible ansible-lint
-        echo status=changed
-      fi
-
-      if ! echo "$installed" | grep -q ' jmespath '; then
-        pipx --global inject ansible jmespath
-        echo status=changed
-      fi
-
-      if ! echo "$installed" | grep -q ' passlib '; then
-        pipx --global inject ansible passlib
-        echo status=changed
-      fi
-    executable: /usr/bin/bash
-  become: true
-  register: task
-  changed_when: "'status=changed' in task.stdout"
-
 - name: Install packages
   community.general.pipx:
     name: "{{ item }}"
     executable: "{{ pipx_executable }}"
   loop:
-    - bpython # https://github.com/bpython/bpython
-    - pre-commit # https://github.com/pre-commit/pre-commit
+    - bpython  # https://github.com/bpython/bpython
+    - pre-commit  # https://github.com/pre-commit/pre-commit
