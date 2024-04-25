@@ -1,12 +1,12 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
-    bash_dynrc_dir: $HOME/.config/bash
+    bash_dynrc_dir: "{{ xdg_config_home }}/bash"
 
-    bash_completions_dir: $HOME/.local/share/bash-completion/completions
+    bash_completions_dir: "{{ xdg_data_home }}/bash-completion/completions"
 
 - name: Set file facts
   ansible.builtin.set_fact:
-    bash_completion: $HOME/.config/bash_completion
+    bash_completion: "{{ xdg_config_home }}/bash_completion"
 
     bash_profile: "{{ bash_dynrc_dir }}/profile.bash"
 
@@ -17,9 +17,11 @@
 
 - name: Create directories
   ansible.builtin.file:
-    state: directory
     path: "{{ item }}"
-    mode: u=rwx,g=,o=
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop:
     - "{{ bash_dynrc_dir }}"
     - "{{ bash_completions_dir }}"
@@ -29,6 +31,8 @@
     path: "{{ item }}"
     state: touch
     mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     modification_time: preserve
     access_time: preserve
   loop:
@@ -50,7 +54,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Shell / Add block to {{ shell_bash_login }}
+- name: Add block to { shell_bash_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -66,7 +70,7 @@
 
       export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
-- name: Shell / Add block to {{ shell_fish_login }}
+- name: Add block to { shell_fish_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -82,7 +86,7 @@
 
       set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
 
-- name: Shell / Add block to {{ shell_zsh_login }}
+- name: Add block to { shell_zsh_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -112,6 +116,8 @@
     src: "{{ item }}"
     dest: "$HOME/{{ item }}"
     mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop:
     - .profile
     - .bashrc
