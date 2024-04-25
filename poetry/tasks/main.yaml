@@ -1,13 +1,13 @@
-- import_tasks: cleanup.yaml
-
 - name: Install dependencies
   ansible.builtin.package:
     name:
-      - python3-venv
       - python-is-python3
+      - python3
+      - python3-pip
+      - python3-venv
   become: true
 
-- name: Fetch and run Poetry installer script
+- name: Fetch and run installer
   ansible.builtin.shell:
     cmd: |
       set -euxo pipefail
