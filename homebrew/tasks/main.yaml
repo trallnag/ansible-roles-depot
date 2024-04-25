@@ -51,7 +51,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: For user brewmaster, add integration block to $HOME/.profile
+- name: For user brewmaster, add block to $HOME/.profile
   ansible.builtin.blockinfile:
     path: /home/brewmaster/.profile
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -64,7 +64,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Add integration block to { bash_profile }
+- name: Add block to { bash_profile }
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -72,7 +72,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add integration block to { bash_bashrc }
+- name: Add block to { bash_bashrc }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
@@ -88,7 +88,7 @@
         fi
       fi
 
-- name: Add integration block to { zsh_zprofile }
+- name: Add block to { zsh_zprofile }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -96,7 +96,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add integration block to { zsh_zshrc_compinit_pre }
+- name: Add block to { zsh_zshrc_compinit_pre }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
