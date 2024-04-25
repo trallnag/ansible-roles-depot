@@ -1,11 +1,11 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
-    zsh_dynrc_dir: $HOME/.config/zsh/dynrc
+    zsh_dynrc_dir: "{{ xdg_config_home }}/zsh/dynrc"
 
-    zsh_completions_dir: $HOME/.local/share/zsh/completions
-    zsh_functions_dir: $HOME/.local/share/zsh/functions
-    zsh_plugins_dir: $HOME/.local/share/zsh/plugins
-    zsh_scripts_dir: $HOME/.local/share/zsh/scripts
+    zsh_completions_dir: "{{ xdg_data_home }}/zsh/completions"
+    zsh_functions_dir: "{{ xdg_data_home }}/zsh/functions"
+    zsh_plugins_dir: "{{ xdg_data_home }}/zsh/plugins"
+    zsh_scripts_dir: "{{ xdg_data_home }}/zsh/scripts"
 
 - name: Set file facts
   ansible.builtin.set_fact:
@@ -26,13 +26,15 @@
 
 - name: Create directories
   ansible.builtin.file:
-    state: directory
     path: "{{ item }}"
-    mode: u=rwx,g=,o=
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop:
-    - $HOME/.cache/zsh
-    - $HOME/.config/zsh
-    - $HOME/.local/state/zsh
+    - "{{ xdg_cache_home }}/zsh"
+    - "{{ xdg_config_home }}/zsh"
+    - "{{ xdg_state_home }}/zsh"
 
     - "{{ zsh_dynrc_dir }}"
     - "{{ zsh_completions_dir }}"
@@ -45,6 +47,8 @@
     path: "{{ item }}"
     state: touch
     mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     modification_time: preserve
     access_time: preserve
   loop:
@@ -72,7 +76,7 @@
   ansible.builtin.git:
     repo: "{{ item.src }}"
     dest: "{{ zsh_plugins_dir }}/{{ item.name }}"
-    umask: "077"
+    umask: "022"
     force: true
     single_branch: true
     update: true
@@ -88,7 +92,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Shell / Add block to {{ shell_bash_login }}
+- name: Add block to { shell_bash_login }
   blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -115,7 +119,7 @@
 
       export DOT_ZSH_P10K="{{ zsh_p10k }}"
 
-- name: Shell / Add block to {{ shell_fish_login }}
+- name: Add block to { shell_fish_login }
   blockinfile:
     path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -142,7 +146,7 @@
 
       set -x DOT_ZSH_P10K "{{ zsh_p10k }}"
 
-- name: Shell / Add block to {{ shell_zsh_login }}
+- name: Add block to { shell_zsh_login }
   blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -191,7 +195,7 @@
 - name: Render and place files
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: $HOME/.config/zsh/
+    dest: "{{ xdg_config_home }}/zsh/"
     mode: u=rw,g=,o=
   loop:
     - .zprofile
@@ -199,7 +203,7 @@
 - name: Place files
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: $HOME/.config/zsh/
+    dest: "{{ xdg_config_home }}/zsh/"
     mode: u=rw,g=,o=
   loop:
     - .zshenv
