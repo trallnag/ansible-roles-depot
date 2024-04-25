@@ -1,21 +1,21 @@
 - name: Install formulae
   community.general.homebrew:
     name:
-      - age # https://github.com/FiloSottile/age
+      - age  # https://github.com/FiloSottile/age
       - awscli
-      - fd # https://github.com/sharkdp/fd
+      - fd  # https://github.com/sharkdp/fd
       - gh
-      - go # https://go.dev/doc/devel/release
-      - go-task # https://taskfile.dev
-      - golangci-lint # https://golangci-lint.run/
+      - go  # https://go.dev/doc/devel/release
+      - go-task  # https://taskfile.dev
+      - golangci-lint  # https://golangci-lint.run
       - helm
-      - just # https://github.com/casey/just
+      - just  # https://github.com/casey/just
       - kubectx
       - kubernetes-cli
-      - optipng # http://optipng.sourceforge.net/
-      - shellcheck # https://github.com/koalaman/shellcheck
-      - shfmt # https://github.com/mvdan/sh
-      - watchexec # https://github.com/watchexec/watchexec
+      - optipng  # http://optipng.sourceforge.net
+      - shellcheck  # https://github.com/koalaman/shellcheck
+      - shfmt  # https://github.com/mvdan/sh
+      - watchexec  # https://github.com/watchexec/watchexec
       - zellij
     path: "{{ homebrew_path }}"
   become_user: brewmaster
@@ -26,9 +26,9 @@
     src: "{{ homebrew_path }}/{{ item }}"
     dest: /usr/local/bin/{{ item }}
     state: link
+    mode: u=rwx,g=rx,o=rx
     owner: root
     group: root
-    mode: u=rwx,g=rx,o=rx
   loop:
     - aws
     - helm
