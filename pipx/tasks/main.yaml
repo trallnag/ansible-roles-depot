@@ -1,14 +1,19 @@
 - name: Set facts
   ansible.builtin.set_fact:
     pipx_default_python: /usr/bin/python
-    pipx_executable: /usr/local/bin/pipx
+    pipx_exe: /usr/local/bin/pipx
 
+#
 # ------------------------------------------------------------------------------
 # Install Pipx.
+#
 
-- name: Install dependencies with APT
-  ansible.builtin.apt:
+- name: Install dependencies
+  ansible.builtin.package:
     name:
+      - python-is-python3
+      - python3
+      - python3-argcomplete
       - python3-pip
       - python3-venv
   become: true
@@ -16,42 +21,48 @@
 - name: Install with pip
   ansible.builtin.pip:
     name: pipx
+    state: present
+    extra_args: --break-system-packages
     executable: /usr/bin/pip
 
 - name: Upgrade
   ansible.builtin.shell:
     cmd: |
       set -euxo pipefail
-      type pip
-      exit 1
+
+      /usr/bin/pip install --break-system-packages --upgrade --no-deps pipx
     executable: /usr/bin/bash
   register: task
-  changed_when: '"status=changed" in task.stdout'
+  changed_when: '"Requirement already satisfied" not in task.stdout'
 
+#
 # ------------------------------------------------------------------------------
 # Set up environment.
+#
 
 - name: Add block to { bash_profile }
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f166f-6581-761f-8f34-98b694dd0cbc"
     block: |
       export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
 
 - name: Add block to { zsh_zprofile }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f166f-6581-72f4-b648-53fe572e90bc"
     block: |
       export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
 
+#
 # ------------------------------------------------------------------------------
 # Set up completion.
+#
 
 - name: Add block to { bash_bashrc }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f166f-6581-74bf-ab16-ab71a9cb5ddb"
     block: |
       if command -v register-python-argcomplete &> /dev/null; then
         eval "$(register-python-argcomplete pipx)"
@@ -62,7 +73,7 @@
 - name: Add block to { zsh_zshrc_compinit_post }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_post }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f166f-6581-7f08-8259-ae9575e5ab95"
     block: |
       if command -v register-python-argcomplete &> /dev/null; then
         eval "$(register-python-argcomplete pipx)"
@@ -70,13 +81,15 @@
         eval "$(register-python-argcomplete3 pipx)"
       fi
 
+#
 # ------------------------------------------------------------------------------
 # Install packages with Pipx.
+#
 
 - name: Install packages
   community.general.pipx:
     name: "{{ item }}"
-    executable: "{{ pipx_executable }}"
+    executable: "{{ pipx_exe }}"
   loop:
     - bpython  # https://github.com/bpython/bpython
     - pre-commit  # https://github.com/pre-commit/pre-commit
