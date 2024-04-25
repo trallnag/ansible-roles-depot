@@ -44,7 +44,7 @@
       alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
 
-- name: Add integration to { zsh_aliases }
+- name: Add block to { zsh_aliases }
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
