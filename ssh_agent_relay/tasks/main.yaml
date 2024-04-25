@@ -1,6 +1,8 @@
-- name: Install socat
+- name: Install packages
   ansible.builtin.apt:
-    name: socat
+    name:
+      - socat
+      - ssh
   become: true
 
 - name: Get full path to npiperelay.exe
@@ -25,14 +27,14 @@
   loop:
     - ssh-agent-relay.service
 
-- name: Add integration block to {{ shell_bash_login }}
+- name: Add block to { shell_bash_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export SSH_AUTH_SOCK="{{ ssh_agent_relay_socket }}"
 
-- name: Add integration block to {{ shell_zsh_login }}
+- name: Add block to { shell_zsh_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
