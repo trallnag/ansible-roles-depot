@@ -1,4 +1,4 @@
-- name: Install with APT
+- name: Install
   ansible.builtin.apt:
     name: git-extras
     state: present
@@ -13,7 +13,7 @@
 - name: Add block to { bash_aliases }
   ansible.builtin.blockinfile:
     path: "{{ bash_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f165e-2c99-72ac-a219-75a57927a86f"
     block: |
       {% for alias in git_extras_aliases %}
       alias {{ alias.word }}='{{ alias.subst }}'
@@ -22,7 +22,7 @@
 - name: Add block to { zsh_aliases }
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f165e-52f8-77fa-a6b1-6a5250a8b257"
     block: |
       {% for alias in git_extras_aliases %}
       alias {{ alias.word }}='{{ alias.subst }}'
