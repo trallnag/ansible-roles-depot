@@ -32,6 +32,7 @@
   loop:
     - $HOME/.cache/zsh
     - $HOME/.config/zsh
+    - $HOME/.local/state/zsh
 
     - "{{ zsh_dynrc_dir }}"
     - "{{ zsh_completions_dir }}"
@@ -67,7 +68,7 @@
     name: zsh
   become: true
 
-- name: Clone plugins # noqa: latest
+- name: Clone plugins  # noqa: latest
   ansible.builtin.git:
     repo: "{{ item.src }}"
     dest: "{{ zsh_plugins_dir }}/{{ item.name }}"
