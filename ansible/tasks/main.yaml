@@ -1,19 +1,33 @@
-- name: Install packages with apt
-  ansible.builtin.apt:
-    name:
-      - libffi-dev
-      - git
-  become: true
+- name: Install
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
 
-- name: Install packages with pip
-  ansible.builtin.pip:
-    name:
-      - ansible
-      - ansible-core
-      - ansible-lint
-      - molecule
-      - molecule
-      - molecule-plugins[docker]
-      - molecule-plugins[podman]
-      - setuptools
-      - yamllint
+      export PIPX_DEFAULT_PYTHON={{ pipx_default_python }}
+
+
+      installed=$({{ pipx_exe }} --global list --include-injected)
+
+      if ! echo "$installed" | grep -q 'ansible$'; then
+        {{ pipx_exe }} --global install --include-deps ansible
+        echo status=changed
+      fi
+
+      if ! echo "$installed" | grep -q 'ansible-lint$'; then
+        {{ pipx_exe }} --global inject --include-apps ansible ansible-lint
+        echo status=changed
+      fi
+
+      if ! echo "$installed" | grep -q ' jmespath '; then
+        {{ pipx_exe }} --global inject ansible jmespath
+        echo status=changed
+      fi
+
+      if ! echo "$installed" | grep -q ' passlib '; then
+        {{ pipx_exe }} --global inject ansible passlib
+        echo status=changed
+      fi
+    executable: /usr/bin/bash
+  become: true
+  register: task
+  changed_when: "'status=changed' in task.stdout"
