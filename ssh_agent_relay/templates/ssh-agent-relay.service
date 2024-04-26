@@ -15,6 +15,9 @@ ExecStartPre=+rm -rf {{ ssh_agent_relay_socket }}
 
 ExecStart=socat -d -d UNIX-LISTEN:{{ ssh_agent_relay_socket }},umask=077,fork EXEC:"{{ npiperelay_exe }} -ep -s //./pipe/openssh-ssh-agent",nofork
 
+Restart=on-failure
+RestartSec=5
+
 [Install]
 
 WantedBy=multiuser.target
