@@ -21,3 +21,27 @@ argument_specs:
         description: >-
           Should the unit be activated? Activation means: Unmask, enable, start,
           and restart if already active.
+      systemd_unit_restart:
+        type: bool
+        required: false
+        default: false
+        description: >-
+          Should the unit be restarted if it was already active and the unit
+          file itself did not change? For example useful to trigger restart
+          if script changed that is executed by service.
+      systemd_unit_running_check:
+        type: str
+        required: false
+        default: false
+        description: >-
+          Should a `systemctl is-active` be performed at the end of the role to
+          ensure unit is running?
+      systemd_unit_running_check_delay:
+        type: str
+        required: false
+        default: "0"
+        description: >-
+          Time in seconds to wait before performing check to see if unit is
+          running at end of role. Only relevant if `systemd_unit_running_check`
+          is set to `true`. Decimals (as string) supported. Pause only done
+          if unit enabled, started, or restarted by role.

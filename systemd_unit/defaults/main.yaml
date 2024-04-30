@@ -1,1 +1,4 @@
 systemd_unit_activate: false
+systemd_unit_restart: false
+systemd_unit_running_check: false
+systemd_unit_running_check_delay: 0

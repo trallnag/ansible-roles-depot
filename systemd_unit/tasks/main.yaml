@@ -14,7 +14,8 @@
     daemon_reload: true
   when: copy.changed
 
-- block:
+- when: systemd_unit_activate
+  block:
     - name: "{{ systemd_unit }} : Check activity"
       ansible.builtin.command: systemctl is-active --quiet {{ systemd_unit }}
       changed_when: false
@@ -26,10 +27,22 @@
         name: "{{ systemd_unit }}"
         state: started
         enabled: true
+      register: started
 
     - name: "{{ systemd_unit }} : Restart"
+      when: (copy.changed or systemd_unit_restart) and active.rc == 0
       ansible.builtin.systemd_service:
         name: "{{ systemd_unit }}"
         state: restarted
-      when: copy.changed and active.rc == 0
-  when: systemd_unit_activate
+      register: restarted
+
+- when: systemd_unit_running_check
+  block:
+    - name: "{{ systemd_unit }} : Sleep"
+      when: started.changed or restarted.changed
+      ansible.builtin.command: sleep {{ systemd_unit_running_check_delay }}
+      changed_when: false
+
+    - name: "{{ systemd_unit }} : Check is running"
+      ansible.builtin.command: systemctl is-active --quiet {{ systemd_unit }}
+      changed_when: false
