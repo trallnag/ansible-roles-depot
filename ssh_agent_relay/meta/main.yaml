@@ -1,2 +1,3 @@
 dependencies:
   - { role: shell, tags: [shell] }
+  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
