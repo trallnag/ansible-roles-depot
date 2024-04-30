@@ -10,6 +10,7 @@
       - golangci-lint  # https://golangci-lint.run
       - helm
       - just  # https://github.com/casey/just
+      - krew  # https://krew.sigs.k8s.io/
       - kubectx
       - kubernetes-cli
       - optipng  # http://optipng.sourceforge.net
@@ -31,6 +32,7 @@
     group: root
   loop:
     - aws
+    - fd
     - helm
     - kubectl
     - shellcheck
