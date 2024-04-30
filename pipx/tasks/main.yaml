@@ -24,6 +24,7 @@
     state: present
     extra_args: --break-system-packages
     executable: /usr/bin/pip
+  become: true
 
 - name: Upgrade
   ansible.builtin.shell:
@@ -32,6 +33,7 @@
 
       /usr/bin/pip install --break-system-packages --upgrade --no-deps pipx
     executable: /usr/bin/bash
+  become: true
   register: task
   changed_when: '"Requirement already satisfied" not in task.stdout'
 
