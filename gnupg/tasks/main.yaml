@@ -2,9 +2,9 @@
   ansible.builtin.set_fact:
     gnupg_pinentry_program: "/mnt/c/Program Files/Git/usr/bin/pinentry.exe"
 
-- name: Ensure pinentry.exe exists
-  ansible.builtin.command: stat "{{ gnupg_pinentry_program }}"
-  changed_when: false
+- name: Get stats of { gnupg_pinentry_program }
+  ansible.builtin.stat:
+    path: "{{ gnupg_pinentry_program }}"
 
 - name: Install packages
   ansible.builtin.apt:
