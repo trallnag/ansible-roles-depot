@@ -71,3 +71,9 @@
     executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
+
+- name: Update
+  ansible.builtin.command: poetry self update
+  changed_when: false
+  async: 60
+  poll: 0
