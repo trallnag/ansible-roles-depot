@@ -17,9 +17,7 @@
   loop:
     - rg
 
-#
 # ------------------------------------------------------------------------------
-#
 
 - name: Set facts
   ansible.builtin.set_fact:
@@ -30,11 +28,16 @@
     state: directory
     path: "{{ ripgrep_config | dirname }}"
     mode: u=rwx,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Place config file
   ansible.builtin.copy:
     src: ripgrep.conf
     dest: "{{ ripgrep_config }}"
+    mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Add block to { bash_profile }
   ansible.builtin.blockinfile:
