@@ -1,6 +1,6 @@
 # Ansible Role `bat`
 
-Installs and configures bat for trallnag and root.
+Installs and configures bat.
 
 ## References
 
