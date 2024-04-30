@@ -13,9 +13,9 @@
     owner: root
     group: root
     mode: u=rwx,g=rx,o=rx
+  become: true
   loop:
     - eza
-  become: true
 
 - name: Set facts
   ansible.builtin.set_fact:
