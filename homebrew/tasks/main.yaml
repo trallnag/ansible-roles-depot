@@ -102,3 +102,15 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Render and place shim brewm
+  ansible.builtin.template:
+    src: brewm.sh
+    dest: /usr/local/bin/brewm
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
