@@ -17,7 +17,7 @@ ExecStartPre=rm -rf {{ ssh_agent_relay_socket }}
 
 ExecStart=/root/.local/share/ssh/ssh-agent-relay.sh
 
-Restart=on-failure
+Restart=always
 RestartSec=5
 
 [Install]
