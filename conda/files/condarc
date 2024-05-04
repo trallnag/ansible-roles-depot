@@ -1,0 +1,4 @@
+# This file is managed by Ansible in the role "conda".
+# Runs will override all changes not managed by Ansible.
+
+auto_activate_base: false

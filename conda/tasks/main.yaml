@@ -1,76 +1,100 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    conda_config_home: "{{ xdg_config_home }}/conda"
+    conda_data_home: "{{ xdg_data_home }}/conda"
+    conda_exe: $HOME/miniconda3/bin/conda
+
+- name: Set facts
+  ansible.builtin.set_fact:
+    conda_config: "{{ conda_config_home }}/condarc"
+
+- name: Create directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ conda_config_home }}"
+    mode: u=rwx,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - "{{ conda_config_home }}"
+    - "{{ conda_data_home }}"
+
+- name: Place file { conda_config }
+  ansible.builtin.copy:
+    src: condarc
+    dest: "{{ conda_config }}"
+    mode: u=rw,g=,o=
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# ------------------------------------------------------------------------------
+
 - name: Install
-  ansible.builtin.shell: |
-    if [ ! -d ~/miniconda3 ]; then
-      wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda-installer.sh
-      bash /tmp/miniconda-installer.sh -b -p ~/miniconda3
-      rm /tmp/miniconda-installer.sh
-      echo status=changed
-    fi
+  ansible.builtin.shell:
+    cmd: |
+      set -euo pipefail
+
+      if [ ! -d ~/miniconda3 ]; then
+        wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda-installer.sh
+        chmod +x /tmp/miniconda-installer.sh
+        /tmp/miniconda-installer.sh -b -p ~/miniconda3
+        rm /tmp/miniconda-installer.sh
+        echo status=changed
+      fi
+    executable: /usr/bin/bash
   register: task
   changed_when: "'status=changed' in task.stdout"
 
-- name: Configure Conda via lines in file
-  with_items:
-    - l: 'auto_activate_base: false'
-  ansible.builtin.lineinfile:
-    path: ~/.condarc
-    line: '{{ item.l }}'
-    state: present
-    create: true
-
 # ------------------------------------------------------------------------------
-# Bash
 
-- name: "bash : Add init block to {{ bash_bashrc }}"
+- name: Bash / Add integration block to { bash_bashrc }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-78ab-9baa-8868ea115340"
     block: |
-      eval "$(~/miniconda3/bin/conda shell.bash hook)"
+      eval "$({{ conda_exe }} shell.bash hook)"
 
-- name: "bash : Clone tartansandal/conda-bash-completion"
+- name: Bash / Clone tartansandal/conda-bash-completion
   ansible.builtin.git:
     repo: https://github.com/tartansandal/conda-bash-completion.git
-    dest: ~/.local/share/conda-bash-completion
+    dest: "{{ conda_data_home }}/conda-bash-completion"
     version: "HEAD"
     depth: 1
     force: true
 
-- name: "bash : Create symbolic link ~/.local/share/bash-completion/completions/conda.bash"
+- name: Bash / Create symbolic link for completion
   ansible.builtin.file:
-    src: ~/.local/share/conda-bash-completion/conda
-    dest: ~/.local/share/bash-completion/completions/conda.bash
+    src: "{{ conda_data_home }}/conda-bash-completion/conda"
+    dest: "{{ bash_completions_dir }}/conda.bash"
     state: link
 
 # ------------------------------------------------------------------------------
-# Zsh.
 
-- name: "zsh : Add init block to {{ zsh_zshrc }}"
+- name: Zsh / Add integration block to { zsh_zshrc }
   blockinfile:
     path: "{{ zsh_zshrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-7837-a26a-cb2444155e97"
     block: |
-      eval "$(~/miniconda3/bin/conda shell.zsh hook)"
+      eval "$({{ conda_exe }} shell.zsh hook)"
 
-- name: "zsh : Clone esc/conda-zsh-completion to ~/.local/share/conda-zsh-completion"
+- name: Zsh / Clone esc/conda-zsh-completion
   ansible.builtin.git:
     repo: https://github.com/esc/conda-zsh-completion.git
-    dest: ~/.local/share/conda-zsh-completion
-    version: HEAD
+    dest: "{{ conda_data_home }}/conda-zsh-completion"
+    version: "HEAD"
     depth: 1
     force: true
 
-- name: "zsh : Create symbolic link /usr/local/share/zsh/site-functions/_conda"
+- name: Zsh / Create symbolic link for completion
   ansible.builtin.file:
-    src: "{{ ansible_env.HOME }}/.local/share/conda-zsh-completion/_conda"
-    dest: /usr/local/share/zsh/site-functions/_conda
+    src: "{{ conda_data_home }}/conda-zsh-completion/_conda"
+    dest: "{{ zsh_functions_dir }}/_conda"
     state: link
-  become: true
 
-- name: Add completion config block to zsh_zshrc_compinit_pre
+- name: Zsh / Add integration block to { zsh_zshrc_compinit_pre }
   blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: zstyle"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-77ae-b984-a4fa0610917d"
     block: |
       zstyle ":conda_zsh_completion:*" use-groups true
       zstyle ":conda_zsh_completion:*" show-unnamed true
