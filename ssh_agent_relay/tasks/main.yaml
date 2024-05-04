@@ -1,3 +1,14 @@
+- name: Install OpenSSH
+  ansible.builtin.apt:
+    name: ssh
+  become: true
+
+- name: Start and enable OpenSSH server
+  ansible.builtin.systemd_service:
+    name: ssh
+    state: started
+    enabled: true
+
 - name: Set facts
   ansible.builtin.set_fact:
     ssh_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH
