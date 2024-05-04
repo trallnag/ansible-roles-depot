@@ -23,7 +23,7 @@ typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
   background_jobs
   # direnv
   virtualenv
-  # anaconda
+  anaconda
   # pyenv
 #  goenv
 #  nodenv
