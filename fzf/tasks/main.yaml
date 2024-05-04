@@ -2,28 +2,37 @@
   community.general.homebrew:
     name: fzf
     path: "{{ homebrew_path }}"
+  become_user: brewmaster
+  become: true
+
+- name: Link to /usr/local/bin
+  ansible.builtin.file:
+    src: "{{ homebrew_path }}/{{ item }}"
+    dest: /usr/bin/{{ item }}
+    state: link
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: true
+  loop:
+    - fzf
+
+# ------------------------------------------------------------------------------
 
 - name: Generate shell config script
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/opt/fzf/install --no-update-rc --key-bindings --completion
   changed_when: false
 
-- name: "bash : Add integration to {{ bash_bashrc }}"
+- name: Add integration block to { bash_bashrc }
   blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f436e-7ea9-74a7-bc5b-7471abf9fa48"
     block: |
       [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
 
-- name: "zsh : Add integration to zsh_zshrc_compinit_pre"
+- name: Add integration block to { zsh_zshrc_compinit_pre }
   blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f436e-7ea9-7a8c-bee8-d620c73f2ad6"
     block: |
       [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-
-
-# ------------------------------------------------------------------------------
-
-
-- name: Set fact used for deduplication
-  set_fact: "{{ role_name }}_done=1"
