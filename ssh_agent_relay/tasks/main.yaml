@@ -47,6 +47,11 @@
   loop:
     - ssh-agent-relay.service
 
+- name: Verify that symlink exists
+  ansible.builtin.stat:
+    path: /etc/systemd/system/multi-user.target.wants/ssh-agent-relay.service
+  changed_when: false
+
 - name: Add block to { shell_bash_login }
   blockinfile:
     path: "{{ shell_bash_login }}"
