@@ -1,0 +1,53 @@
+- name: Create keyrings directory
+  ansible.builtin.file:
+    path: /usr/local/share/keyrings
+    state: directory
+  become: true
+
+- name: Place public key
+  ansible.builtin.copy:
+    src: docker.asc
+    dest: /usr/local/share/keyrings/docker.asc
+    mode: u=rw,g=r,o=r
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  register: key
+  become: true
+
+- name: Render and place sources
+  ansible.builtin.template:
+    src: docker.sources
+    dest: /etc/apt/sources.list.d/docker.sources
+    mode: u=rw,g=r,o=r
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  register: source
+  become: true
+
+- name: Update APT cache
+  when: key.changed or source.changed
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+
+- name: Install packages with APT
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+  become: true
+
+# ------------------------------------------------------------------------------
+
+- name: Check health by running hello-world
+  ansible.builtin.command: >-
+    timeout --kill-after=5 10
+    docker run --rm hello-world
+
+- name: Check health by running curl
+  ansible.builtin.command: >-
+    timeout --kill-after=5 10
+    docker run --rm curlimages/curl -L -v https://ifconfig.me
