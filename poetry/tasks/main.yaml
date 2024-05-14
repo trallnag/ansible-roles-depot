@@ -77,3 +77,14 @@
   changed_when: false
   async: 60
   poll: 0
+
+- name: Configure
+  ansible.builtin.shell:
+    cmd: |
+      set -euxo pipefail
+
+      exe=$HOME/.local/bin/poetry
+
+      $exe config virtualenvs.in-project true
+    executable: /usr/bin/bash
+  changed_when: false
