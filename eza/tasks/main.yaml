@@ -10,9 +10,9 @@
     src: "{{ homebrew_path }}/{{ item }}"
     dest: /usr/bin/{{ item }}
     state: link
-    owner: root
-    group: root
-    mode: u=rwx,g=rx,o=rx
+    mode: u+r,g+r,o+r
+    owner: brewmaster
+    group: brewmaster
   become: true
   loop:
     - eza

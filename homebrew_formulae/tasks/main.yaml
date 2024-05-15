@@ -2,7 +2,6 @@
   community.general.homebrew:
     name:
       - age  # https://github.com/FiloSottile/age
-      - awscli
       - fd  # https://github.com/sharkdp/fd
       - gh
       - go  # https://go.dev/doc/devel/release
@@ -27,13 +26,15 @@
     src: "{{ homebrew_path }}/{{ item }}"
     dest: /usr/local/bin/{{ item }}
     state: link
-    mode: u=rwx,g=rx,o=rx
-    owner: root
-    group: root
+    mode: u+r,g+r,o+r
+    owner: brewmaster
+    group: brewmaster
   loop:
-    - aws
+    - age
     - fd
+    - gh
     - helm
+    - just
     - kubectl
     - shellcheck
     - shfmt
