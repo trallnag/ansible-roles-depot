@@ -1,9 +1,8 @@
-- name: Import role trallnag.awscli
+- name: Import role trallnag.aws_cli
   ansible.builtin.import_role:
-    name: trallnag.awscli
+    name: trallnag.aws_cli
   vars:
-    awscli_version: "2.15.41"
-    awscli_ssm_version: "1.2.553.0"
+    aws_cli_version: latest
 
 - name: Add block to { bash_bashrc }
   ansible.builtin.blockinfile:
