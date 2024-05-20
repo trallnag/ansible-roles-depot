@@ -23,3 +23,9 @@
     name: trallnag.aws_ssm_plugin
   vars:
     aws_ssm_plugin_version: latest
+
+- name: Import role trallnag.aws_sam_cli
+  ansible.builtin.import_role:
+    name: trallnag.aws_sam_cli
+  vars:
+    aws_sam_cli_version: latest
