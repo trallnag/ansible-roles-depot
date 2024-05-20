@@ -17,3 +17,9 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       complete -C /usr/local/bin/aws_completer aws
+
+- name: Import role trallnag.aws_ssm_plugin
+  ansible.builtin.import_role:
+    name: trallnag.aws_ssm_plugin
+  vars:
+    aws_ssm_plugin_version: latest

@@ -1,1 +1,1 @@
-# Ansible Role `awscli`
+# Ansible Role `aws`
