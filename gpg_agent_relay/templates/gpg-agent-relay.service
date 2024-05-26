@@ -1,0 +1,20 @@
+[Unit]
+
+Description=GPG Agent Relay
+
+ConditionPathExists={{ gpg_agent_relay_win_ssh_exe }}
+
+After=ssh.service
+
+[Service]
+
+Type=simple
+
+ExecStart=/root/.local/share/gpg/gpg-agent-relay.sh
+
+Restart=always
+RestartSec=5
+
+[Install]
+
+WantedBy=multi-user.target
