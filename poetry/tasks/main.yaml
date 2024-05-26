@@ -12,6 +12,8 @@
     cmd: |
       set -euxo pipefail
 
+      export PATH="$HOME/.local/bin:$PATH"
+
       if ! command -v poetry; then
         curl -sSL https://install.python-poetry.org | python
         echo status=changed
