@@ -1,16 +1,7 @@
-- name: Set facts
-  ansible.builtin.set_fact:
-    gnupg_pinentry_program: "/mnt/c/Program Files/Git/usr/bin/pinentry.exe"
-
-- name: Get stats of { gnupg_pinentry_program }
-  ansible.builtin.stat:
-    path: "{{ gnupg_pinentry_program }}"
-
 - name: Install packages
   ansible.builtin.apt:
     name:
       - pinentry-curses
-      - pinentry-gnome3
   become: true
 
 - name: Render and place files
@@ -21,31 +12,34 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
   loop:
-    - gpg-agent.conf
     - gpg.conf
   register: files
 
-- name: Add integration block to {{ bash_bashrc_top }}
+- name: Add integration block to { bash_bashrc_top }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc_top }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export GPG_TTY=$(tty)
-  register: bash_bashrc_top
 
 
-- name: Add integration block to {{ zsh_zshrc_interactive }}
+- name: Add integration block to { zsh_zshrc_interactive }
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_interactive }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export GPG_TTY=$(tty)
-  register: zsh_zshrc_interactive
 
-- name: Reload GPG agent
-  when: >-
-    files | json_query('results[*].changed') is any
-    or bash_bashrc_top.changed
-    or zsh_zshrc_interactive.changed
-  ansible.builtin.command: gpg-connect-agent reloadagent /bye
-  changed_when: false
+- name: Add integration block to { bash_profile }
+  ansible.builtin.blockinfile:
+    path: "{{ bash_profile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      gpgconf --create-socketdir
+
+- name: Add integration block to { zsh_zprofile }
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zprofile }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      gpgconf --create-socketdir
