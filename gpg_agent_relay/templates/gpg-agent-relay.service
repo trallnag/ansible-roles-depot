@@ -10,6 +10,8 @@ After=ssh.service
 
 Type=simple
 
+ExecStartPre=rm /run/user/0/gnupg/S.gpg-agent
+
 ExecStart=/root/.local/share/gpg/gpg-agent-relay.sh
 
 Restart=always
