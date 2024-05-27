@@ -2,15 +2,13 @@
 
 Description=GPG Agent Relay
 
-ConditionPathExists="{{ gpg_agent_relay_win_ssh_exe }}"
-
 After=ssh.service
 
 [Service]
 
 Type=simple
 
-ExecStartPre=rm /run/user/0/gnupg/S.gpg-agent
+ExecStartPre=rm -f /run/user/0/gnupg/S.gpg-agent
 
 ExecStart=/root/.local/share/gpg/gpg-agent-relay.sh
 

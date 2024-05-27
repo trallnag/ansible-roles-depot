@@ -11,7 +11,7 @@
 
 - name: Set facts
   ansible.builtin.set_fact:
-    ssh_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH
+    ssh_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH/ssh.exe
 
     ssh_agent_relay_socket_dir: /run/user/0/ssh
     ssh_agent_relay_socket: /run/user/0/ssh/ssh-agent-relay.sock

@@ -2,8 +2,6 @@
 
 Description=SSH Agent Relay
 
-ConditionPathExists="{{ ssh_agent_relay_win_ssh_exe }}"
-
 After=ssh.service
 
 [Service]
