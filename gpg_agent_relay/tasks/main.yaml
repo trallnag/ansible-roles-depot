@@ -1,6 +1,6 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    gpg_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH
+    gpg_agent_relay_win_ssh_exe: /mnt/c/Program Files/OpenSSH/ssh.exe
 
 - name: Get stats of { gpg_agent_relay_win_ssh_exe }
   ansible.builtin.stat:
