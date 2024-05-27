@@ -2,9 +2,7 @@
 
 set -e
 
-export PATH="{{ ssh_agent_relay_win_ssh_exe }}:$PATH"
-
-ssh.exe -o ServerAliveInterval=60 root@localhost -A sh -s <<- 'EOF'
+"{{ ssh_agent_relay_win_ssh_exe }}" -o ServerAliveInterval=60 root@localhost -A sh -s <<- 'EOF'
   set -e
   echo "Connection to localhost opened."
   echo "Creating symlink..."

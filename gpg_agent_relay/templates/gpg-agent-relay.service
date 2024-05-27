@@ -2,7 +2,7 @@
 
 Description=GPG Agent Relay
 
-ConditionPathExists={{ gpg_agent_relay_win_ssh_exe }}
+ConditionPathExists="{{ gpg_agent_relay_win_ssh_exe }}"
 
 After=ssh.service
 
