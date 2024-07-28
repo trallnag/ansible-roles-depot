@@ -3,11 +3,13 @@
   register: task
   changed_when: false
 
-# - { name: "Debug win_env_userprofile", debug: {var: task.stdout_lines}}
-
 - name: Set win_env_userprofile
   ansible.builtin.set_fact:
     win_env_userprofile: "{{ task.stdout }}"
+
+- name: Print win_env_userprofile
+  ansible.builtin.debug:
+    var: win_env_userprofile
 
 # ------------------------------------------------------------------------------
 
@@ -16,11 +18,13 @@
   register: task
   changed_when: false
 
-# - { name: "Debug win_home", debug: {var: task.stdout_lines}}
-
 - name: Set win_home
   ansible.builtin.set_fact:
     win_home: "{{ task.stdout }}"
+
+- name: Print win_home
+  ansible.builtin.debug:
+    var: win_home
 
 # ------------------------------------------------------------------------------
 

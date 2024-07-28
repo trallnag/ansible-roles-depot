@@ -87,6 +87,6 @@
 
       exe=$HOME/.local/bin/poetry
 
-      $exe config virtualenvs.in-project true
+      $exe config virtualenvs.in-project false
     executable: /usr/bin/bash
   changed_when: false
