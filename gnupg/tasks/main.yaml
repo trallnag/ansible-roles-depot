@@ -1,20 +1,3 @@
-- name: Install packages
-  ansible.builtin.apt:
-    name:
-      - pinentry-curses
-  become: true
-
-- name: Render and place files
-  ansible.builtin.template:
-    src: "{{ item }}"
-    dest: $HOME/.gnupg/
-    mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-  loop:
-    - gpg.conf
-  register: files
-
 - name: Add integration block to { bash_bashrc_top }
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc_top }}"
@@ -29,17 +12,3 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export GPG_TTY=$(tty)
-
-- name: Add integration block to { bash_profile }
-  ansible.builtin.blockinfile:
-    path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      gpgconf --create-socketdir
-
-- name: Add integration block to { zsh_zprofile }
-  ansible.builtin.blockinfile:
-    path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      gpgconf --create-socketdir
