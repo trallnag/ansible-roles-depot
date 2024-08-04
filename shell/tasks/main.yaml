@@ -9,16 +9,12 @@
     path: "{{ xdg_config_home }}/shell"
     state: directory
     mode: u=rwx,g=rx,o=rx
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
 
 - name: Touch files
   ansible.builtin.file:
     path: "{{ item }}"
     state: touch
     mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     modification_time: preserve
     access_time: preserve
   loop:
