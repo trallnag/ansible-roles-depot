@@ -2,23 +2,14 @@
   ansible.builtin.set_fact:
     homebrew_path: /home/linuxbrew/.linuxbrew/bin
 
-- name: Add user brewmaster
-  ansible.builtin.user:
-    name: brewmaster
-    password: "{{ brewmaster_password | password_hash(hashtype='sha512', salt=brewmaster_password_salt) }}"
-    groups: sudo
-    append: true
-    shell: /usr/bin/bash
-  become: true
-
 - name: Install dependencies
   ansible.builtin.apt:
     name:
       - build-essential
-      - procps
       - curl
       - file
       - git
+      - procps
   become: true
 
 - name: Install
@@ -26,43 +17,23 @@
     cmd: |
       set -euo pipefail
 
-      sudo -u brewmaster /usr/bin/bash <<- "EOT"
-        if ! test -d "{{ homebrew_path }}"; then
-          if ! sudo -n true 2>/dev/null; then
-            printf '%s' "{{ brewmaster_password }}" | sudo -S whoami &>/dev/null
-          fi
-
-          if sudo -n true 2>/dev/null; then
-            unset INTERACTIVE && export NONINTERACTIVE=1
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            echo status=changed
-          else
-            echo "Sudo still not working."
-            exit 1
-          fi
+      if ! test -d "{{ homebrew_path }}"; then
+        if ! sudo -n true 2>/dev/null; then
+          printf '%s' "{{ ansible_become_pass }}" | sudo -S whoami &>/dev/null
         fi
-      EOT
+
+        if sudo -n true 2>/dev/null; then
+          unset INTERACTIVE && export NONINTERACTIVE=1
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo status=changed
+        else
+          echo "Sudo not working."
+          exit 1
+        fi
+      fi
     executable: /usr/bin/bash
   register: homebrew_installation
   changed_when: "'status=changed' in homebrew_installation.stdout"
-  become: true
-
-#
-# ------------------------------------------------------------------------------
-#
-
-- name: For user brewmaster, add block to $HOME/.profile
-  ansible.builtin.blockinfile:
-    path: /home/brewmaster/.profile
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-  become: true
-
-#
-# ------------------------------------------------------------------------------
-#
 
 - name: Add block to { bash_profile }
   ansible.builtin.blockinfile:
@@ -102,15 +73,3 @@
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
-
-#
-# ------------------------------------------------------------------------------
-#
-
-- name: Render and place shim brewm
-  ansible.builtin.template:
-    src: brewm.sh
-    dest: /usr/local/bin/brewm
-    mode: u=rwx,g=rx,o=rx
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
