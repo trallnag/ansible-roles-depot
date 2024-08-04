@@ -20,8 +20,6 @@
     path: "{{ item }}"
     state: directory
     mode: u=rwx,g=rx,o=rx
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
   loop:
     - "{{ bash_dynrc_dir }}"
     - "{{ bash_completions_dir }}"
@@ -31,8 +29,6 @@
     path: "{{ item }}"
     state: touch
     mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
     modification_time: preserve
     access_time: preserve
   loop:
@@ -47,7 +43,6 @@
     name:
       - bash
       - bash-completion
-      - git
   become: true
 
 #
@@ -116,8 +111,6 @@
     src: "{{ item }}"
     dest: "$HOME/{{ item }}"
     mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
   loop:
     - .profile
     - .bashrc
