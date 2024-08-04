@@ -1,1 +1,0 @@
-# Ansible Role `ansible`
