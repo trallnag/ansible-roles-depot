@@ -1,6 +1,6 @@
 # Ansible Role `zsh`
 
-Role that installs and configures Zsh.
+Installs and configures Zsh.
 
 ## Content
 
