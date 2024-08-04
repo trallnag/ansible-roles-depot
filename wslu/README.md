@@ -1,6 +1,7 @@
-# Ansible Role `ssh_agent_relay`
+# Ansible Role `wslu`
 
-Set ups systemd service that uses WSL interop to call ssh.exe in Windows and
-forward agent to WSL distribution.
+Installs wslu by cloning the repo and using Make.
 
-Only works for `root` user.
+## References
+
+- <https://github.com/wslutilities/wslu>
