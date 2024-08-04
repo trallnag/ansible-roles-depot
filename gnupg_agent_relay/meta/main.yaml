@@ -1,0 +1,4 @@
+dependencies:
+  - { role: gnupg_agent_trigger, tags: [gnupg_agent_trigger] }
+  - { role: gnupg_bridge, tags: [gnupg_bridge] }
+  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
