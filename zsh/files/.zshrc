@@ -313,6 +313,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # ohmyzsh
 #
 
+source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/clipboard.zsh"
 source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/functions.zsh"
 source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/key-bindings.zsh"
 source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/termsupport.zsh"
