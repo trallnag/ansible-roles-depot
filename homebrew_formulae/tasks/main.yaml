@@ -1,41 +1,19 @@
 - name: Install formulae
   community.general.homebrew:
     name:
-      - age  # https://github.com/FiloSottile/age
-      - fd  # https://github.com/sharkdp/fd
-      - gh
-      - go  # https://go.dev/doc/devel/release
-      - go-task  # https://taskfile.dev
-      - golangci-lint  # https://golangci-lint.run
-      - helm
-      - just  # https://github.com/casey/just
-      - krew  # https://krew.sigs.k8s.io/
-      - kubectx
-      - kubernetes-cli
-      - optipng  # http://optipng.sourceforge.net
-      - shellcheck  # https://github.com/koalaman/shellcheck
-      - shfmt  # https://github.com/mvdan/sh
-      - watchexec  # https://github.com/watchexec/watchexec
-      - zellij
+      - age # https://github.com/FiloSottile/age
+      - fd # https://github.com/sharkdp/fd
+      - gh # https://github.com/cli/cli
+      - go # https://go.dev/doc/devel/release
+      - go-task # https://taskfile.dev
+      - golangci-lint # https://golangci-lint.run
+      - helm # https://helm.sh/
+      - just # https://github.com/casey/just
+      - kubectx # https://github.com/ahmetb/kubectx
+      - kubernetes-cli # https://kubernetes.io/docs/reference/kubectl/
+      - optipng # http://optipng.sourceforge.net
+      - shellcheck # https://github.com/koalaman/shellcheck
+      - shfmt # https://github.com/mvdan/sh
+      - watchexec # https://github.com/watchexec/watchexec
+      - zellij # https://github.com/zellij-org/zellij
     path: "{{ homebrew_path }}"
-  become_user: brewmaster
-  become: true
-
-- name: Link to /usr/local/bin
-  ansible.builtin.file:
-    src: "{{ homebrew_path }}/{{ item }}"
-    dest: /usr/local/bin/{{ item }}
-    state: link
-    mode: u+r,g+r,o+r
-    owner: brewmaster
-    group: brewmaster
-  loop:
-    - age
-    - fd
-    - gh
-    - helm
-    - just
-    - kubectl
-    - shellcheck
-    - shfmt
-  become: true
