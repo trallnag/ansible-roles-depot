@@ -2,7 +2,7 @@
 
 Description=SSH Agent Relay
 
-#ConditionPathExists="{{ ssh_agent_relay_win_ssh_exe }}"
+ConditionFileIsExecutable="{{ ssh_agent_relay_win_exe }}"
 
 After=ssh.service
 
@@ -15,10 +15,13 @@ ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} {{ ssh_agent_relay_sock
 ExecStartPre=chmod u=rwx,g=,o= {{ ssh_agent_relay_socket_dir }}
 ExecStartPre=rm -rf {{ ssh_agent_relay_socket }}
 
-ExecStart=/root/.local/share/ssh/ssh-agent-relay.sh
+User={{ ansible_user }}
+Group={{ ansible_user }}
+
+ExecStart={{ ssh_agent_relay_data_home }}/ssh-agent-relay.sh
 
 Restart=always
-RestartSec=5
+RestartSec=15
 
 [Install]
 

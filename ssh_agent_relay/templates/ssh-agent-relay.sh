@@ -2,7 +2,7 @@
 
 set -e
 
-"{{ ssh_agent_relay_win_ssh_exe }}" -o ServerAliveInterval=60 root@localhost -A sh -s <<- 'EOF'
+"{{ ssh_agent_relay_win_exe }}" -o ServerAliveInterval=60 {{ ansible_user }}@localhost -A sh -s <<- 'EOF'
   set -e
   echo "Connection to localhost opened."
   echo "Creating symlink..."

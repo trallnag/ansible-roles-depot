@@ -8,60 +8,60 @@
     name: ssh
     state: started
     enabled: true
+  become: true
 
 - name: Set facts
   ansible.builtin.set_fact:
-    ssh_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH/ssh.exe
+    ssh_agent_relay_data_home: "{{ xdg_data_home }}/ssh"
 
-    ssh_agent_relay_socket_dir: /run/user/0/ssh
-    ssh_agent_relay_socket: /run/user/0/ssh/ssh-agent-relay.sock
+    ssh_agent_relay_win_exe: /mnt/c/Windows/System32/OpenSSH/ssh.exe
 
-- name: Get stats of { ssh_agent_relay_win_ssh_exe }
+    ssh_agent_relay_socket_dir: /run/user/{{ ansible_facts.user_uid }}/ssh
+    ssh_agent_relay_socket: /run/user/{{ ansible_facts.user_uid }}/ssh/ssh-agent-relay.sock
+
+- name: Validate ssh.exe exists
   ansible.builtin.stat:
-    path: "{{ ssh_agent_relay_win_ssh_exe }}"
+    path: "{{ ssh_agent_relay_win_exe }}"
 
-- name: Create directory
+- name: Create directory ssh
   ansible.builtin.file:
-    path: "{{ xdg_data_home }}/ssh"
     state: directory
-    mode: u=rwx,g=rx,o=rx
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    path: "{{ ssh_agent_relay_data_home }}"
+    mode: u=rwx,g=rwx,o=rx
 
 - name: Render and place ssh-agent-relay.sh
   ansible.builtin.template:
     src: ssh-agent-relay.sh
-    dest: "{{ xdg_data_home }}/ssh/ssh-agent-relay.sh"
-    mode: u=rwx,g=,o=
+    dest: "{{ ssh_agent_relay_data_home }}/ssh-agent-relay.sh"
+    mode: u=rwx,g=rwx,o=r
   register: script
 
-- ansible.builtin.include_role:
+- name: Set up systemd unit ssh-agent-relay.service
+  ansible.builtin.include_role:
     name: systemd_unit
   vars:
-    systemd_unit: "{{ item }}"
-    systemd_unit_content: "{{ lookup('ansible.builtin.template', item) }}"
+    systemd_unit_name: ssh-agent-relay.service
+    systemd_unit_content: "{{ lookup('ansible.builtin.template', 'ssh-agent-relay.service') }}"
     systemd_unit_restart: "{{ script.changed }}"
     systemd_unit_activate: true
     systemd_unit_running_check: true
-    systemd_unit_running_check_delay: "1"
-  loop:
-    - ssh-agent-relay.service
+    systemd_unit_running_check_delay: "3"
 
-- name: Verify that symlink exists
+- name: Validate that symlink exists
   ansible.builtin.stat:
     path: /etc/systemd/system/multi-user.target.wants/ssh-agent-relay.service
-  changed_when: false
+  become: true
 
 - name: Add block to { shell_bash_login }
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export SSH_AUTH_SOCK={{ ssh_agent_relay_socket }}
+      export SSH_AUTH_SOCK="{{ ssh_agent_relay_socket }}"
 
 - name: Add block to { shell_zsh_login }
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export SSH_AUTH_SOCK={{ ssh_agent_relay_socket }}
+      export SSH_AUTH_SOCK="{{ ssh_agent_relay_socket }}"
