@@ -1,13 +1,15 @@
 # Ansible Role `conda`
 
-This role installes the latest version of Miniconda if no version of Miniconda
-is already installed. It also configures a few things.
+This role installs the latest version of
+[Miniconda](https://docs.anaconda.com/miniconda)
+if no version is already installed.
 
-- https://docs.conda.io/en/latest/miniconda.html
-- https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
+It also configures a few things.
 
-Does not support upgrades. Upgrades have to be done manually.
+## Lifecycle Management
 
-It is enough to execute the following:
+Conda is not kept up-to-date by this role. This has to be done manually:
 
-    conda update conda
+```sh
+conda update conda
+```

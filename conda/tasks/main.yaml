@@ -11,50 +11,57 @@
 - name: Create directories
   ansible.builtin.file:
     state: directory
-    path: "{{ conda_config_home }}"
+    path: "{{ item }}"
     mode: u=rwx,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
   loop:
     - "{{ conda_config_home }}"
     - "{{ conda_data_home }}"
 
-- name: Place file { conda_config }
+- name: Place config
   ansible.builtin.copy:
     src: condarc
     dest: "{{ conda_config }}"
     mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
 
+#
 # ------------------------------------------------------------------------------
+#
 
-- name: Install
+- name: Get info about executable
+  ansible.builtin.stat:
+    path: "{{ conda_exe }}"
+  register: conda_exe_stat
+
+- name: Create temporary directory
+  when: not conda_exe_stat.stat.exists
+  ansible.builtin.tempfile:
+    state: directory
+  register: temp_dir
+
+- name: Install latest
+  when: not conda_exe_stat.stat.exists
   ansible.builtin.shell:
     cmd: |
       set -euo pipefail
+      installer="{{ temp_dir.path }}/miniconda-installer.sh"
+      wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$installer"
+      chmod +x "$installer"
+      "$installer" -b -p ~/miniconda3
+    executable: /bin/bash
+  changed_when: true
 
-      if [ ! -d ~/miniconda3 ]; then
-        wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda-installer.sh
-        chmod +x /tmp/miniconda-installer.sh
-        /tmp/miniconda-installer.sh -b -p ~/miniconda3
-        rm /tmp/miniconda-installer.sh
-        echo status=changed
-      fi
-    executable: /usr/bin/bash
-  register: task
-  changed_when: "'status=changed' in task.stdout"
-
+#
 # ------------------------------------------------------------------------------
+#
 
-- name: Bash / Add integration block to { bash_bashrc }
+- name: Init in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-78ab-9baa-8868ea115340"
     block: |
       eval "$({{ conda_exe }} shell.bash hook)"
 
-- name: Bash / Clone tartansandal/conda-bash-completion
+- name: Clone completion script for bash # noqa: latest
   ansible.builtin.git:
     repo: https://github.com/tartansandal/conda-bash-completion.git
     dest: "{{ conda_data_home }}/conda-bash-completion"
@@ -62,22 +69,24 @@
     depth: 1
     force: true
 
-- name: Bash / Create symbolic link for completion
+- name: Configure completion in bash
   ansible.builtin.file:
     src: "{{ conda_data_home }}/conda-bash-completion/conda"
     dest: "{{ bash_completions_dir }}/conda.bash"
     state: link
 
+#
 # ------------------------------------------------------------------------------
+#
 
-- name: Zsh / Add integration block to { zsh_zshrc }
-  blockinfile:
+- name: Init in zsh
+  ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-7837-a26a-cb2444155e97"
     block: |
       eval "$({{ conda_exe }} shell.zsh hook)"
 
-- name: Zsh / Clone esc/conda-zsh-completion
+- name: Clone completion script for zsh # noqa: latest
   ansible.builtin.git:
     repo: https://github.com/esc/conda-zsh-completion.git
     dest: "{{ conda_data_home }}/conda-zsh-completion"
@@ -85,14 +94,14 @@
     depth: 1
     force: true
 
-- name: Zsh / Create symbolic link for completion
+- name: Enable completion in zsh
   ansible.builtin.file:
     src: "{{ conda_data_home }}/conda-zsh-completion/_conda"
     dest: "{{ zsh_functions_dir }}/_conda"
     state: link
 
-- name: Zsh / Add integration block to { zsh_zshrc_compinit_pre }
-  blockinfile:
+- name: Configure completion in zsh
+  ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f44cd-ac41-77ae-b984-a4fa0610917d"
     block: |
