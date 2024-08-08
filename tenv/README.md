@@ -1,7 +1,3 @@
-# Ansible Role `ripgrep`
+# Ansible Role `tenv`
 
-Installs and configures ripgrep for trallnag and root.
-
-## References
-
-- <https://github.com/BurntSushi/ripgrep>
+Installs and configures [tenv](https://github.com/tofuutils/tenv).

@@ -2,17 +2,3 @@
   community.general.homebrew:
     name: tenv
     path: "{{ homebrew_path }}"
-  become_user: brewmaster
-  become: true
-
-- name: Link to /usr/local/bin
-  ansible.builtin.file:
-    src: "{{ homebrew_path }}/{{ item }}"
-    dest: /usr/bin/{{ item }}
-    state: link
-    mode: u+r,g+r,o+r
-    owner: brewmaster
-    group: brewmaster
-  become: true
-  loop:
-    - tenv
