@@ -1,14 +1,14 @@
 - name: Add block to { bash_bashrc } to open in same dir
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018fa13b-4786-7d2b-a3c5-a25108e1dc43"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: open in same dir"
     block: |
       PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
 
 - name: Add block to { zsh_zshrc } to open in same dir
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018fa13b-4786-739c-8dff-77568d8d0765"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: open in same dir"
     block: |
       keep_current_path() {
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
