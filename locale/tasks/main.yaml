@@ -1,0 +1,12 @@
+- name: Generate
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: true
+
+- name: Configure
+  ansible.builtin.lineinfile:
+    path: /etc/default/locale
+    regexp: ^LANG=
+    line: LANG=en_US.UTF-8
+  become: true
