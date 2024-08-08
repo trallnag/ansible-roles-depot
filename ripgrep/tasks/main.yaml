@@ -2,53 +2,37 @@
   community.general.homebrew:
     name: ripgrep
     path: "{{ homebrew_path }}"
-  become_user: brewmaster
-  become: true
 
-- name: Link to /usr/local/bin
-  ansible.builtin.file:
-    src: "{{ homebrew_path }}/{{ item }}"
-    dest: /usr/bin/{{ item }}
-    state: link
-    mode: u+r,g+r,o+r
-    owner: brewmaster
-    group: brewmaster
-  become: true
-  loop:
-    - rg
-
-# ------------------------------------------------------------------------------
-
-- name: Set facts
+- name: Set fact ripgrep_config_home
   ansible.builtin.set_fact:
-    ripgrep_config: "{{ xdg_config_home }}/ripgrep/ripgrep.conf"
+    ripgrep_config_home: "{{ xdg_config_home }}/ripgrep"
+
+- name: Set fact ripgrep_config
+  ansible.builtin.set_fact:
+    ripgrep_config: "{{ ripgrep_config_home }}/ripgrep.conf"
 
 - name: Create config directory
   ansible.builtin.file:
     state: directory
-    path: "{{ ripgrep_config | dirname }}"
-    mode: u=rwx,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    path: "{{ ripgrep_config_home }}"
+    mode: u=rwx,g=rwx,o=rx
 
 - name: Place config file
   ansible.builtin.copy:
     src: ripgrep.conf
     dest: "{{ ripgrep_config }}"
-    mode: u=rw,g=,o=
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
 
-- name: Add block to { bash_profile }
+- name: Make rg aware of conf in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f1661-6ae1-72e2-882f-f501ab2b6e07"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
 
-- name: Add block to { zsh_zprofile }
+- name: Make rg aware of conf in zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f1661-a118-7ab2-96bb-25d3f58c06e5"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
