@@ -1,17 +1,18 @@
 # Ansible Role `pipx`
 
-Installs pipx with the system Python. Also installs some packages with pipx.
+Manages [pipx](https://github.com/pypa/pipx) and some pipx packages.
 
-- <https://github.com/pypa/pipx>
-- <https://pypa.github.io/pipx/>
+Assumes that pipx is already installed as part of initial getting started of the
+playbook. Installs some packages with pipx.
 
 ## Lifecycle Management
 
 Pipx is kept up-to-date by this role.
 
-Versions and updates of the packages installed with Pipx within this role are
-not managed by this role. Must be done manually. For example with:
+Versions and updates of the packages installed with pipx within this role are
+not managed by this role. Must be done manually. For example with the following
+command, that will upgrade all packages managed by pipx.
 
-```shell
+```sh
 pipx upgrade-all
 ```
