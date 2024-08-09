@@ -31,11 +31,11 @@
           exit 1
         fi
       fi
-    executable: /usr/bin/bash
+    executable: /bin/bash
   register: homebrew_installation
   changed_when: "'status=changed' in homebrew_installation.stdout"
 
-- name: Add block to { bash_profile }
+- name: Hook into bash
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -43,7 +43,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add block to { bash_bashrc }
+- name: Enable completion in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
@@ -59,7 +59,7 @@
         fi
       fi
 
-- name: Add block to { zsh_zprofile }
+- name: Hook into zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -67,7 +67,7 @@
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-- name: Add block to { zsh_zshrc_compinit_pre }
+- name: Enable completion in zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
