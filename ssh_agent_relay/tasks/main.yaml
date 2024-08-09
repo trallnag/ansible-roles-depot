@@ -27,18 +27,18 @@
   ansible.builtin.file:
     state: directory
     path: "{{ ssh_agent_relay_data_home }}"
-    mode: u=rwx,g=rwx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Render and place ssh-agent-relay.sh
   ansible.builtin.template:
     src: ssh-agent-relay.sh
     dest: "{{ ssh_agent_relay_data_home }}/ssh-agent-relay.sh"
-    mode: u=rwx,g=rwx,o=r
+    mode: u=rwx,g=,o=
   register: script
 
 - name: Set up systemd unit ssh-agent-relay.service
   ansible.builtin.include_role:
-    name: systemd_unit
+    name: trallnag.systemd_unit
   vars:
     systemd_unit_name: ssh-agent-relay.service
     systemd_unit_content: "{{ lookup('ansible.builtin.template', 'ssh-agent-relay.service') }}"
