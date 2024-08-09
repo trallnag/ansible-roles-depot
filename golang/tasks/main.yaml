@@ -1,14 +1,10 @@
-- name: Install formulae
+- name: Install
   community.general.homebrew:
-    name:
-      - go # https://go.dev/doc/devel/release
-      - golangci-lint # https://golangci-lint.run
+    name: go
     path: "{{ homebrew_path }}"
 
-
-
 - name: Integrate into bash
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
@@ -17,7 +13,7 @@
       export PATH="$PATH:$GOBIN"
 
 - name: Integrate into zsh
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
@@ -25,7 +21,36 @@
       export GOBIN="$GOPATH/bin"
       path=($path $GOBIN)
 
-- name: Install packages
+#
+# ------------------------------------------------------------------------------
+# https://github.com/nao1215/gup
+#
+
+- name: Install golangci-lint
+  community.general.homebrew:
+    name: golangci-lint
+    path: "{{ homebrew_path }}"
+
+#
+# ------------------------------------------------------------------------------
+# https://github.com/nao1215/gup
+#
+
+- name: Tap repository nao1215/tap
+  community.general.homebrew_tap:
+    name: nao1215/tap
+    path: "{{ homebrew_path }}"
+
+- name: Install formula nao1215/tap/gup
+  community.general.homebrew:
+    name: nao1215/tap/gup
+    path: "{{ homebrew_path }}"
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Install misc tools directly with Go
   ansible.builtin.shell: |
     set -euo pipefail
 
