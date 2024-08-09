@@ -2,3 +2,10 @@
   community.general.homebrew:
     name: direnv
     path: "{{ homebrew_path }}"
+
+- name: Hook into bash
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc }}"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    block: |
+      eval "$(direnv hook bash)"
