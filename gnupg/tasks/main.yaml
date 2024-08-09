@@ -1,4 +1,4 @@
-- name: Add integration block to { bash_bashrc_top }
+- name: Integrate into bash
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc_top }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -6,7 +6,7 @@
       export GPG_TTY=$(tty)
 
 
-- name: Add integration block to { zsh_zshrc_interactive }
+- name: Integrate into zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_interactive }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
