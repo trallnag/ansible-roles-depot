@@ -49,7 +49,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Add block to { shell_bash_login }
+- name: Set up export of dot env vars during bash login
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -65,7 +65,7 @@
 
       export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
-- name: Add block to { shell_fish_login }
+- name: Set up export of dot env vars during fish login
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -81,7 +81,7 @@
 
       set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up export of dot env vars during zsh login
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -101,7 +101,7 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Delete $HOME/.bash_profile
+- name: Delete .bash_profile
   ansible.builtin.file:
     path: $HOME/.bash_profile
     state: absent
