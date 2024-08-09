@@ -21,7 +21,7 @@
       - word: et
         subst: eza -aT --group-directories-first
 
-- name: Add block to { bash_aliases }
+- name: Set up aliases in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_aliases }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -30,7 +30,7 @@
       alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
 
-- name: Add block to { zsh_aliases }
+- name: Set up aliases in zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
