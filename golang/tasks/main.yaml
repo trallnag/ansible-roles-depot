@@ -1,41 +1,70 @@
-- name: "bash : Integration"
+- name: Install formulae
+  community.general.homebrew:
+    name:
+      - go # https://go.dev/doc/devel/release
+      - golangci-lint # https://golangci-lint.run
+    path: "{{ homebrew_path }}"
+
+
+
+- name: Integrate into bash
   blockinfile:
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export GOPATH=$HOME/go
-      export GOBIN=$GOPATH/bin
+      export GOPATH="$HOME/go"
+      export GOBIN="$GOPATH/bin"
       export PATH="$PATH:$GOBIN"
 
-- name: "zsh : Integration"
+- name: Integrate into zsh
   blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
-      export GOPATH=$HOME/go
-      export GOBIN=$GOPATH/bin
+      export GOPATH="$HOME/go"
+      export GOBIN="$GOPATH/bin"
       path=($path $GOBIN)
 
 - name: Install packages
   ansible.builtin.shell: |
+    set -euo pipefail
+
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 
-    export GOPATH=$HOME/go
-    export GOBIN=$GOPATH/bin
+    export GOPATH="$HOME/go"
+    export GOBIN="$GOPATH/bin"
     export PATH="$PATH:$GOBIN"
 
     if ! command -v {{ item['cmd'] }}; then
       go install {{ item['pkg'] }}
       echo status=changed
     fi
-  args: { executable: "{{ bash_executable }}" }
+  args:
+    executable: /usr/bin/bash
   register: task
   changed_when: "'status=changed' in task.stdout"
   loop:
-    - { cmd: air, pkg: github.com/cosmtrek/air@latest }
-    - { cmd: go-global-update, pkg: github.com/Gelio/go-global-update@latest }
-    - { cmd: godoc, pkg: golang.org/x/tools/cmd/godoc@latest }
-    - { cmd: gofumpt, pkg: mvdan.cc/gofumpt@latest } # https://github.com/mvdan/gofumpt
-    - { cmd: go-mod-upgrade, pkg: github.com/oligot/go-mod-upgrade@latest } # https://github.com/oligot/go-mod-upgrade
-    - { cmd: gopls, pkg: golang.org/x/tools/gopls@latest }
+    # https://github.com/air-verse/air
+    - cmd: air
+      pkg: github.com/air-verse/air@latest
+
+    # https://github.com/Gelio/go-global-update
+    - cmd: go-global-update
+      pkg: github.com/Gelio/go-global-update@latest
+
+    # https://pkg.go.dev/golang.org/x/tools/cmd/godoc
+    - cmd: godoc
+      pkg: golang.org/x/tools/cmd/godoc@latest
+
+    # https://github.com/mvdan/gofumpt
+    - cmd: gofumpt
+      pkg: mvdan.cc/gofumpt@latest
+
+    # https://github.com/oligot/go-mod-upgrade
+    - cmd: go-mod-upgrade
+      pkg: github.com/oligot/go-mod-upgrade@latest
+
+    # https://pkg.go.dev/golang.org/x/tools/gopls
+    - cmd: gopls
+      pkg: golang.org/x/tools/gopls@latest
