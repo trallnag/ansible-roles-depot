@@ -1,4 +1,4 @@
-- name: Configure sudo for { ansible_user }
+- name: Configure for ansible user
   ansible.builtin.copy:
     dest: /etc/sudoers.d/10-{{ ansible_user }}
     mode: u=r,g=r,o=
