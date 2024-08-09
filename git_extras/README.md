@@ -1,3 +1,3 @@
 # Ansible Role `git_extras`
 
-- <https://github.com/tj/git-extras>
+Set ups [git-extras](https://github.com/tj/git-extras)

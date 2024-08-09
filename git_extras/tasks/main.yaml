@@ -10,7 +10,7 @@
       - word: gitb
         subst: git browse
 
-- name: Add block to { bash_aliases }
+- name: Create aliases in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_aliases }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
@@ -19,7 +19,7 @@
       alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
 
-- name: Add block to { zsh_aliases }
+- name: Create aliases in zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
