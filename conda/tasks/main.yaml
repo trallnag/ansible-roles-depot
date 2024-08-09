@@ -69,7 +69,7 @@
     depth: 1
     force: true
 
-- name: Configure completion in bash
+- name: Enable completion in bash
   ansible.builtin.file:
     src: "{{ conda_data_home }}/conda-bash-completion/conda"
     dest: "{{ bash_completions_dir }}/conda.bash"
