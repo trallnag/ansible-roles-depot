@@ -17,7 +17,7 @@
   ansible.builtin.file:
     state: directory
     path: "{{ gnupg_bridge_win_exe | dirname }}"
-    mode: u=rwx,g=rwx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Create temporary directory
   when: not gpg_bridge_exe_stat.stat.exists
@@ -30,7 +30,7 @@
   ansible.builtin.get_url:
     url: "https://github.com/BusyJay/gpg-bridge/releases/download/v{{ gnupg_bridge_version }}/gpg-bridge-v{{ gnupg_bridge_version }}.zip"
     dest: "{{ temp_dir.path }}/gpg-bridge.zip"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=,o=
 
 - name: Unzip archive
   when: not gpg_bridge_exe_stat.stat.exists
@@ -43,7 +43,7 @@
   when: not gpg_bridge_exe_stat.stat.exists
   ansible.builtin.file:
     path: "{{ gnupg_bridge_win_exe }}"
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Validate gpg-bridge.exe exists
   ansible.builtin.stat:
@@ -51,7 +51,7 @@
 
 - name: Set up systemd unit gnupg-bridge.service
   ansible.builtin.include_role:
-    name: systemd_unit
+    name: trallnag.systemd_unit
   vars:
     systemd_unit_name: gnupg-bridge.service
     systemd_unit_content: "{{ lookup('ansible.builtin.template', 'gnupg-bridge.service') }}"
