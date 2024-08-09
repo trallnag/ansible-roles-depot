@@ -2,37 +2,21 @@
   community.general.homebrew:
     name: fzf
     path: "{{ homebrew_path }}"
-  become_user: brewmaster
-  become: true
-
-- name: Link to /usr/local/bin
-  ansible.builtin.file:
-    src: "{{ homebrew_path }}/{{ item }}"
-    dest: /usr/bin/{{ item }}
-    state: link
-    mode: u+r,g+r,o+r
-    owner: brewmaster
-    group: brewmaster
-  become: true
-  loop:
-    - fzf
-
-# ------------------------------------------------------------------------------
 
 - name: Generate shell config script
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/opt/fzf/install --no-update-rc --key-bindings --completion
   changed_when: false
 
-- name: Add integration block to { bash_bashrc }
+- name: Hook into bash
   blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f436e-7ea9-74a7-bc5b-7471abf9fa48"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
 
-- name: Add integration block to { zsh_zshrc_compinit_pre }
+- name: Hook into zsh
   blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 018f436e-7ea9-7a8c-bee8-d620c73f2ad6"
+    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     block: |
       [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
