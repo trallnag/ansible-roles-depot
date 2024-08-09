@@ -4,9 +4,7 @@
       - age # https://github.com/FiloSottile/age
       - fd # https://github.com/sharkdp/fd
       - gh # https://github.com/cli/cli
-      - go # https://go.dev/doc/devel/release
       - go-task # https://taskfile.dev
-      - golangci-lint # https://golangci-lint.run
       - helm # https://helm.sh/
       - just # https://github.com/casey/just
       - kubectx # https://github.com/ahmetb/kubectx
