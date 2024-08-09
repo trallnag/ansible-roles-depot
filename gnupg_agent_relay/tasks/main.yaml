@@ -12,7 +12,6 @@
 - name: Set facts
   ansible.builtin.set_fact:
     gnupg_agent_relay_data_home: "{{ xdg_data_home }}/gnupg"
-
     gnupg_agent_relay_win_ssh_exe: /mnt/c/Windows/System32/OpenSSH/ssh.exe
 
 - name: Validate ssh.exe exists
@@ -23,18 +22,18 @@
   ansible.builtin.file:
     state: directory
     path: "{{ gnupg_agent_relay_data_home }}"
-    mode: u=rwx,g=rwx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Render and place gnupg-agent-relay.sh
   ansible.builtin.template:
     src: gnupg-agent-relay.sh
     dest: "{{ gnupg_agent_relay_data_home }}/gnupg-agent-relay.sh"
-    mode: u=rwx,g=rwx,o=r
+    mode: u=rwx,g=,o=
   register: script
 
 - name: Set up systemd unit gnupg-agent-relay.service
   ansible.builtin.include_role:
-    name: systemd_unit
+    name: trallnag.systemd_unit
   vars:
     systemd_unit_name: gnupg-agent-relay.service
     systemd_unit_content: "{{ lookup('ansible.builtin.template', 'gnupg-agent-relay.service') }}"
