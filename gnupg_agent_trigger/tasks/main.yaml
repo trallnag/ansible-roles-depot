@@ -1,8 +1,8 @@
 - name: Set facts
   ansible.builtin.set_fact:
     gnupg_agent_trigger_data_home: "{{ xdg_data_home }}/gnupg"
-
     gnupg_agent_trigger_win_exe: /mnt/c/Program Files (x86)/GnuPG/bin/gpg-connect-agent.exe
+    gnupg_agent_trigger_lock: "{{ win_home }}/AppData/Roaming/gnupg/gnupg_spawn_agent_sentinel.lock"
 
 - name: Validate gpg-connect-agent.exe exists
   ansible.builtin.stat:
@@ -12,18 +12,18 @@
   ansible.builtin.file:
     state: directory
     path: "{{ gnupg_agent_trigger_data_home }}"
-    mode: u=rwx,g=rwx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Render and place gnupg-agent-trigger.sh
   ansible.builtin.template:
     src: gnupg-agent-trigger.sh
     dest: "{{ gnupg_agent_trigger_data_home }}/gnupg-agent-trigger.sh"
-    mode: u=rwx,g=rwx,o=r
+    mode: u=rwx,g=,o=
   register: script
 
 - name: Set up systemd unit gnupg-agent-trigger.service
   ansible.builtin.include_role:
-    name: systemd_unit
+    name: trallnag.systemd_unit
   vars:
     systemd_unit_name: gnupg-agent-trigger.service
     systemd_unit_content: "{{ lookup('ansible.builtin.template', 'gnupg-agent-trigger.service') }}"
