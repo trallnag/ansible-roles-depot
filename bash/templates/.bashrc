@@ -1,17 +1,18 @@
-source "$DOT_BASH_BASHRC_TOP"
-
-#
-# ------------------------------------------------------------------------------
-#
-
 # If not running interactively, don't do anything.
 case $- in
   *i*) ;;
   *) return ;;
 esac
 
-# Set a few options.
-# https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+source "$DOT_BASH_BASHRC_TOP"
+
+#
+# ------------------------------------------------------------------------------
+#
+# Misc shell options.
+# Reference: https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+#
+
 shopt -s autocd
 shopt -s cdspell
 shopt -s checkhash
@@ -26,7 +27,8 @@ shopt -s checkwinsize
 
 #
 # ------------------------------------------------------------------------------
-# History
+#
+# Configure history.
 #
 
 HISTIGNORE='&:[ ]*:exit:ls:bg:fg:history:clear'
@@ -48,6 +50,7 @@ bind '"\e[D": backward-char'
 
 #
 # ------------------------------------------------------------------------------
+#
 # More or less copied from default bashrc on Ubuntu.
 #
 
@@ -98,10 +101,10 @@ fi
 
 #
 # ------------------------------------------------------------------------------
-# Cherry pick from Bash Sensible:
-# https://github.com/mrzool/bash-sensible/blob/master/sensible.bash
 #
-
+# Cherry pick from Bash Sensible.
+# Reference: https://github.com/mrzool/bash-sensible/blob/master/sensible.bash
+#
 
 # Enable history expansion with space.
 # E.g. typing !!<space> will replace the !! with your last command.
@@ -121,6 +124,7 @@ bind "set mark-symlinked-directories on"
 
 #
 # ------------------------------------------------------------------------------
+#
 # Aliases.
 #
 
