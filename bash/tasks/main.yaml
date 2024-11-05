@@ -1,10 +1,9 @@
-- name: Set directory facts
+- name: Set file facts
   ansible.builtin.set_fact:
     bash_dynrc_dir: "{{ xdg_config_home }}/bash"
-
     bash_completions_dir: "{{ xdg_data_home }}/bash-completion/completions"
 
-- name: Set file facts
+- name: Set directory facts
   ansible.builtin.set_fact:
     bash_completion: "{{ xdg_config_home }}/bash_completion"
 
@@ -33,9 +32,12 @@
     access_time: preserve
   loop:
     - "{{ bash_completion }}"
+
     - "{{ bash_profile }}"
+
     - "{{ bash_bashrc_top }}"
     - "{{ bash_bashrc }}"
+
     - "{{ bash_aliases }}"
 
 - name: Install packages
