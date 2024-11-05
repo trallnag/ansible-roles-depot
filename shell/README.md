@@ -1,3 +1,3 @@
 # Ansible Role `shell`
 
-Prepares shell files to be loaded by my primary shell roles.
+Set ups common configuration sourced by Bash, Fish, and Zsh.
