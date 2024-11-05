@@ -19,38 +19,9 @@ typeset -g POWERLEVEL9K_TOP_LEFT_PROMPT_ELEMENTS=(
   status
   command_execution_time
   background_jobs
-  # direnv
   virtualenv
   anaconda
-  # pyenv
-#  goenv
-#  nodenv
-#  nvm
-#  nodeenv
-#  node_version
-#  go_version for some reason slows down prompt. leads to lagging behind.
-#  rust_version
-#  dotnet_version
-#  php_version
-#  laravel_version
-#  java_version
-#  rbenv
-#  rvm
-#  fvm
-#  luaenv
-#  jenv
-#  plenv
-#  phpenv
-#  scalaenv
   kubecontext
-#  terraform
-#  aws
-#  azure
-#  gcloud
-#  ranger
-#  nnn
-#  xplr
-#  midnight_commander
 )
 
 typeset -g POWERLEVEL9K_BOTTOM_LEFT_PROMPT_ELEMENTS=(
