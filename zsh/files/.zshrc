@@ -1,14 +1,19 @@
-# Executes commands at the start of an interactive session.
-
+#
+# Sourced in interactive shells. It should contain commands to set up aliases,
+# functions, options, key bindings, etc.
+#
 # Here is how Zsh loads its configuration files:
-#   1) .zshenv
-#   2) .zprofile if login
-#   3) .zshrc if interactive
-#   4) .zlogin if login
-#   5) .zlogout
-
-# Online man page regarding Zsh options: https://linux.die.net/man/1/zshoptions
-
+#
+# 1. `.zshenv`
+# 2. `.zprofile` if login
+# 3. `.zshrc` if interactive
+# 4. `.zlogin` if login
+# 5. `.zlogout`
+#
+# References:
+#
+# 1. https://linux.die.net/man/1/zshoptions
+# 2. https://zsh.sourceforge.io/Intro/intro_3.html
 #
 # ------------------------------------------------------------------------------
 #
@@ -80,7 +85,8 @@ if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
 #
 # ------------------------------------------------------------------------------
-# History
+#
+# History.
 #
 
 # Loaded into memory from the history file.
@@ -113,11 +119,13 @@ alias history='fc -il 1'
 
 #
 # ------------------------------------------------------------------------------
-# Completion
+#
+# Completion.
 #
 # This block is based on:
-#   - f1e24d3 https://github.com/sorin-ionescu/prezto/blob/master/modules/completion/init.zsh
-#   - 02d07f3 https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/completion.zsh
+#
+# - f1e24d3 https://github.com/sorin-ionescu/prezto/blob/master/modules/completion/init.zsh
+# - 02d07f3 https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/completion.zsh
 #
 
 zmodload -i zsh/complist
@@ -228,7 +236,8 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
 #
 # ------------------------------------------------------------------------------
-# Correction
+#
+# Correction.
 #
 
 setopt correct
@@ -263,7 +272,8 @@ alias sftp='noglob sftp'
 
 #
 # ------------------------------------------------------------------------------
-# zsh-syntax-highlighting
+#
+# Init zsh-syntax-highlighting.
 #
 
 source "$DOT_ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
@@ -278,6 +288,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
 
 #
 # ------------------------------------------------------------------------------
+#
 # zsh-history-substring-search
 #
 # If you want to use zsh-syntax-highlighting along with this script, then make
@@ -298,7 +309,8 @@ fi
 
 #
 # ------------------------------------------------------------------------------
-# zsh-autosuggestions
+#
+# Init zsh-autosuggestions.
 #
 # Must be setup after both zsh-syntax-highlighting and
 # zsh-history-substring-search to work properly.
@@ -318,7 +330,8 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
 #
 # ------------------------------------------------------------------------------
-# ohmyzsh
+#
+# Init ohmyzsh.
 #
 
 source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/clipboard.zsh"
@@ -338,10 +351,11 @@ source "$DOT_ZSH_ZSHRC"
 
 source "$DOT_ZSH_ZSHRC_COMPINIT_PRE"
 
-
+#
 # ------------------------------------------------------------------------------
-# Compinit & Bashcompinit
-
+#
+# Compinit & Bashcompinit.
+#
 
 autoload -Uz compinit bashcompinit
 compinit -u -d ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
@@ -355,6 +369,7 @@ source "$DOT_ZSH_ZSHRC_COMPINIT_POST"
 
 #
 # ------------------------------------------------------------------------------
+#
 # Aliases.
 #
 
