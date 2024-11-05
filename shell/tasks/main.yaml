@@ -1,16 +1,16 @@
-- name: Set directory facts
+- name: Set file facts
   ansible.builtin.set_fact:
     shell_bash_login: "{{ xdg_config_home }}/shell/login.bash"
     shell_fish_login: "{{ xdg_config_home }}/shell/login.fish"
     shell_zsh_login: "{{ xdg_config_home }}/shell/login.zsh"
 
-- name: Create directory
+- name: Create config home
   ansible.builtin.file:
     path: "{{ xdg_config_home }}/shell"
     state: directory
     mode: u=rwx,g=rx,o=rx
 
-- name: Touch files
+- name: Touch login scripts
   ansible.builtin.file:
     path: "{{ item }}"
     state: touch
@@ -22,21 +22,21 @@
     - "{{ shell_fish_login }}"
     - "{{ shell_zsh_login }}"
 
-- name: Add block to { shell_bash_login }
+- name: Set up shell init during bash login
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.bash') }}"
 
-- name: Add block to { shell_fish_login }
+- name: Set up shell init during fish login
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.fish') }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up shell init during zsh login
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
