@@ -1,0 +1,11 @@
+- name: Set up agent autostart
+  ansible.builtin.shell:
+    executable: pwsh.exe
+    cmd: "{{ lookup('ansible.builtin.file', 'autostart-agent.ps1') }}"
+  changed_when: false
+
+- name: Set up Kleopatra autostart
+  ansible.builtin.shell:
+    executable: pwsh.exe
+    cmd: "{{ lookup('ansible.builtin.file', 'autostart-kleopatra.ps1') }}"
+  changed_when: false
