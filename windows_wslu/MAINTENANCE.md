@@ -1,6 +1,6 @@
 # Maintenance
 
-## 1. Update version
+## Update version
 
 Currently, [wslu][wslu] is pinned to a commit hash specified in
 [`tasks/main.yaml`](tasks/main.yaml).
