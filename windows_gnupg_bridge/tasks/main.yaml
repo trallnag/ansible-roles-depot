@@ -1,0 +1,123 @@
+- name: Set target version fact
+  ansible.builtin.set_fact:
+    windows_gnupg_bridge_target_version: "0.1.1"
+
+- name: Set executable fact
+  ansible.builtin.set_fact:
+    windows_gnupg_bridge_exe: >-
+      {{ windows_home }}/Share/GnuPG Bridge/gpg-bridge.exe
+
+- name: Get installed version
+  ansible.builtin.shell:
+    executable: /usr/bin/bash
+    cmd: |
+      set -euo pipefail
+      if [[ -f "{{ windows_gnupg_bridge_exe }}" ]]; then
+        "{{ windows_gnupg_bridge_exe }}" --version | sed "s/gpg-bridge //"
+      fi
+  register: windows_gnupg_bridge_get_installed_version
+  changed_when: false
+
+- name: Set installed version fact
+  ansible.builtin.set_fact:
+    windows_gnupg_bridge_installed_version: >-
+      {{
+        windows_gnupg_bridge_get_installed_version.stdout
+        | regex_search(".+\..+\..+")
+      }}
+
+- name: Print installed version
+  ansible.builtin.debug:
+    var: windows_gnupg_bridge_installed_version
+
+- name: Install
+  when: >-
+    windows_gnupg_bridge_installed_version
+    != windows_gnupg_bridge_target_version
+  block:
+    - name: Delete install directory
+      ansible.builtin.file:
+        path: "{{ windows_gnupg_bridge_exe | dirname }}"
+        state: absent
+
+    - name: Create install directory
+      ansible.builtin.file:
+        path: "{{ windows_gnupg_bridge_exe | dirname }}"
+        state: directory
+        mode: u=rwx,g=,o=
+
+    - name: Create temporary directory
+      ansible.builtin.tempfile:
+        state: directory
+      register: temp_dir
+
+    - name: Download archive
+      ansible.builtin.get_url:
+        url: "{{ url_parts | join }}"
+        dest: "{{ temp_dir.path }}/gpg-bridge.zip"
+        mode: u=rw,g=,o=
+        force: true
+      vars:
+        url_parts:
+          - "https://github.com/BusyJay/gpg-bridge/releases/download/v"
+          - "{{ windows_gnupg_bridge_target_version }}/gpg-bridge-v"
+          - "{{ windows_gnupg_bridge_target_version }}.zip"
+
+    - name: Unzip archive
+      ansible.builtin.unarchive:
+        src: "{{ temp_dir.path }}/gpg-bridge.zip"
+        dest: "{{ windows_gnupg_bridge_exe | dirname }}"
+        remote_src: true
+
+    - name: Set file permissions
+      ansible.builtin.file:
+        path: "{{ windows_gnupg_bridge_exe }}"
+        mode: u=rwx,g=,o=
+
+    - name: Get new installed version
+      ansible.builtin.shell:
+        executable: /usr/bin/bash
+        cmd: |
+          set -euo pipefail
+          "{{ windows_gnupg_bridge_exe }}" --version | sed "s/gpg-bridge //"
+      register: windows_gnupg_bridge_get_new_installed_version
+      changed_when: false
+
+    - name: Set new installed version fact
+      ansible.builtin.set_fact:
+        windows_gnupg_bridge_new_installed_version: >-
+          {{
+            windows_gnupg_bridge_get_new_installed_version.stdout
+            | regex_search(".+\..+\..+")
+          }}
+
+    - name: Print new installed version
+      ansible.builtin.debug:
+        var: windows_gnupg_bridge_new_installed_version
+
+    - name: Validate installed version correctness
+      ansible.builtin.assert:
+        that:
+          - >-
+            windows_gnupg_bridge_new_installed_version
+            == windows_gnupg_bridge_target_version
+        fail_msg: >-
+          Something went wrong with the installation. Newly installed version
+          is unexpected. Got `{{ windows_gnupg_bridge_new_installed_version }}`,
+          want `{{ windows_gnupg_bridge_target_version }}`.
+
+- name: Set up systemd unit windows-gnupg-bridge.service
+  ansible.builtin.include_role:
+    name: trallnag.systemd_unit
+  vars:
+    systemd_unit_name: windows-gnupg-bridge.service
+    systemd_unit_activate: true
+    systemd_unit_running_check: true
+    systemd_unit_running_check_delay: "3"
+    systemd_unit_content: >-
+      {{ lookup('ansible.builtin.template', 'windows-gnupg-bridge.service') }}
+
+- name: Validate symlink existence
+  ansible.builtin.stat:
+    path: /etc/systemd/system/multi-user.target.wants/windows-gnupg-bridge.service
+  changed_when: false
