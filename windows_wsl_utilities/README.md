@@ -1,4 +1,4 @@
-# Ansible Role `windows_wslu`
+# Ansible Role `windows_wsl_utilities`
 
 Installs [wslu][wslu], a collection of utilities for WSL.
 
