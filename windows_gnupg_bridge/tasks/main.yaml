@@ -2,10 +2,21 @@
   ansible.builtin.set_fact:
     windows_gnupg_bridge_target_version: "0.1.1"
 
+- name: Set fact data home
+  ansible.builtin.set_fact:
+    windows_gnupg_bridge_data_home: >-
+      {{ xdg_data_home }}/windows-gnupg-bridge
+
 - name: Set executable fact
   ansible.builtin.set_fact:
     windows_gnupg_bridge_exe: >-
-      {{ windows_home }}/Share/GnuPG Bridge/gpg-bridge.exe
+      {{ windows_gnupg_bridge_data_home }}/gpg-bridge
+
+- name: Create data home directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ windows_gnupg_bridge_data_home }}"
+    mode: u=rwx,g=,o=
 
 - name: Get installed version
   ansible.builtin.shell:
@@ -35,16 +46,10 @@
     windows_gnupg_bridge_installed_version
     != windows_gnupg_bridge_target_version
   block:
-    - name: Delete install directory
+    - name: Delete executable
       ansible.builtin.file:
-        path: "{{ windows_gnupg_bridge_exe | dirname }}"
+        path: "{{ windows_gnupg_bridge_exe }}"
         state: absent
-
-    - name: Create install directory
-      ansible.builtin.file:
-        path: "{{ windows_gnupg_bridge_exe | dirname }}"
-        state: directory
-        mode: u=rwx,g=,o=
 
     - name: Create temporary directory
       ansible.builtin.tempfile:
@@ -68,6 +73,13 @@
         src: "{{ temp_dir.path }}/gpg-bridge.zip"
         dest: "{{ windows_gnupg_bridge_exe | dirname }}"
         remote_src: true
+
+    - name: Rename executable
+      ansible.builtin.command:
+        cmd: >-
+          mv
+          "{{ windows_gnupg_bridge_exe | dirname }}/gpg-bridge.exe"
+          "{{ windows_gnupg_bridge_exe }}"
 
     - name: Set file permissions
       ansible.builtin.file:
@@ -115,9 +127,17 @@
     systemd_unit_running_check: true
     systemd_unit_running_check_delay: "3"
     systemd_unit_content: >-
-      {{ lookup('ansible.builtin.template', 'windows-gnupg-bridge.service') }}
+      {{
+        lookup(
+          'ansible.builtin.template',
+          'windows-gnupg-bridge.service'
+        )
+      }}
 
 - name: Validate symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/windows-gnupg-bridge.service
-  changed_when: false
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - "/etc/systemd/system/multi-user.target.wants/"
+      - "windows-gnupg-bridge.service"

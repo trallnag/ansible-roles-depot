@@ -2,8 +2,6 @@
 
 Description=Windows GnuPG Bridge
 
-ConditionFileIsExecutable="{{ windows_gnupg_bridge_exe }}"
-
 [Service]
 
 Type=simple
