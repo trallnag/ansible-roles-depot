@@ -1,0 +1,26 @@
+[Unit]
+
+Description=Windows SSH Agent Relay
+
+After=ssh.service
+
+[Service]
+
+Type=simple
+
+ExecStartPre=mkdir -p {{ windows_ssh_agent_relay_socket | dirname }}
+ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} {{ windows_ssh_agent_relay_socket | dirname  }}
+ExecStartPre=chmod u=rwx,g=,o= {{ windows_ssh_agent_relay_socket | dirname  }}
+ExecStartPre=rm -rf {{ windows_ssh_agent_relay_socket }}
+
+User={{ ansible_user }}
+Group={{ ansible_user }}
+
+ExecStart={{ windows_ssh_agent_relay_data_home }}/windows-ssh-agent-relay.sh
+
+Restart=always
+RestartSec=15
+
+[Install]
+
+WantedBy=multi-user.target
