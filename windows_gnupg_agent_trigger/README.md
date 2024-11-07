@@ -1,3 +1,3 @@
-# Ansible Role `gpg_agent_relay`
+# Ansible Role `windows_gnupg_agent_trigger`
 
-Set ups a systemd service that triggers the gpg agent in Windows every 60 seconds.
+Sets up a systemd service that triggers the GnuPG agent in Windows regularly.

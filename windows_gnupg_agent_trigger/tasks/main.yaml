@@ -1,38 +1,54 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    gnupg_agent_trigger_data_home: "{{ xdg_data_home }}/gnupg"
-    gnupg_agent_trigger_win_exe: /mnt/c/Program Files (x86)/GnuPG/bin/gpg-connect-agent.exe
-    gnupg_agent_trigger_lock: "{{ win_home }}/AppData/Roaming/gnupg/gnupg_spawn_agent_sentinel.lock"
+    windows_gnupg_agent_trigger_data_home: >-
+      {{ xdg_data_home }}/windows-gnupg-agent-trigger
+    windows_gnupg_agent_trigger_exe: >-
+      /mnt/c/Program Files (x86)/GnuPG/bin/gpg-connect-agent.exe
+    windows_gnupg_agent_trigger_lock: >-
+      {{ windows_home }}/AppData/Roaming/gnupg/gnupg_spawn_agent_sentinel.lock
 
-- name: Validate gpg-connect-agent.exe exists
+- name: Validate executable existence
   ansible.builtin.stat:
-    path: "{{ gnupg_agent_trigger_win_exe }}"
+    path: "{{ windows_gnupg_agent_trigger_exe }}"
 
-- name: Create directory gnupg
+- name: Create data home directory
   ansible.builtin.file:
     state: directory
-    path: "{{ gnupg_agent_trigger_data_home }}"
+    path: "{{ windows_gnupg_agent_trigger_data_home }}"
     mode: u=rwx,g=,o=
 
-- name: Render and place gnupg-agent-trigger.sh
+- name: Render and place windows-gnupg-agent-trigger.sh
   ansible.builtin.template:
-    src: gnupg-agent-trigger.sh
-    dest: "{{ gnupg_agent_trigger_data_home }}/gnupg-agent-trigger.sh"
-    mode: u=rwx,g=,o=
+    src: windows-gnupg-agent-trigger.sh
+    dest: "{{ dest_parts | join }}"
+    mode: u=rwx,g=r,o=r
   register: script
+  vars:
+    dest_parts:
+      - "{{ windows_gnupg_agent_trigger_data_home }}/"
+      - "windows-gnupg-agent-trigger.sh"
 
-- name: Set up systemd unit gnupg-agent-trigger.service
+- name: Set up systemd unit windows-gnupg-agent-trigger.service
   ansible.builtin.include_role:
     name: trallnag.systemd_unit
   vars:
-    systemd_unit_name: gnupg-agent-trigger.service
-    systemd_unit_content: "{{ lookup('ansible.builtin.template', 'gnupg-agent-trigger.service') }}"
-    systemd_unit_restart: "{{ script.changed }}"
+    systemd_unit_name: windows-gnupg-agent-trigger.service
     systemd_unit_activate: true
     systemd_unit_running_check: true
     systemd_unit_running_check_delay: "3"
+    systemd_unit_restart: "{{ script.changed }}"
+    systemd_unit_content: >-
+      {{
+        lookup(
+          'ansible.builtin.template',
+          'windows-gnupg-agent-trigger.service'
+        )
+      }}
 
-- name: Validate that symlink exists
+- name: Validate symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/gnupg-agent-trigger.service
-  changed_when: false
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - "/etc/systemd/system/multi-user.target.wants/"
+      - "windows-gnupg-agent-trigger.service"
