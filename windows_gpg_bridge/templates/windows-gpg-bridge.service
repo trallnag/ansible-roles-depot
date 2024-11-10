@@ -1,6 +1,6 @@
 [Unit]
 
-Description=Windows GnuPG Bridge
+Description=Windows GPG Bridge
 
 [Service]
 
@@ -9,7 +9,7 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart="{{ windows_gnupg_bridge_exe }}" --extra 127.0.0.1:54321
+ExecStart={{ windows_gpg_bridge_exe }} --extra {{ windows_gpg_bridge_extra_host }}:{{ windows_gpg_bridge_extra_port }}
 
 Restart=always
 RestartSec=60
