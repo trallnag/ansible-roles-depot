@@ -47,7 +47,7 @@
       wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$installer"
       chmod +x "$installer"
       "$installer" -b -p ~/miniconda3
-    executable: /bin/bash
+    executable: /usr/bin/bash
   changed_when: true
 
 #
