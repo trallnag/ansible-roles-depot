@@ -6,7 +6,7 @@
   ansible.builtin.file:
     path: "{{ windows_wslu_data_home }}"
     state: directory
-    mode: u=rwx,g=rwx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Checkout repository
   ansible.builtin.git:
