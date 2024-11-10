@@ -1,6 +1,6 @@
 [Unit]
 
-Description=Windows GnuPG Agent Trigger
+Description=Windows GPG Agent Trigger
 
 [Service]
 
@@ -9,7 +9,7 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart="{{ windows_gnupg_agent_trigger_data_home }}/windows-gnupg-agent-trigger.sh"
+ExecStart={{ windows_gpg_agent_trigger_home }}/windows-gpg-agent-trigger.sh
 
 Restart=always
 RestartSec=60
