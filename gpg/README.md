@@ -1,3 +1,5 @@
-# Ansible Role `gnupg`
+# Ansible Role `gpg`
 
-Set ups GnuPG.
+Set ups things related to GPG.
+
+- Sets 
