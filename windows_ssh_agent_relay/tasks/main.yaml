@@ -1,7 +1,7 @@
 - name: Set facts
   ansible.builtin.set_fact:
     # Data related to this role is stored here.
-    windows_ssh_agent_relay_data_home: >-
+    windows_ssh_agent_relay_home: >-
       {{ xdg_data_home }}/windows-ssh-agent-relay
 
     # Path to the OpenSSH executable in Windows. Must be the special Windows
@@ -10,15 +10,15 @@
       /mnt/c/Windows/System32/OpenSSH/ssh.exe
 
     # Paths to the OpenSSH agent socket in Linux. This is the destination of the
-    # relay action. In Linux, OpenSSH is configured to use the socket.
+    # relay action. In Linux, OpenSSH is then configured to use this socket.
     windows_ssh_agent_relay_socket: "\
       /run/user/{{ ansible_facts.user_uid }}\
       /windows-ssh-agent-relay/windows-ssh-agent-relay.sock"
 
-- name: Create data home directory
+- name: Create home directory
   ansible.builtin.file:
     state: directory
-    path: "{{ windows_ssh_agent_relay_data_home }}"
+    path: "{{ windows_ssh_agent_relay_home }}"
     mode: u=rwx,g=,o=
 
 - name: Validate executable existence
@@ -33,7 +33,7 @@
 - name: Render and place windows-ssh-agent-relay.sh
   ansible.builtin.template:
     src: windows-ssh-agent-relay.sh
-    dest: "{{ windows_ssh_agent_relay_data_home }}/windows-ssh-agent-relay.sh"
+    dest: "{{ windows_ssh_agent_relay_home }}/windows-ssh-agent-relay.sh"
     mode: u=rwx,g=,o=
   register: script
 
@@ -54,11 +54,13 @@
         )
       }}
 
-- name: Validate symlink existence
+- name: Validate wants symlink existence
   ansible.builtin.stat:
-    path: "\
-      /etc/systemd/system/multi-user.target.wants/\
-      windows-ssh-agent-relay.service"
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - "/etc/systemd/system/multi-user.target.wants/"
+      - "windows-ssh-agent-relay.service"
 
 - name: In { shell_bash_login }, configure OpenSSH to use relay socket
   ansible.builtin.blockinfile:
