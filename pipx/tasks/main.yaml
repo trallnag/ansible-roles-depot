@@ -9,7 +9,7 @@
       set -euxo pipefail
 
       /usr/bin/pip install --break-system-packages --upgrade pipx
-    executable: /bin/bash
+    executable: /usr/bin/bash
   become: true
   register: task
   changed_when: '"Requirement already satisfied" not in task.stdout'
