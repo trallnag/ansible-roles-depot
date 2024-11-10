@@ -18,7 +18,7 @@
         curl -sSL https://install.python-poetry.org | python
         echo status=changed
       fi
-    executable: /bin/bash
+    executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
 
@@ -40,7 +40,7 @@
       if [[ $hash_before != $hash_after ]]; then
         echo status=changed
       fi
-    executable: /bin/bash
+    executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
 
@@ -70,7 +70,7 @@
           zsh -c "zcompile $zcd"
         fi
       fi
-    executable: /bin/bash
+    executable: /usr/bin/bash
   register: task
   changed_when: '"status=changed" in task.stdout'
 
@@ -88,5 +88,5 @@
       export PATH="/path/to/directory:$PATH"
 
       poetry config virtualenvs.in-project false
-    executable: /bin/bash
+    executable: /usr/bin/bash
   changed_when: false
