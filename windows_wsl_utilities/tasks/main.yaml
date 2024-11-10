@@ -1,34 +1,34 @@
-- name: Set fact windows_wslu_data_home
+- name: Set fact
   ansible.builtin.set_fact:
-    windows_wslu_data_home: "{{ xdg_data_home }}/wslu"
+    windows_wsl_utilities_home: "{{ xdg_data_home }}/wslu"
 
 - name: Create directory
   ansible.builtin.file:
-    path: "{{ windows_wslu_data_home }}"
+    path: "{{ windows_wsl_utilities_home }}"
     state: directory
     mode: u=rwx,g=,o=
 
 - name: Checkout repository
   ansible.builtin.git:
     repo: https://github.com/wslutilities/wslu.git
-    dest: "{{windows_wslu_data_home }}/wslutilities-wslu"
+    dest: "{{windows_wsl_utilities_home }}/wslutilities-wslu"
     version: 1f01fc1d0c50598b842d4e8e7ca5f51265817708
     force: true
 
 - name: Run make target default
   ansible.builtin.command:
-    chdir: "{{windows_wslu_data_home }}/wslutilities-wslu"
+    chdir: "{{windows_wsl_utilities_home }}/wslutilities-wslu"
     cmd: make
   changed_when: false
 
 - name: Run make target install
   ansible.builtin.command:
-    chdir: "{{windows_wslu_data_home }}/wslutilities-wslu"
+    chdir: "{{windows_wsl_utilities_home }}/wslutilities-wslu"
     cmd: make install
   changed_when: false
   become: true
 
-- name: Check that wslvar is installed
+- name: Check executable
   ansible.builtin.command:
     cmd: wslvar --version
   changed_when: false
