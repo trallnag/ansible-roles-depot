@@ -1,0 +1,28 @@
+[Unit]
+
+Description=Windows GPG Agent Relay
+
+After=windows-gpg-agent-trigger.service
+After=windows-gpg-bridge.service
+After=ssh.service
+
+[Service]
+
+Type=simple
+
+ExecStartPre=mkdir -p /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
+ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
+ExecStartPre=chmod u=rwx,g=,o= /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
+ExecStartPre=rm -rf /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay/S.gpg-agent
+
+User={{ ansible_user }}
+Group={{ ansible_user }}
+
+ExecStart={{ windows_gpg_agent_relay_home }}/windows-gpg-agent-relay.sh
+
+Restart=always
+RestartSec=60
+
+[Install]
+
+WantedBy=multi-user.target
