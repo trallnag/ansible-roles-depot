@@ -1,0 +1,5 @@
+- name: Create shortcut
+  ansible.builtin.shell:
+    executable: pwsh.exe
+    cmd: "{{ lookup('ansible.builtin.file', 'create-shortcut.ps1') }}"
+  changed_when: false

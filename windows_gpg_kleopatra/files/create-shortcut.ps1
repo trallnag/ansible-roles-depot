@@ -1,7 +1,7 @@
 Set-StrictMode -Version Latest
 
 #
-# Determine variables.
+# Set variables.
 #
 
 $shortcutName = "Kleopatra"
@@ -32,11 +32,20 @@ $shortcut.WindowStyle = 7
 $shortcut.Save()
 
 #
+# Hide the shortcut.
+#
+
+attrib +h $shortcutPath
+
+#
 # Start if not already running.
 #
 
-$process = Get-Process -Name "kleopatra" -ErrorAction SilentlyContinue
+$process = Get-Process -Name kleopatra -ErrorAction SilentlyContinue
 
 if (-not $process) {
-    Start-Process -FilePath $executablePath -ArgumentList "--daemon"
+    Start-Process `
+        -WindowStyle Hidden `
+        -FilePath $executablePath `
+        -ArgumentList "--daemon"
 }
