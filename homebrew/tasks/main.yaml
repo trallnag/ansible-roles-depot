@@ -31,7 +31,7 @@
           exit 1
         fi
       fi
-    executable: /bin/bash
+    executable: /usr/bin/bash
   register: homebrew_installation
   changed_when: "'status=changed' in homebrew_installation.stdout"
 
