@@ -62,17 +62,17 @@
       - "/etc/systemd/system/multi-user.target.wants/"
       - "windows-ssh-agent-relay.service"
 
-- name: In { shell_bash_login }, configure OpenSSH to use relay socket
+- name: Add block to { shell_bash_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 019307f6-0973-7351-ba97-2e4b94e23a4b"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
 
-- name: In { shell_zsh_login }, configure OpenSSH to use relay socket
+- name: Add block to { shell_zsh_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 019307f6-2aa8-70ef-bc7a-29af3f644c40"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
 
