@@ -10,7 +10,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=,o=
   loop:
     - "{{ xdg_cache_home }}"
     - "{{ xdg_config_home }}"
