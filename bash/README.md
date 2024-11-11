@@ -1,3 +1,3 @@
 # Ansible Role `bash`
 
-Set ups Bash.
+Sets up Bash.

@@ -1,10 +1,10 @@
 # Ansible Role `zsh`
 
-Set ups Zsh.
+Sets up Zsh.
 
-## Content
+## Features
 
-### powerlevel10k
+### Powerlevel10k
 
 Includes [powerlevel10k][p10k]. Powerlevel10k is a theme for Zsh. It emphasizes
 speed, flexibility and out-of-the-box experience.
@@ -16,7 +16,7 @@ Problem with p10k is that the project is extremly complex and run by a single
 
 [p10k]: https://github.com/romkatv/powerlevel10k
 
-### zsh-completions
+### Zsh completions
 
 Includes [zsh-completions][zsh-completions]. Additional completion definitions.
 
@@ -24,7 +24,7 @@ Cloned and source files added to `fpath` in `~/.zshrc`.
 
 [zsh-completions]: https://github.com/zsh-users/zsh-completions
 
-### zsh-syntax-highlighting
+### Zsh syntax highlighting
 
 Includes [zsh-syntax-highlighting][zsh-syntax-highlighting]. Fish shell-like
 syntax highlighting for Zsh.
@@ -33,7 +33,7 @@ Cloned, compiled, sourced, and configured manually.
 
 [zsh-syntax-highlighting]: https://github.com/zsh-users/zsh-syntax-highlighting
 
-### zsh-history-substring-search
+### Zsh history substring search
 
 Includes [zsh-history-substring-search][zsh-history-substring-search]. This is a
 clean-room implementation of the Fish shell's history search feature, where you
@@ -48,7 +48,7 @@ sure that you load it before you load this script.
 [zsh-history-substring-search]:
   https://github.com/zsh-users/zsh-history-substring-search
 
-### zsh-autosuggestions
+### Zsh autosuggestions
 
 Includes [zsh-autosuggestions][zsh-autosuggestions]. Fish-like fast/unobtrusive
 autosuggestions for zsh.
