@@ -91,7 +91,7 @@
 - name: Add block to { shell_bash_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
 
@@ -118,7 +118,7 @@
 - name: Add block to { shell_fish_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       set -x DOT_ZSH_DYNRC_DIR "{{ zsh_dynrc_dir }}"
 
@@ -145,7 +145,7 @@
 - name: Add block to { shell_zsh_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
 
