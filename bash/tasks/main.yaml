@@ -51,10 +51,10 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Set up export of dot env vars during bash login
+- name: Add block to { shell_bash_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
 
@@ -67,10 +67,10 @@
 
       export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
-- name: Set up export of dot env vars during fish login
+- name: Add block to { shell_fish_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       set -x DOT_BASH_COMPLETIONS_DIR "{{ bash_completions_dir }}"
 
@@ -83,10 +83,10 @@
 
       set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
 
-- name: Set up export of dot env vars during zsh login
+- name: Add block to { shell_zsh_login }
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
 
