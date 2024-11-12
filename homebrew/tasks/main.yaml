@@ -1,6 +1,10 @@
-- name: Set fact
+- name: Set Homebrew prefix fact
   ansible.builtin.set_fact:
-    homebrew_path: /home/linuxbrew/.linuxbrew/bin
+    homebrew_prefix: /home/linuxbrew/.linuxbrew
+
+- name: Set Homebrew path fact
+  ansible.builtin.set_fact:
+    homebrew_path: "{{ homebrew_prefix }}/bin"
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -14,62 +18,45 @@
 
 - name: Install
   ansible.builtin.shell:
-    cmd: |
-      set -euo pipefail
-
-      if ! test -d "{{ homebrew_path }}"; then
-        if ! sudo -n true 2>/dev/null; then
-          printf '%s' "{{ ansible_become_pass }}" | sudo -S whoami &>/dev/null
-        fi
-
-        if sudo -n true 2>/dev/null; then
-          unset INTERACTIVE && export NONINTERACTIVE=1
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo status=changed
-        else
-          echo "Sudo not working."
-          exit 1
-        fi
-      fi
     executable: /usr/bin/bash
-  register: homebrew_installation
-  changed_when: "'status=changed' in homebrew_installation.stdout"
+    cmd: "{{ lookup('ansible.builtin.template', 'install.bash') }}"
+  register: homebrew_install
+  changed_when: "'status=changed' in homebrew_install.stdout"
 
-- name: Hook into bash
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ bash_profile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+      eval "$({{ homebrew_path }}/brew shellenv)"
+      export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
 
-- name: Enable completion in bash
+- name: Set up completion in Bash
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
-      if type brew &>/dev/null; then
-        if [[ -r "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]]; then
-          source "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
-        else
-          for COMPLETION in "$HOMEBREW_PREFIX/etc/bash_completion.d/"*; do
-            [[ -r "$COMPLETION" ]] && source "$COMPLETION"
-          done
-          unset COMPLETION
-        fi
-      fi
+      source "$HOMEBREW_PREFIX/etc/bash_completion.d/"*
 
-- name: Hook into zsh
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+      eval "$({{ homebrew_path }}/brew shellenv)"
+      export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
 
-- name: Enable completion in zsh
+- name: Set up completion in Zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_compinit_pre }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: completion"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
