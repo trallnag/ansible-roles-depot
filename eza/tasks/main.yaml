@@ -3,38 +3,83 @@
     name: eza
     path: "{{ homebrew_path }}"
 
-- name: Set facts
+- name: Set alias facts
   ansible.builtin.set_fact:
     eza_aliases:
       - word: es
-        subst: eza
+        subst: >-
+          eza
       - word: e
-        subst: eza -a
+        subst: >-
+          eza
+          --all
       - word: eo
-        subst: eza -1a --group-directories-first
+        subst: >-
+          eza
+          --all
+          --group-directories-first
+          --oneline
       - word: el
-        subst: eza -ahl --time-style=long-iso --links --classify --color-scale --group-directories-first
+        subst: >-
+          eza
+          --all
+          --classify
+          --color-scale
+          --group-directories-first
+          --header
+          --links
+          --long
+          --time-style=long-iso
       - word: ll
-        subst: eza -ahl --time-style=long-iso --links --classify --color-scale --group-directories-first
+        subst: >-
+          eza
+          --all
+          --classify
+          --color-scale
+          --group-directories-first
+          --header
+          --links
+          --long
+          --time-style=long-iso
       - word: ex
-        subst: eza -lbhHigUmuSa@ --time-style=long-iso --color-scale
+        subst: >-
+          eza
+          --accessed
+          --all
+          --binary
+          --blocksize
+          --color-scale
+          --created
+          --extended
+          --group
+          --header
+          --inode
+          --links
+          --long
+          --modified
+          --mounts
+          --time-style=long-iso
       - word: et
-        subst: eza -aT --group-directories-first
+        subst: >-
+          eza
+          --all
+          --group-directories-first
+          --tree
 
 - name: Set up aliases in bash
   ansible.builtin.blockinfile:
     path: "{{ bash_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} aliases"
     block: |
       {% for alias in eza_aliases %}
-      alias {{ alias.word }}='{{ alias.subst }}'
+      alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
 
 - name: Set up aliases in zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} aliases"
     block: |
       {% for alias in eza_aliases %}
-      alias {{ alias.word }}='{{ alias.subst }}'
+      alias {{ alias.word }}="{{ alias.subst }}"
       {% endfor %}
