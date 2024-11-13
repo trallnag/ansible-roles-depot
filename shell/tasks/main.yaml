@@ -22,23 +22,23 @@
     - "{{ shell_fish_login }}"
     - "{{ shell_zsh_login }}"
 
-- name: Add block to { shell_bash_login }
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.bash') }}"
 
-- name: Add block to { shell_fish_login }
+- name: Set up environment in Fish
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.fish') }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.zsh') }}"

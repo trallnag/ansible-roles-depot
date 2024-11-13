@@ -62,17 +62,17 @@
       - "/etc/systemd/system/multi-user.target.wants/"
       - "windows-ssh-agent-relay.service"
 
-- name: Add block to { shell_bash_login }
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
 

@@ -1,14 +1,14 @@
-- name: Add block to { bash_bashrc_top }
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ bash_bashrc_top }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export GPG_TTY=$(tty)
 
 
-- name: Add block to { zsh_zshrc_interactive }
+- name: Set up environment in Fish
   ansible.builtin.blockinfile:
     path: "{{ zsh_zshrc_interactive }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export GPG_TTY=$(tty)

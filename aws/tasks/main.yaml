@@ -4,9 +4,17 @@
   vars:
     aws_cli_version: latest
 
-#
-# ------------------------------------------------------------------------------
-#
+- name: Import role trallnag.aws_ssm_plugin
+  ansible.builtin.import_role:
+    name: trallnag.aws_ssm_plugin
+  vars:
+    aws_ssm_plugin_version: latest
+
+- name: Import role trallnag.aws_sam_cli
+  ansible.builtin.import_role:
+    name: trallnag.aws_sam_cli
+  vars:
+    aws_sam_cli_version: latest
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
@@ -21,19 +29,3 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       complete -C /usr/local/bin/aws_completer aws
-
-#
-# ------------------------------------------------------------------------------
-#
-
-- name: Import role trallnag.aws_ssm_plugin
-  ansible.builtin.import_role:
-    name: trallnag.aws_ssm_plugin
-  vars:
-    aws_ssm_plugin_version: latest
-
-- name: Import role trallnag.aws_sam_cli
-  ansible.builtin.import_role:
-    name: trallnag.aws_sam_cli
-  vars:
-    aws_sam_cli_version: latest

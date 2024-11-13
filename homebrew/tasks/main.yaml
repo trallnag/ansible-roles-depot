@@ -26,6 +26,8 @@
 #
 # ------------------------------------------------------------------------------
 #
+# Bash integration.
+#
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
@@ -44,6 +46,8 @@
 
 #
 # ------------------------------------------------------------------------------
+#
+# Zsh integration.
 #
 
 - name: Set up environment in Zsh

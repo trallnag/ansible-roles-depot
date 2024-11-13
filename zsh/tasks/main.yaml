@@ -1,7 +1,6 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
     zsh_dynrc_dir: "{{ xdg_config_home }}/zsh/dynrc"
-
     zsh_completions_dir: "{{ xdg_data_home }}/zsh/completions"
     zsh_functions_dir: "{{ xdg_data_home }}/zsh/functions"
     zsh_plugins_dir: "{{ xdg_data_home }}/zsh/plugins"
@@ -10,18 +9,13 @@
 - name: Set file facts
   ansible.builtin.set_fact:
     zsh_zprofile: "{{ zsh_dynrc_dir }}/zprofile.zsh"
-
     zsh_zshrc_interactive: "{{ zsh_dynrc_dir }}/zshrc-interactive.zsh"
     zsh_zshrc: "{{ zsh_dynrc_dir }}/zshrc.zsh"
     zsh_zshrc_compinit_pre: "{{ zsh_dynrc_dir }}/zshrc-compinit-pre.zsh"
     zsh_zshrc_compinit_post: "{{ zsh_dynrc_dir }}/zshrc-compinit-post.zsh"
-
     zsh_aliases: "{{ zsh_dynrc_dir }}/aliases.zsh"
-
     zsh_zlogin: "{{ zsh_dynrc_dir }}/zlogin.zsh"
-
     zsh_zlogout: "{{ zsh_dynrc_dir }}/zlogout.zsh"
-
     zsh_p10k: "{{ zsh_dynrc_dir }}/p10k.zsh"
 
 - name: Create directories
@@ -33,7 +27,6 @@
     - "{{ xdg_cache_home }}/zsh"
     - "{{ xdg_config_home }}/zsh"
     - "{{ xdg_state_home }}/zsh"
-
     - "{{ zsh_dynrc_dir }}"
     - "{{ zsh_completions_dir }}"
     - "{{ zsh_functions_dir }}"
@@ -49,18 +42,13 @@
     access_time: preserve
   loop:
     - "{{ zsh_zprofile }}"
-
     - "{{ zsh_zshrc_interactive }}"
     - "{{ zsh_zshrc }}"
     - "{{ zsh_zshrc_compinit_pre }}"
     - "{{ zsh_zshrc_compinit_post }}"
-
     - "{{ zsh_aliases }}"
-
     - "{{ zsh_zlogin }}"
-
     - "{{ zsh_zlogout }}"
-
     - "{{ zsh_p10k }}"
 
 - name: Install zsh
@@ -88,85 +76,64 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Add block to { shell_bash_login }
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
-
       export DOT_ZSH_COMPLETIONS_DIR="{{ zsh_completions_dir }}"
       export DOT_ZSH_FUNCTIONS_DIR="{{ zsh_functions_dir }}"
       export DOT_ZSH_PLUGINS_DIR="{{ zsh_plugins_dir }}"
       export DOT_ZSH_SCRIPTS_DIR="{{ zsh_scripts_dir }}"
-
       export DOT_ZSH_ZPROFILE="{{ zsh_zprofile }}"
-
       export DOT_ZSH_ZSHRC_INTERACTIVE="{{ zsh_zshrc_interactive }}"
       export DOT_ZSH_ZSHRC="{{ zsh_zshrc }}"
       export DOT_ZSH_ZSHRC_COMPINIT_PRE="{{ zsh_zshrc_compinit_pre }}"
       export DOT_ZSH_ZSHRC_COMPINIT_POST="{{ zsh_zshrc_compinit_post }}"
-
       export DOT_ZSH_ALIASES="{{ zsh_aliases }}"
-
       export DOT_ZSH_ZLOGIN="{{ zsh_zlogin }}"
-
       export DOT_ZSH_ZLOGOUT="{{ zsh_zlogout }}"
-
       export DOT_ZSH_P10K="{{ zsh_p10k }}"
 
-- name: Add block to { shell_fish_login }
+- name: Set up environment in Fish
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       set -x DOT_ZSH_DYNRC_DIR "{{ zsh_dynrc_dir }}"
-
       set -x DOT_ZSH_COMPLETIONS_DIR "{{ zsh_completions_dir }}"
       set -x DOT_ZSH_FUNCTIONS_DIR "{{ zsh_functions_dir }}"
       set -x DOT_ZSH_PLUGINS_DIR "{{ zsh_plugins_dir }}"
       set -x DOT_ZSH_SCRIPTS_DIR "{{ zsh_scripts_dir }}"
-
       set -x DOT_ZSH_ZPROFILE "{{ zsh_zprofile }}"
-
       set -x DOT_ZSH_ZSHRC_INTERACTIVE "{{ zsh_zshrc_interactive }}"
       set -x DOT_ZSH_ZSHRC "{{ zsh_zshrc }}"
       set -x DOT_ZSH_ZSHRC_COMPINIT_PRE "{{ zsh_zshrc_compinit_pre }}"
       set -x DOT_ZSH_ZSHRC_COMPINIT_POST "{{ zsh_zshrc_compinit_post }}"
-
       set -x DOT_ZSH_ALIASES "{{ zsh_aliases }}"
-
       set -x DOT_ZSH_ZLOGIN "{{ zsh_zlogin }}"
-
       set -x DOT_ZSH_ZLOGOUT "{{ zsh_zlogout }}"
-
       set -x DOT_ZSH_P10K "{{ zsh_p10k }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export DOT_ZSH_DYNRC_DIR="{{ zsh_dynrc_dir }}"
-
       export DOT_ZSH_COMPLETIONS_DIR="{{ zsh_completions_dir }}"
       export DOT_ZSH_FUNCTIONS_DIR="{{ zsh_functions_dir }}"
       export DOT_ZSH_PLUGINS_DIR="{{ zsh_plugins_dir }}"
       export DOT_ZSH_SCRIPTS_DIR="{{ zsh_scripts_dir }}"
-
       export DOT_ZSH_ZPROFILE="{{ zsh_zprofile }}"
-
       export DOT_ZSH_ZSHRC_INTERACTIVE="{{ zsh_zshrc_interactive }}"
       export DOT_ZSH_ZSHRC="{{ zsh_zshrc }}"
       export DOT_ZSH_ZSHRC_COMPINIT_PRE="{{ zsh_zshrc_compinit_pre }}"
       export DOT_ZSH_ZSHRC_COMPINIT_POST="{{ zsh_zshrc_compinit_post }}"
-
       export DOT_ZSH_ALIASES="{{ zsh_aliases }}"
-
       export DOT_ZSH_ZLOGIN="{{ zsh_zlogin }}"
-
       export DOT_ZSH_ZLOGOUT="{{ zsh_zlogout }}"
-
       export DOT_ZSH_P10K="{{ zsh_p10k }}"
 
 #

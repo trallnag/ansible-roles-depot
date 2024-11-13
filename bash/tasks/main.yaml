@@ -6,12 +6,9 @@
 - name: Set directory facts
   ansible.builtin.set_fact:
     bash_completion: "{{ xdg_config_home }}/bash_completion"
-
     bash_profile: "{{ bash_dynrc_dir }}/profile.bash"
-
     bash_bashrc_top: "{{ bash_dynrc_dir }}/bashrc-top.bash"
     bash_bashrc: "{{ bash_dynrc_dir }}/bashrc.bash"
-
     bash_aliases: "{{ bash_dynrc_dir }}/aliases.bash"
 
 - name: Create directories
@@ -32,12 +29,9 @@
     access_time: preserve
   loop:
     - "{{ bash_completion }}"
-
     - "{{ bash_profile }}"
-
     - "{{ bash_bashrc_top }}"
     - "{{ bash_bashrc }}"
-
     - "{{ bash_aliases }}"
 
 - name: Install packages
@@ -51,52 +45,40 @@
 # ------------------------------------------------------------------------------
 #
 
-- name: Add block to { shell_bash_login }
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
-
       export DOT_BASH_COMPLETION="{{ bash_completion }}"
-
       export DOT_BASH_PROFILE="{{ bash_profile }}"
-
       export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
       export DOT_BASH_BASHRC="{{ bash_bashrc }}"
-
       export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
-- name: Add block to { shell_fish_login }
+- name: Set up environment in Fish
   ansible.builtin.blockinfile:
     path: "{{ shell_fish_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       set -x DOT_BASH_COMPLETIONS_DIR "{{ bash_completions_dir }}"
-
       set -x DOT_BASH_COMPLETION "{{ bash_completion }}"
-
       set -x DOT_BASH_PROFILE "{{ bash_profile }}"
-
       set -x DOT_BASH_BASHRC_TOP "{{ bash_bashrc_top }}"
       set -x DOT_BASH_BASHRC "{{ bash_bashrc }}"
-
       set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
 
-- name: Add block to { shell_zsh_login }
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
-
       export DOT_BASH_COMPLETION="{{ bash_completion }}"
-
       export DOT_BASH_PROFILE="{{ bash_profile }}"
-
       export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
       export DOT_BASH_BASHRC="{{ bash_bashrc }}"
-
       export DOT_BASH_ALIASES="{{ bash_aliases }}"
 
 #
