@@ -1,4 +1,4 @@
-- name: Install formulae
+- name: Install
   community.general.homebrew:
     name:
       - age # https://github.com/FiloSottile/age
