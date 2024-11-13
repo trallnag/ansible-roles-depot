@@ -1,4 +1,3 @@
-# Ansible Role `bat`
+# Ansible Role `locale`
 
-Installs and configures [bat](https://github.com/sharkdp/bat).
-
+Configures locale.
