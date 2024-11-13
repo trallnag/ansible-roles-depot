@@ -1,0 +1,83 @@
+- name: Set fact git_config_home
+  ansible.builtin.set_fact:
+    git_config_home: "{{ xdg_config_home }}/git"
+
+- name: Set miscellaneous facts
+  ansible.builtin.set_fact:
+    git_config: "{{ git_config_home }}/config"
+    git_managed_config: "{{ git_config_home }}/managed_config"
+
+- name: Create config directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ git_config_home }}"
+    mode: u=rwx,g=rx,o=rx
+
+- name: Touch config file
+  ansible.builtin.file:
+    path: "{{ git_config }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+
+- name: Set up { git_config } to include managed config
+  ansible.builtin.shell:
+    executable: /usr/bin/bash
+    cmd: |
+      set -euxo pipefail
+
+      hash_before=$(cat "{{ git_config }}" | sha256sum)
+
+      git config --file "{{ git_config }}" include.path "{{ git_config_home }}/managed_config"
+
+      hash_after=$(cat "{{ git_config }}" | sha256sum)
+
+      if [ "$hash_before" != "$hash_after" ]; then
+        echo status=changed
+      fi
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Place { git_managed_config } file
+  ansible.builtin.copy:
+    dest: "{{ git_managed_config }}"
+    content: |
+      # This file is managed by Ansible the role `git`.
+      # Playbook runs will override changes made to this file.
+
+      [user]
+        email = tim@trallnag.com
+        name = Tim Schwenke
+        signingKey = ACCB8F306184BEEE49E7370E5DBF2C327E72AA3F
+
+      [commit]
+        gpgSign = true
+
+      [gpg]
+        program = /usr/bin/gpg
+
+      [init]
+        defaultBranch = master
+
+      [pull]
+        rebase = true
+
+      [tag]
+        forceSignAnnotated = true
+
+      [merge]
+        conflictStyle = zdiff3
+
+      [status]
+        submoduleSummary = true
+
+      [branch]
+        sort = committerdate
+
+      [tag]
+        sort = taggerdate
+
+      [diff]
+        algorithm = histogram
+    mode: u=rw,g=,o=
