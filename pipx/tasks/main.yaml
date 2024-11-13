@@ -1,22 +1,19 @@
-- name: Set facts
+- name: Set executable facts
   ansible.builtin.set_fact:
-    pipx_default_python: /usr/bin/python
+    pipx_python_exe: /usr/bin/python
     pipx_exe: /usr/local/bin/pipx
 
 - name: Upgrade
-  ansible.builtin.shell:
-    cmd: |
-      set -euxo pipefail
-
-      /usr/bin/pip install --break-system-packages --upgrade pipx
-    executable: /usr/bin/bash
+  ansible.builtin.command:
+    cmd: /usr/bin/pip install --break-system-packages --upgrade pipx
   become: true
-  register: task
-  changed_when: '"Requirement already satisfied" not in task.stdout'
+  register: upgrade
+  changed_when: '"Requirement already satisfied" not in upgrade.stdout'
 
 #
 # ------------------------------------------------------------------------------
-# Set up environment.
+#
+# Set up shell environment.
 #
 
 - name: Integrate into bash
@@ -24,18 +21,19 @@
     path: "{{ bash_profile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: f52656cc-e50c-4aee-8407-08ba3f299c98"
     block: |
-      export PIPX_DEFAULT_PYTHON="{{ pipx_default_python }}"
+      export PIPX_DEFAULT_PYTHON="{{ pipx_python_exe }}"
 
 - name: Integrate into zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_zprofile }}"
     marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }} :: 78b737ab-ccbe-4310-9a5c-61cf7c09432a"
     block: |
-      export PIPX_DEFAULT_PYTHON="{{ pipx_default_python }}"
+      export PIPX_DEFAULT_PYTHON="{{ pipx_python_exe }}"
 
 #
 # ------------------------------------------------------------------------------
-# Set up completion.
+#
+# Set up shell completion.
 #
 
 - name: Enable completion in bash
@@ -65,12 +63,12 @@
 # Install packages.
 #
 
-- name: Install packages
-  community.general.pipx:
-    name: "{{ item }}"
-    executable: "{{ pipx_exe }}"
-  loop:
-    - bpython # https://github.com/bpython/bpython
-    - cookiecutter # https://github.com/cookiecutter/cookiecutter
-    - copier # https://github.com/copier-org/copier
-    - pre-commit # https://github.com/pre-commit/pre-commit
+# - name: Install packages
+#   community.general.pipx:
+#     name: "{{ item }}"
+#     executable: "{{ pipx_exe }}"
+#   loop:
+#     - bpython # https://github.com/bpython/bpython
+#     - cookiecutter # https://github.com/cookiecutter/cookiecutter
+#     - copier # https://github.com/copier-org/copier
+#     - pre-commit # https://github.com/pre-commit/pre-commit
