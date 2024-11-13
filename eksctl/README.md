@@ -1,3 +1,5 @@
 # Ansible Role `eksctl`
 
-Installs [eksctl](https://eksctl.io).
+Sets up [eksctl][eksctl].
+
+[eksctl]: https://eksctl.io
