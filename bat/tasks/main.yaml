@@ -3,11 +3,11 @@
     name: bat
     path: "{{ homebrew_path }}"
 
-- name: Set fact for bat config home
+- name: Set config home fact
   ansible.builtin.set_fact:
     bat_config_home: "{{ xdg_config_home }}/bat"
 
-- name: Set fact for bat config
+- name: Set config bat
   ansible.builtin.set_fact:
     bat_config: "{{ bat_config_home }}/bat.conf"
 
@@ -15,24 +15,24 @@
   ansible.builtin.file:
     state: directory
     path: "{{ bat_config_home }}"
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=,o=
 
 - name: Place config file
   ansible.builtin.copy:
     src: bat.conf
     dest: "{{ bat_config }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=,o=
 
-- name: Setup export of bat config path during bash login
+- name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export BAT_CONFIG_PATH="{{ bat_config }}"
 
-- name: Setup export of bat config path during zsh login
+- name: Set up environment in Zsh
   ansible.builtin.blockinfile:
     path: "{{ shell_zsh_login }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export BAT_CONFIG_PATH="{{ bat_config }}"

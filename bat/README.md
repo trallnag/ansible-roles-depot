@@ -1,4 +1,5 @@
 # Ansible Role `bat`
 
-Installs and configures [bat](https://github.com/sharkdp/bat).
+Sets up [bat].
 
+[bat]: https://github.com/sharkdp/bat
