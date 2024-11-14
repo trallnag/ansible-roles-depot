@@ -1,0 +1,52 @@
+- name: Get installed
+  ansible.builtin.shell: code --list-extensions
+  register: get_installed
+  changed_when: false
+
+- name: Set installed fact
+  ansible.builtin.set_fact:
+    vscode_extensions_installed: "{{ get_installed.stdout }}"
+
+- name: Install
+  ansible.builtin.shell:
+    executable: /usr/bin/bash
+    cmd: |
+      set -euo pipefail
+      x="{{ vscode_extensions_installed | lower }}"
+      if ! echo "$x" | grep -q "{{ item | lower }}"; then
+        code --install-extension "{{ item | lower }}"
+        echo status=changed
+      fi
+  register: install
+  changed_when: "'status=changed' in install.stdout"
+  loop:
+    - editorconfig.editorconfig
+    - gerrnperl.outline-map
+    - github.copilot
+    - github.copilot-chat
+    - github.vscode-pull-request-github
+    - gruntfuggly.todo-tree
+    - tyriar.sort-lines
+    - visualstudioexptteam.vscodeintellicode
+    - amazonwebservices.aws-toolkit-vscode
+    - bierner.markdown-preview-github-styles
+    - donjayamanne.githistory
+    - formulahendry.code-runner
+    - github.vscode-github-actions
+    - golang.go
+    - hangxingliu.vscode-systemd-support
+    - hashicorp.terraform
+    - mhutchie.git-graph
+    - ms-python.python
+    - nefrob.vscode-just-syntax
+    - oderwat.indent-rainbow
+    - qufiwefefwoyn.inline-sql-syntax
+    - redhat.ansible
+    - redhat.vscode-yaml
+    - samuelcolvin.jinjahtml
+    - streetsidesoftware.code-spell-checker
+    - streetsidesoftware.code-spell-checker-german
+    - tamasfe.even-better-toml
+    - tomoki1207.selectline-statusbar
+    - waderyan.gitblame
+    - yzhang.markdown-all-in-one
