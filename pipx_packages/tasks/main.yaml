@@ -1,0 +1,8 @@
+- name: Install
+  community.general.pipx:
+    name: "{{ item }}"
+  loop:
+    - bpython # https://github.com/bpython/bpython
+    - cookiecutter # https://github.com/cookiecutter/cookiecutter
+    - copier # https://github.com/copier-org/copier
+    - pre-commit # https://github.com/pre-commit/pre-commit
