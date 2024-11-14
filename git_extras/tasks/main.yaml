@@ -4,25 +4,25 @@
     state: present
   become: true
 
-- name: Set facts
+- name: Set aliases fact
   ansible.builtin.set_fact:
     git_extras_aliases:
       - word: gitb
         subst: git browse
 
-- name: Create aliases in bash
+- name: Set up aliases in Bash
   ansible.builtin.blockinfile:
     path: "{{ bash_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}
       alias {{ alias.word }}='{{ alias.subst }}'
       {% endfor %}
 
-- name: Create aliases in zsh
+- name: Set up aliases in Zsh
   ansible.builtin.blockinfile:
     path: "{{ zsh_aliases }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}
       alias {{ alias.word }}='{{ alias.subst }}'
