@@ -27,7 +27,6 @@
           --color-scale
           --group-directories-first
           --header
-          --links
           --long
           --time-style=long-iso
       - word: ll
@@ -38,7 +37,6 @@
           --color-scale
           --group-directories-first
           --header
-          --links
           --long
           --time-style=long-iso
       - word: ex
