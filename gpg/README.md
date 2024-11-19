@@ -1,3 +1,5 @@
 # Ansible Role `gpg`
 
-Configures GPG.
+Sets up GPG.
+
+GPG is installed with APT.
