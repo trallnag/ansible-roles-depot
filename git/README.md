@@ -1,3 +1,5 @@
 # Ansible Role `git`
 
-Configures Git.
+Sets up Git.
+
+Git is installed with APT.
