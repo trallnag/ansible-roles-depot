@@ -2,4 +2,4 @@
 
 ## Update
 
-Use Homebrew to update Git Extras. The package is called `git-extras`.
+Use Homebrew to update Git Extras.
