@@ -1,5 +1,5 @@
 # Ansible Role `pipx`
 
-Installs packages with pipx.
+Installs various packages with Pipx that don't require additional setup.
 
-Installed packages are not updated.
+Packages are not kept up to date.
