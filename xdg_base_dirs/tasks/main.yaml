@@ -1,19 +1,19 @@
-- name: Set directory facts
+- name: Set home directory facts
   ansible.builtin.set_fact:
-    xdg_cache_home: /home/{{ ansible_user }}/.cache
-    xdg_config_home: /home/{{ ansible_user }}/.config
-    xdg_data_home: /home/{{ ansible_user }}/.local/share
-    xdg_exe_dir: /home/{{ ansible_user }}/.local/bin
-    xdg_state_home: /home/{{ ansible_user }}/.local/state
+    xdg_cache_home_dir: /home/{{ ansible_user }}/.cache
+    xdg_config_home_dir: /home/{{ ansible_user }}/.config
+    xdg_data_home_dir: /home/{{ ansible_user }}/.local/share
+    xdg_exe_home_dir: /home/{{ ansible_user }}/.local/bin
+    xdg_state_home_dir: /home/{{ ansible_user }}/.local/state
 
-- name: Create directories
+- name: Create home directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: u=rwx,g=,o=
   loop:
-    - "{{ xdg_cache_home }}"
-    - "{{ xdg_config_home }}"
-    - "{{ xdg_data_home }}"
-    - "{{ xdg_exe_dir }}"
-    - "{{ xdg_state_home }}"
+    - "{{ xdg_cache_home_dir }}"
+    - "{{ xdg_config_home_dir }}"
+    - "{{ xdg_data_home_dir }}"
+    - "{{ xdg_exe_home_dir }}"
+    - "{{ xdg_state_home_dir }}"
