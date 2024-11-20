@@ -6,4 +6,7 @@ Sets up the AWS CLI and related components.
 - AWS SAM CLI: <https://github.com/aws/aws-sam-cli>
 - AWS Session Manager Plugin: <https://github.com/aws/session-manager-plugin>
 
-All components are installed directly without use of package managers like APT.
+All components are installed without the use of package managers like APT.
+
+The latest available versions of all components are installed. Previously
+installed versions are overwritten.
