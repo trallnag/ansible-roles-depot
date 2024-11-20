@@ -27,7 +27,13 @@ set -gx EDITOR nano
 set -gx VISUAL nano
 set -gx PAGER less
 
+# XDG base directories.
+set -gx XDG_CACHE_HOME "{{ xdg_cache_home_dir }}"
+set -gx XDG_CONFIG_HOME "{{ xdg_config_home_dir }}"
+set -gx XDG_DATA_HOME "{{ xdg_data_home_dir }}"
+set -gx XDG_STATE_HOME "{{ xdg_state_home_dir }}"
+
 # This.
-set -gx DOT_SHELL_BASH_LOGIN "{{ shell_bash_login }}"
-set -gx DOT_SHELL_FISH_LOGIN "{{ shell_fish_login }}"
-set -gx DOT_SHELL_ZSH_LOGIN "{{ shell_zsh_login }}"
+set -gx DOT_SHELL_BASH_LOGIN "{{ shell_bash_login_file }}"
+set -gx DOT_SHELL_FISH_LOGIN "{{ shell_fish_login_file }}"
+set -gx DOT_SHELL_ZSH_LOGIN "{{ shell_zsh_login_file }}"

@@ -1,16 +1,20 @@
-- name: Set file facts
+- name: Set config directory fact
   ansible.builtin.set_fact:
-    shell_bash_login: "{{ xdg_config_home }}/shell/login.bash"
-    shell_fish_login: "{{ xdg_config_home }}/shell/login.fish"
-    shell_zsh_login: "{{ xdg_config_home }}/shell/login.zsh"
+    shell_config_dir: "{{ shell_config_dir }}"
 
-- name: Create config home
+- name: Set login file facts
+  ansible.builtin.set_fact:
+    shell_bash_login_file: "{{ shell_config_dir }}/login.bash"
+    shell_fish_login_file: "{{ shell_config_dir }}/login.fish"
+    shell_zsh_login_file: "{{ shell_config_dir }}/login.zsh"
+
+- name: Create config directory
   ansible.builtin.file:
-    path: "{{ xdg_config_home }}/shell"
+    path: "{{ shell_config_dir }}"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=,o=
 
-- name: Touch login scripts
+- name: Touch login files
   ansible.builtin.file:
     path: "{{ item }}"
     state: touch
@@ -18,27 +22,27 @@
     modification_time: preserve
     access_time: preserve
   loop:
-    - "{{ shell_bash_login }}"
-    - "{{ shell_fish_login }}"
-    - "{{ shell_zsh_login }}"
+    - "{{ shell_bash_login_file }}"
+    - "{{ shell_fish_login_file }}"
+    - "{{ shell_zsh_login_file }}"
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ shell_bash_login }}"
+    path: "{{ shell_bash_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.bash') }}"
 
 - name: Set up environment in Fish
   ansible.builtin.blockinfile:
-    path: "{{ shell_fish_login }}"
+    path: "{{ shell_fish_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.fish') }}"
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ shell_zsh_login }}"
+    path: "{{ shell_zsh_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     insertbefore: BOF
     block: "{{ lookup('ansible.builtin.template', 'login.zsh') }}"
