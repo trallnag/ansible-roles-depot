@@ -14,4 +14,4 @@
       - shfmt # https://github.com/mvdan/sh
       - watchexec # https://github.com/watchexec/watchexec
       - zellij # https://github.com/zellij-org/zellij
-    path: "{{ homebrew_path }}"
+    path: "{{ homebrew_exe_dir }}"
