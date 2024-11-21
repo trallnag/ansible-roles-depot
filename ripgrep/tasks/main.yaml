@@ -1,38 +1,38 @@
 - name: Install
   community.general.homebrew:
     name: ripgrep
-    path: "{{ homebrew_path }}"
+    path: "{{ homebrew_exe_dir }}"
 
 - name: Set config home fact
   ansible.builtin.set_fact:
-    ripgrep_config_home: "{{ xdg_config_home }}/ripgrep"
+    ripgrep_config_dir: "{{ xdg_config_home_dir }}/ripgrep"
 
-- name: Set config fact
+- name: Set config file fact
   ansible.builtin.set_fact:
-    ripgrep_config: "{{ ripgrep_config_home }}/ripgrep.conf"
+    ripgrep_config_file: "{{ ripgrep_config_dir }}/ripgrep.conf"
 
 - name: Create config directory
   ansible.builtin.file:
     state: directory
-    path: "{{ ripgrep_config_home }}"
+    path: "{{ ripgrep_config_dir }}"
     mode: u=rwx,g=,o=
 
 - name: Place config file
   ansible.builtin.copy:
     src: ripgrep.conf
-    dest: "{{ ripgrep_config }}"
+    dest: "{{ ripgrep_config_file }}"
     mode: u=rw,g=,o=
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_profile }}"
+    path: "{{ bash_profile_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
+      export RIPGREP_CONFIG_PATH="{{ ripgrep_config_file }}"
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zprofile }}"
+    path: "{{ zsh_zprofile_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export RIPGREP_CONFIG_PATH="{{ ripgrep_config }}"
+      export RIPGREP_CONFIG_PATH="{{ ripgrep_config_file }}"

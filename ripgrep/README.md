@@ -1,5 +1,7 @@
 # Ansible Role `ripgrep`
 
-Installs and configures [ripgrep][ripgrep].
+Sets up [Ripgrep](https://github.com/BurntSushi/ripgrep).
 
-[ripgrep]: https://github.com/BurntSushi/ripgrep
+Ripgrep is installed with Homebrew.
+
+Ripgrep is not kept up to date.
