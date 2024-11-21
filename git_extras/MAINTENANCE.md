@@ -2,4 +2,4 @@
 
 ## Update
 
-Use Homebrew to update Git Extras.
+Use APT to update Git Extras.

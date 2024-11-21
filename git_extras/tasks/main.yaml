@@ -12,7 +12,7 @@
 
 - name: Set up aliases in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_aliases }}"
+    path: "{{ bash_aliases_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}
@@ -21,7 +21,7 @@
 
 - name: Set up aliases in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_aliases }}"
+    path: "{{ zsh_aliases_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in git_extras_aliases %}

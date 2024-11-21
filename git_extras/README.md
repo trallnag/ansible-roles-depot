@@ -2,6 +2,6 @@
 
 Sets up [Git Extras](https://github.com/tj/git-extras).
 
-Git Extras is installed with Homebrew.
+Git Extras is installed with APT.
 
 Git Extras is not kept up to date.
