@@ -1,5 +1,5 @@
-source "{{ shell_bash_login }}"
+source "{{ shell_bash_login_file }}"
 
-source "$DOT_BASH_PROFILE"
+source "$DOT_BASH_PROFILE_FILE"
 
 source "$HOME/.bashrc"

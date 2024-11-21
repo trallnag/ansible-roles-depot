@@ -1,23 +1,30 @@
-- name: Set file facts
-  ansible.builtin.set_fact:
-    bash_dynrc_dir: "{{ xdg_config_home }}/bash"
-    bash_completions_dir: "{{ xdg_data_home }}/bash-completion/completions"
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - bash
+      - bash-completion
+  become: true
 
 - name: Set directory facts
   ansible.builtin.set_fact:
-    bash_completion: "{{ xdg_config_home }}/bash_completion"
-    bash_profile: "{{ bash_dynrc_dir }}/profile.bash"
-    bash_bashrc_top: "{{ bash_dynrc_dir }}/bashrc-top.bash"
-    bash_bashrc: "{{ bash_dynrc_dir }}/bashrc.bash"
-    bash_aliases: "{{ bash_dynrc_dir }}/aliases.bash"
+    bash_config_dir: "{{ xdg_config_home_dir }}/bash"
+    bash_completions_dir: "{{ xdg_data_home_dir }}/bash-completion/completions"
+
+- name: Set file facts
+  ansible.builtin.set_fact:
+    bash_completion_file: "{{ xdg_config_home_dir }}/bash_completion"
+    bash_profile_file: "{{ bash_config_dir }}/profile.bash"
+    bash_bashrc_top_file: "{{ bash_config_dir }}/bashrc-top.bash"
+    bash_bashrc_file: "{{ bash_config_dir }}/bashrc.bash"
+    bash_aliases_file: "{{ bash_config_dir }}/aliases.bash"
 
 - name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=,o=
   loop:
-    - "{{ bash_dynrc_dir }}"
+    - "{{ bash_config_dir }}"
     - "{{ bash_completions_dir }}"
 
 - name: Create files
@@ -28,18 +35,11 @@
     modification_time: preserve
     access_time: preserve
   loop:
-    - "{{ bash_completion }}"
-    - "{{ bash_profile }}"
-    - "{{ bash_bashrc_top }}"
-    - "{{ bash_bashrc }}"
-    - "{{ bash_aliases }}"
-
-- name: Install packages
-  ansible.builtin.apt:
-    name:
-      - bash
-      - bash-completion
-  become: true
+    - "{{ bash_completion_file }}"
+    - "{{ bash_profile_file }}"
+    - "{{ bash_bashrc_top_file }}"
+    - "{{ bash_bashrc_file }}"
+    - "{{ bash_aliases_file }}"
 
 #
 # ------------------------------------------------------------------------------
@@ -47,39 +47,42 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ shell_bash_login }}"
+    path: "{{ shell_bash_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
+      export DOT_BASH_CONFIG_DIR="{{ bash_config_dir }}"
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
-      export DOT_BASH_COMPLETION="{{ bash_completion }}"
-      export DOT_BASH_PROFILE="{{ bash_profile }}"
-      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
-      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
-      export DOT_BASH_ALIASES="{{ bash_aliases }}"
+      export DOT_BASH_COMPLETION_FILE="{{ bash_completion_file }}"
+      export DOT_BASH_PROFILE_FILE="{{ bash_profile_file }}"
+      export DOT_BASH_BASHRC_TOP_FILE="{{ bash_bashrc_top_file }}"
+      export DOT_BASH_BASHRC_FILE="{{ bash_bashrc_file }}"
+      export DOT_BASH_ALIASES_FILE="{{ bash_aliases_file }}"
 
 - name: Set up environment in Fish
   ansible.builtin.blockinfile:
-    path: "{{ shell_fish_login }}"
+    path: "{{ shell_fish_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
+      set -x DOT_BASH_CONFIG_DIR "{{ bash_config_dir }}"
       set -x DOT_BASH_COMPLETIONS_DIR "{{ bash_completions_dir }}"
-      set -x DOT_BASH_COMPLETION "{{ bash_completion }}"
-      set -x DOT_BASH_PROFILE "{{ bash_profile }}"
-      set -x DOT_BASH_BASHRC_TOP "{{ bash_bashrc_top }}"
-      set -x DOT_BASH_BASHRC "{{ bash_bashrc }}"
-      set -x DOT_BASH_ALIASES "{{ bash_aliases }}"
+      set -x DOT_BASH_COMPLETION_FILE "{{ bash_completion_file }}"
+      set -x DOT_BASH_PROFILE_FILE "{{ bash_profile_file }}"
+      set -x DOT_BASH_BASHRC_TOP_FILE "{{ bash_bashrc_top_file }}"
+      set -x DOT_BASH_BASHRC_FILE "{{ bash_bashrc_file }}"
+      set -x DOT_BASH_ALIASES_FILE "{{ bash_aliases_file }}"
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ shell_zsh_login }}"
+    path: "{{ shell_zsh_login_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
+      export DOT_BASH_CONFIG_DIR="{{ bash_config_dir }}"
       export DOT_BASH_COMPLETIONS_DIR="{{ bash_completions_dir }}"
-      export DOT_BASH_COMPLETION="{{ bash_completion }}"
-      export DOT_BASH_PROFILE="{{ bash_profile }}"
-      export DOT_BASH_BASHRC_TOP="{{ bash_bashrc_top }}"
-      export DOT_BASH_BASHRC="{{ bash_bashrc }}"
-      export DOT_BASH_ALIASES="{{ bash_aliases }}"
+      export DOT_BASH_COMPLETION_FILE="{{ bash_completion_file }}"
+      export DOT_BASH_PROFILE_FILE="{{ bash_profile_file }}"
+      export DOT_BASH_BASHRC_TOP_FILE="{{ bash_bashrc_top_file }}"
+      export DOT_BASH_BASHRC_FILE="{{ bash_bashrc_file }}"
+      export DOT_BASH_ALIASES_FILE="{{ bash_aliases_file }}"
 
 #
 # ------------------------------------------------------------------------------

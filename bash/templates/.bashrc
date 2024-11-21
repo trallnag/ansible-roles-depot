@@ -4,7 +4,7 @@ case $- in
   *) return ;;
 esac
 
-source "$DOT_BASH_BASHRC_TOP"
+source "$DOT_BASH_BASHRC_TOP_FILE"
 
 #
 # ------------------------------------------------------------------------------
@@ -133,10 +133,10 @@ alias path='echo -e ${PATH//:/\\n}'
 
 alias rmi='rm -I'
 
-source "$DOT_BASH_ALIASES"
+source "$DOT_BASH_ALIASES_FILE"
 
 #
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_BASH_BASHRC"
+source "$DOT_BASH_BASHRC_FILE"
