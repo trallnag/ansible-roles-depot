@@ -2,9 +2,9 @@
   ansible.builtin.set_fact:
     homebrew_prefix: /home/linuxbrew/.linuxbrew
 
-- name: Set Homebrew path fact
+- name: Set Homebrew exe dir fact
   ansible.builtin.set_fact:
-    homebrew_path: "{{ homebrew_prefix }}/bin"
+    homebrew_exe_dir: "{{ homebrew_prefix }}/bin"
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -31,15 +31,15 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_profile }}"
+    path: "{{ bash_profile_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$({{ homebrew_path }}/brew shellenv)"
+      eval "$({{ homebrew_exe_dir }}/brew shellenv)"
       export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc }}"
+    path: "{{ bash_bashrc_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       source "$HOMEBREW_PREFIX/etc/bash_completion.d/"*
@@ -52,15 +52,15 @@
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zprofile }}"
+    path: "{{ zsh_zprofile_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$({{ homebrew_path }}/brew shellenv)"
+      eval "$({{ homebrew_exe_dir }}/brew shellenv)"
       export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
 
 - name: Set up completion in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_compinit_pre }}"
+    path: "{{ zsh_zshrc_compinit_pre_file }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"

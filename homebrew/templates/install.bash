@@ -2,11 +2,11 @@
 
 set -euo pipefail
 
-homebrew_path="{{ homebrew_path }}"
+homebrew_exe_dir="{{ homebrew_exe_dir }}"
 ansible_become_pass="{{ ansible_become_pass }}"
 
-# Check if the Homebrew path does not exist.
-if ! test -d "$homebrew_path"; then
+# Check if the Homebrew exe dir does not exist.
+if ! test -d "$homebrew_exe_dir"; then
   # Check if sudo can be run without a password.
   if ! sudo -n true 2> /dev/null; then
     # Provide the sudo password if needed.
