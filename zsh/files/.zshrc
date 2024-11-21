@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_INTERACTIVE"
+source "$DOT_ZSH_ZSHRC_INTERACTIVE_FILE"
 
 #
 # ------------------------------------------------------------------------------
@@ -343,13 +343,13 @@ source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/termsupport.zsh"
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC"
+source "$DOT_ZSH_ZSHRC_FILE"
 
 #
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_COMPINIT_PRE"
+source "$DOT_ZSH_ZSHRC_COMPINIT_PRE_FILE"
 
 #
 # ------------------------------------------------------------------------------
@@ -365,7 +365,7 @@ bashcompinit
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_COMPINIT_POST"
+source "$DOT_ZSH_ZSHRC_COMPINIT_POST_FILE"
 
 #
 # ------------------------------------------------------------------------------
@@ -378,4 +378,4 @@ alias path='echo -e ${PATH//:/\\n}'
 
 alias rmi='rm -I'
 
-source "$DOT_ZSH_ALIASES"
+source "$DOT_ZSH_ALIASES_FILE"
