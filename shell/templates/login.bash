@@ -34,6 +34,6 @@ export XDG_DATA_HOME="{{ xdg_data_home_dir }}"
 export XDG_STATE_HOME="{{ xdg_state_home_dir }}"
 
 # This.
-export DOT_SHELL_BASH_LOGIN="{{ shell_bash_login_file }}"
-export DOT_SHELL_FISH_LOGIN="{{ shell_fish_login_file }}"
-export DOT_SHELL_ZSH_LOGIN="{{ shell_zsh_login_file }}"
+export DOT_SHELL_BASH_LOGIN_FILE="{{ shell_bash_login_file }}"
+export DOT_SHELL_FISH_LOGIN_FILE="{{ shell_fish_login_file }}"
+export DOT_SHELL_ZSH_LOGIN_FILE="{{ shell_zsh_login_file }}"
