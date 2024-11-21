@@ -2,4 +2,4 @@
 
 ## Update
 
-Use Homebrew to update `eza`.
+Use Homebrew to update Eza.
