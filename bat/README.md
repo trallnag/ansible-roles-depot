@@ -1,7 +1,7 @@
 # Ansible Role `bat`
 
-Sets up [`bat`](https://github.com/sharkdp/bat).
+Sets up [Bat](https://github.com/sharkdp/bat).
 
-`bat` is installed with Homebrew.
+Bat is installed with Homebrew.
 
-`bat` is no kept up to date.
+Bat is no kept up to date.

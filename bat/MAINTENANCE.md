@@ -2,4 +2,4 @@
 
 ## Update
 
-Use Homebrew to update `bat`.
+Use Homebrew to update Bat.
