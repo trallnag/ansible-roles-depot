@@ -21,24 +21,23 @@
   register: install
   changed_when: "'status=changed' in install.stdout"
   loop:
-    - editorconfig.editorconfig
-    - gerrnperl.outline-map
-    - github.copilot
-    - github.copilot-chat
-    - github.vscode-pull-request-github
-    - gruntfuggly.todo-tree
-    - tyriar.sort-lines
-    - visualstudioexptteam.vscodeintellicode
     - amazonwebservices.aws-toolkit-vscode
     - bierner.markdown-preview-github-styles
     - donjayamanne.githistory
+    - editorconfig.editorconfig
     - formulahendry.code-runner
+    - gerrnperl.outline-map
+    - github.copilot
+    - github.copilot-chat
     - github.vscode-github-actions
+    - github.vscode-pull-request-github
     - golang.go
+    - gruntfuggly.todo-tree
     - hangxingliu.vscode-systemd-support
     - hashicorp.terraform
     - mhutchie.git-graph
     - ms-python.python
+    - ms-vscode.powershell
     - nefrob.vscode-just-syntax
     - oderwat.indent-rainbow
     - qufiwefefwoyn.inline-sql-syntax
@@ -49,5 +48,7 @@
     - streetsidesoftware.code-spell-checker-german
     - tamasfe.even-better-toml
     - tomoki1207.selectline-statusbar
+    - tyriar.sort-lines
+    - visualstudioexptteam.vscodeintellicode
     - waderyan.gitblame
     - yzhang.markdown-all-in-one
