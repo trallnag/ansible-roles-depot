@@ -2,4 +2,4 @@
 
 ## Update
 
-Use Homebrew to update `eksctl`.
+Use Homebrew to update Eksctl.

@@ -1,7 +1,7 @@
 # Ansible Role `eksctl`
 
-Sets up [`eksctl`](https://eksctl.io).
+Sets up [Eksctl](https://eksctl.io).
 
-`eksctl` is installed with Homebrew.
+Eksctl is installed with Homebrew.
 
-`eksctl` is not kept up to date.
+Eksctl is not kept up to date.
