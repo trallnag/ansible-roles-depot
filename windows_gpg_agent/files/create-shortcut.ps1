@@ -32,12 +32,6 @@ $shortcut.WindowStyle = 7
 $shortcut.Save()
 
 #
-# Hide the shortcut.
-#
-
-attrib +h $shortcutPath
-
-#
 # Start if not already running.
 #
 
