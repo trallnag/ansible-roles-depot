@@ -1656,7 +1656,7 @@
   #
 
   source "$ZDOTDIR/p10k-pre.zsh"
-  source "$DOT_ZSH_P10K"
+  source "$DOT_ZSH_P10K_FILE"
   source "$ZDOTDIR/p10k-post.zsh"
 
   #
