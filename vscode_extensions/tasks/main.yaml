@@ -1,5 +1,6 @@
 - name: Get installed
-  ansible.builtin.shell: code --list-extensions
+  ansible.builtin.command:
+    cmd: code --list-extensions
   register: get_installed
   changed_when: false
 

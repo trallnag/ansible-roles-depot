@@ -1,5 +1,5 @@
-# Ansible Role `vscode`
+# Ansible Role `vscode_extensions`
 
-Installs Visual Studio Code extensions using the `code` CLI.
+Installs Visual Studio Code extensions with the `code` CLI.
 
-Installed extensions are not updated.
+Extensions are not kept up to date.
