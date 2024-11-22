@@ -1,4 +1,4 @@
 - name: Place icon
   ansible.builtin.copy:
     src: icon.png
-    dest: "{{ windows_home }}/Share/WSL/Wubuntu/icon.png"
+    dest: "{{ windows_home_dir }}/Share/WSL/Wubuntu/icon.png"
