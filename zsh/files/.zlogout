@@ -15,4 +15,4 @@
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZLOGOUT_FILE"
+source "$DOT_ZSH_ZLOGOUT_SCRIPT_PATH"

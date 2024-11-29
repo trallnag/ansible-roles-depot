@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_INTERACTIVE_FILE"
+source "$DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH"
 
 #
 # ------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ fi
 # https://github.com/romkatv/powerlevel10k#how-do-i-initialize-direnv-when-using-instant-prompt
 (( ${+commands[direnv]} )) && emulate zsh -c "$(direnv hook zsh)"
 
-source "$DOT_ZSH_PLUGINS_DIR/powerlevel10k/powerlevel10k.zsh-theme"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/powerlevel10k/powerlevel10k.zsh-theme"
 source "$ZDOTDIR/.p10k.zsh"
 
 #
@@ -73,13 +73,13 @@ unsetopt \
 ;
 
 # Plugin zsh-completions.
-fpath=("$DOT_ZSH_PLUGINS_DIR/zsh-completions/src" $fpath)
+fpath=("$DOT_ZSH_PLUGINS_DIR_PATH/zsh-completions/src" $fpath)
 
 # Central place where I (try to) place all completions.
-fpath=("$DOT_ZSH_COMPLETIONS_DIR" $fpath)
+fpath=("$DOT_ZSH_COMPLETIONS_DIR_PATH" $fpath)
 
 # Central place where I (try to) place all Zsh functions.
-fpath=("$DOT_ZSH_FUNCTIONS_DIR" $fpath)
+fpath=("$DOT_ZSH_FUNCTIONS_DIR_PATH" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
@@ -276,7 +276,7 @@ alias sftp='noglob sftp'
 # Init zsh-syntax-highlighting.
 #
 
-source "$DOT_ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Disable displaying paths with underlines.
 # https://github.com/zsh-users/zsh-syntax-highlighting/issues/573
@@ -295,7 +295,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
 # sure that you load it before you load this script.
 #
 
-source "$DOT_ZSH_PLUGINS_DIR/zsh-history-substring-search/zsh-history-substring-search.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
 if [[ -n "$terminfo[kcuu1]" ]]; then
   bindkey -M emacs "$terminfo[kcuu1]" history-substring-search-up
@@ -316,7 +316,7 @@ fi
 # zsh-history-substring-search to work properly.
 #
 
-source "$DOT_ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
@@ -334,22 +334,22 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # Init ohmyzsh.
 #
 
-source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/clipboard.zsh"
-source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/functions.zsh"
-source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/key-bindings.zsh"
-source "$DOT_ZSH_PLUGINS_DIR/ohmyzsh/lib/termsupport.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/clipboard.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/functions.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/key-bindings.zsh"
+source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/termsupport.zsh"
 
 #
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_FILE"
+source "$DOT_ZSH_ZSHRC_SCRIPT_PATH"
 
 #
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_COMPINIT_PRE_FILE"
+source "$DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH"
 
 #
 # ------------------------------------------------------------------------------
@@ -365,7 +365,7 @@ bashcompinit
 # ------------------------------------------------------------------------------
 #
 
-source "$DOT_ZSH_ZSHRC_COMPINIT_POST_FILE"
+source "$DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH"
 
 #
 # ------------------------------------------------------------------------------
@@ -378,4 +378,4 @@ alias path='echo -e ${PATH//:/\\n}'
 
 alias rmi='rm -I'
 
-source "$DOT_ZSH_ALIASES_FILE"
+source "$DOT_ZSH_ALIASES_SCRIPT_PATH"

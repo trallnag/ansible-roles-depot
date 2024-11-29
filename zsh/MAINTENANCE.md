@@ -4,4 +4,4 @@
 
 Use APT to update Zsh.
 
-Run this role to update all plugins.
+Run this role to update the plugins.
