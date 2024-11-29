@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 # Set variables.
 #
 
-$shortcutName = "GnuPG Agent"
+$shortcutName = "GPG Agent"
 $executablePath = "C:\Program Files (x86)\GnuPG\bin\gpg-connect-agent.exe"
 $startupPath = [System.Environment]::GetFolderPath("Startup")
 $shortcutPath = [System.IO.Path]::Combine($startupPath, $shortcutName)
