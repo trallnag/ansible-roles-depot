@@ -1,37 +1,37 @@
 - name: Set facts
   ansible.builtin.set_fact:
     # Data related to this role is stored here.
-    windows_gpg_agent_trigger_home: >-
-      {{ xdg_data_home }}/windows-gpg-agent-trigger
+    windows_gpg_agent_trigger_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/windows-gpg-agent-trigger
 
     # Path to the connect-agent executable in Windows.
-    windows_gpg_agent_trigger_exe: >-
+    windows_gpg_agent_trigger_exe_path: >-
       /mnt/c/Program Files (x86)/GnuPG/bin/gpg-connect-agent.exe
 
     # Path to the sentinel lock file in Windows.
-    windows_gpg_agent_trigger_lock: >-
-      {{ windows_home }}/AppData/Roaming/gnupg/gnupg_spawn_agent_sentinel.lock
+    windows_gpg_agent_trigger_lock_path: >-
+      {{ windows_home_dir_path }}/AppData/Roaming/gnupg/gnupg_spawn_agent_sentinel.lock
 
-- name: Create home directory
+- name: Create data dir
   ansible.builtin.file:
     state: directory
-    path: "{{ windows_gpg_agent_trigger_home }}"
+    path: "{{ windows_gpg_agent_trigger_data_dir_path }}"
     mode: u=rwx,g=,o=
 
 - name: Validate executable existence
   ansible.builtin.stat:
-    path: "{{ windows_gpg_agent_trigger_exe }}"
+    path: "{{ windows_gpg_agent_trigger_exe_path }}"
 
 - name: Validate executable usability
   ansible.builtin.command:
-    cmd: "'{{ windows_gpg_agent_trigger_exe }}' --help"
+    cmd: "'{{ windows_gpg_agent_trigger_exe_path }}' --help"
   changed_when: false
 
 - name: Render and place windows-gpg-agent-trigger.sh
   ansible.builtin.template:
     src: windows-gpg-agent-trigger.sh
-    dest: "{{ windows_gpg_agent_trigger_home }}/windows-gpg-agent-trigger.sh"
-    mode: u=rwx,g=r,o=r
+    dest: "{{ windows_gpg_agent_trigger_data_dir_path }}/windows-gpg-agent-trigger.sh"
+    mode: u=rwx,g=,o=
   register: script
 
 - name: Set up systemd unit windows-gpg-agent-trigger.service
