@@ -28,12 +28,12 @@ export VISUAL=nano
 export PAGER=less
 
 # XDG base directories.
-export XDG_CACHE_HOME="{{ xdg_cache_home_dir }}"
-export XDG_CONFIG_HOME="{{ xdg_config_home_dir }}"
-export XDG_DATA_HOME="{{ xdg_data_home_dir }}"
-export XDG_STATE_HOME="{{ xdg_state_home_dir }}"
+export XDG_CACHE_HOME="{{ xdg_cache_home_dir_path }}"
+export XDG_CONFIG_HOME="{{ xdg_config_home_dir_path }}"
+export XDG_DATA_HOME="{{ xdg_data_home_dir_path }}"
+export XDG_STATE_HOME="{{ xdg_state_home_dir_path }}"
 
 # This.
-export DOT_SHELL_BASH_LOGIN_FILE="{{ shell_bash_login_file }}"
-export DOT_SHELL_FISH_LOGIN_FILE="{{ shell_fish_login_file }}"
-export DOT_SHELL_ZSH_LOGIN_FILE="{{ shell_zsh_login_file }}"
+export DOT_SHELL_BASH_LOGIN_SCRIPT_PATH="{{ shell_bash_login_script_path }}"
+export DOT_SHELL_FISH_LOGIN_SCRIPT_PATH="{{ shell_fish_login_script_path }}"
+export DOT_SHELL_ZSH_LOGIN_SCRIPT_PATH="{{ shell_zsh_login_script_path }}"
