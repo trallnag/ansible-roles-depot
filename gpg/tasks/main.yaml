@@ -1,6 +1,6 @@
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_top }}"
+    path: "{{ bash_bashrc_top_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export GPG_TTY=$(tty)
@@ -8,7 +8,7 @@
 
 - name: Set up environment in Fish
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_interactive }}"
+    path: "{{ zsh_zshrc_interactive_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export GPG_TTY=$(tty)
