@@ -8,10 +8,61 @@
   ansible.builtin.shell: fish & sleep 1 & exit
   when: task.changed
 
-- import_tasks: facts.yaml
+- name: Set config dir path fact
+  ansible.builtin.set_fact:
+    fish_config_dir_path: "{{ xdg_config_home_dir_path }}/fish"
 
-- name: Place $HOME/.config/fish/config.fish
-  ansible.builtin.copy:
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ fish_config_dir_path }}"
+    state: directory
+    mode: u=rwx,g=,o=
+
+- name: Set script path facts
+  ansible.builtin.set_fact:
+    fish_login_script_path: "{{ fish_config_dir_path }}/login.fish"
+    fish_interactive_script_path: "{{ fish_config_dir_path }}/interactive.fish"
+
+- name: Create scripts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ fish_login_script_path }}"
+    - "{{ fish_interactive_script_path }}"
+
+- name: Place config
+  ansible.builtin.template:
     src: config.fish
-    dest: $HOME/.config/fish/config.fish
-    mode: 0644
+    dest: "{{ fish_config_dir_path }}/config.fish"
+    mode: u=rw,g=,o=
+
+- name: Set up environment in Bash
+  ansible.builtin.blockinfile:
+    path: "{{ shell_bash_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export DOT_FISH_CONFIG_DIR_PATH="{{ fish_config_dir_path }}"
+      export DOT_FISH_LOGIN_SCRIPT_PATH="{{ fish_login_script_path }}"
+      export DOT_FISH_INTERACTIVE_SCRIPT_PATH="{{ fish_interactive_script_path }}"
+
+- name: Set up environment in Fish
+  ansible.builtin.blockinfile:
+    path: "{{ shell_fish_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      set -x DOT_FISH_CONFIG_DIR_PATH {{ fish_config_dir_path }}
+      set -x DOT_FISH_LOGIN_SCRIPT_PATH {{ fish_login_script_path }}
+      set -x DOT_FISH_INTERACTIVE_SCRIPT_PATH {{ fish_interactive_script_path }}
+
+- name: Set up environment in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ shell_zsh_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export DOT_FISH_CONFIG_DIR_PATH="{{ fish_config_dir_path }}"
+      export DOT_FISH_LOGIN_SCRIPT_PATH="{{ fish_login_script_path }}"
+      export DOT_FISH_INTERACTIVE_SCRIPT_PATH="{{ fish_interactive_script_path }}"
