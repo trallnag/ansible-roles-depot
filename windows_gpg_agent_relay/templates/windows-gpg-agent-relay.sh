@@ -7,7 +7,7 @@ r_local="{{ windows_gpg_bridge_extra_host }}:{{ windows_gpg_bridge_extra_port }}
 
 echo "Connecting to target with SSH..."
 
-exec "{{ windows_gpg_agent_relay_ssh_exe }}" \
+exec "{{ windows_gpg_agent_relay_ssh_exe_path }}" \
   -o ServerAliveInterval=60 \
   -R "$r_remote:$r_local" \
   "{{ ansible_user }}@localhost" \
