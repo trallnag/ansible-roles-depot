@@ -2,6 +2,4 @@
 
 Sets up [Bat](https://github.com/sharkdp/bat).
 
-Bat is installed with Homebrew.
-
-Bat is no kept up to date.
+Bat is installed with Homebrew. It is no kept up to date.
