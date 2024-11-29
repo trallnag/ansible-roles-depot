@@ -2,4 +2,4 @@
 
 Sets up Bash.
 
-It is not installed. It is not kept up to date.
+Bash is not installed. It is not kept up to date.
