@@ -1,51 +1,71 @@
-- import_tasks: cleanup.yaml
+- name: Set dir path facts
+  ansible.builtin.set_fact:
+    terraform_cache_dir_path: "{{ xdg_cache_home_dir_path }}/terraform"
+    terraform_config_dir_path: "{{ xdg_config_home_dir_path }}/terraform"
 
-- name: Install
-  community.general.homebrew:
-    name:  terraform
+- name: Set plugin cache dir path fact
+  ansible.builtin.set_fact:
+    terraform_plugin_cache_dir_path: "{{ terraform_cache_dir_path }}/plugins"
 
-- name: Install related
-  community.general.homebrew:
-    name:
-      - terragrunt # https://github.com/gruntwork-io/terragrunt
-      - tflint # https://github.com/terraform-linters/tflint
-      - tfsec # https://github.com/aquasecurity/tfsec
+- name: Set config path fact
+  ansible.builtin.set_fact:
+    terraform_config_path: "{{ terraform_config_dir_path }}/terraform.tfrc"
 
-- name: Create .terraformrc
-  ansible.builtin.copy:
-    dest: ~/.terraformrc
-    content: |
-      plugin_cache_dir = "$HOME/.cache/terraform-plugin-cache"
+- name: Uninstall unused
+  ansible.builtin.command:
+    cmd: "{{ tenv_exe_path }} tf uninstall not-used-for:3m"
+  environment:
+    TENV_ROOT: "{{ tenv_data_dir_path }}"
+  changed_when: false
 
-- name: Create plugin cache dir
-  file:
-    path: ~/.cache/terraform-plugin-cache
+- name: Install latest
+  ansible.builtin.command:
+    cmd: "{{ tenv_exe_path }} tf install latest"
+  environment:
+    TENV_ROOT: "{{ tenv_data_dir_path }}"
+  changed_when: false
+
+- name: Create dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{ terraform_cache_dir_path }}"
+    - "{{ terraform_config_dir_path }}"
+    - "{{ terraform_plugin_cache_dir_path }}"
 
-- name: "bash : bash_bashrc : Integration"
-  blockinfile:
-    path: "{{ bash_bashrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+- name: Place config
+  ansible.builtin.copy:
+    dest: "{{ terraform_config_path }}"
+    mode: u=rw,g=,o=
+    content: |
+      plugin_cache_dir = "{{ terraform_cache_dir_path }}/plugins"
+
+- name: Set up environment in Bash
+  ansible.builtin.blockinfile:
+    path: "{{ shell_bash_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      alias tf=terraform
+      export TF_CLI_CONFIG_FILE="{{ terraform_config_path }}"
 
-- name: "bash : bash_completion : Integration"
-  blockinfile:
-    path: "{{ bash_completion }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+- name: Set up environment in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ shell_zsh_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export TF_CLI_CONFIG_FILE="{{ terraform_config_path }}"
+
+- name: Set up completion in Bash
+  ansible.builtin.blockinfile:
+    path: "{{ bash_completion_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       complete -C terraform terraform
 
-- name: "zsh : zsh_zshrc : Integration"
-  blockinfile:
-    path: "{{ zsh_zshrc }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
-    block: |
-      alias tf=terraform
-
-- name: "zsh : zsh_zshrc_compinit_post : Integration"
-  blockinfile:
-    path: "{{ zsh_zshrc_compinit_post }}"
-    marker: "# {mark} :: ANSIBLE MANAGED BLOCK :: {{ role_name }}"
+- name: Set up completion in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_compinit_post_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       complete -C terraform terraform
