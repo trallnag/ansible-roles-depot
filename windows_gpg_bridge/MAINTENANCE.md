@@ -1,13 +1,13 @@
 # Maintenance
 
-## Update GPG Bridge
+## Update
 
-[GnuPG Bridge][gpg-bridge] is pinned to a specific version in
+[GPG Bridge][gpg-bridge] is pinned to a specific version in
 [`tasks/main.yaml`](tasks/main.yaml) via the variables
-`windows_gpg_bridge_target_version` and `windows_gpg_bridge_target_sha256sum`.
+`windows_gpg_bridge_target_version` and `windows_gpg_bridge_target_digest`.
 
-Check [busyjay/gpg-bridge][gpg-bridge] on GitHub for changes.
-Consider updating if applicable. To update, adjust the values of the
-aforementioned variables.
+Check the [busyjay/gpg-bridge][gpg-bridge] repository on GitHub for changes.
+
+Adjust the values of the aforementioned variables to update GPG Bridge.
 
 [gpg-bridge]: https://github.com/BusyJay/gpg-bridge

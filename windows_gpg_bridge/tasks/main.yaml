@@ -1,8 +1,8 @@
-- name: Set home directory fact
+- name: Set data dir path fact
   ansible.builtin.set_fact:
     # Data related to this role is stored here.
-    windows_gpg_bridge_home: >-
-      {{ xdg_data_home }}/windows-gpg-bridge
+    windows_gpg_bridge_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/windows-gpg-bridge
 
 - name: Set misc facts
   ansible.builtin.set_fact:
@@ -10,21 +10,21 @@
     windows_gpg_bridge_target_version: "0.1.1"
 
     # Target SHA-256 checksum of GPG Bridge archive.
-    windows_gpg_bridge_target_sha256sum: >-
+    windows_gpg_bridge_target_digest: >-
       3c7595d0f4f135937b7b9dfae7b0dc4134e88100fd563d2b751a48613dcf42ab
 
     # Path to GPG Bridge executable.
-    windows_gpg_bridge_exe: >-
-      {{ windows_gpg_bridge_home }}/gpg-bridge
+    windows_gpg_bridge_exe_path: >-
+      {{ windows_gpg_bridge_data_dir_path }}/gpg-bridge
 
     # Combined and passed with `--extra` parameter as argument.
     windows_gpg_bridge_extra_host: "127.0.0.1"
     windows_gpg_bridge_extra_port: "54321"
 
-- name: Create home directory
+- name: Create data dir
   ansible.builtin.file:
     state: directory
-    path: "{{ windows_gpg_bridge_home }}"
+    path: "{{ windows_gpg_bridge_data_dir_path }}"
     mode: u=rwx,g=,o=
 
 - name: Get installed version
@@ -32,8 +32,8 @@
     executable: /usr/bin/bash
     cmd: |
       set -euo pipefail
-      if [[ -f "{{ windows_gpg_bridge_exe }}" ]]; then
-        "{{ windows_gpg_bridge_exe }}" --version | sed "s/gpg-bridge //"
+      if [[ -f "{{ windows_gpg_bridge_exe_path }}" ]]; then
+        "{{ windows_gpg_bridge_exe_path }}" --version | sed "s/gpg-bridge //"
       fi
   register: windows_gpg_bridge_get_installed_version
   changed_when: false
@@ -57,7 +57,7 @@
   block:
     - name: Delete executable
       ansible.builtin.file:
-        path: "{{ windows_gpg_bridge_exe }}"
+        path: "{{ windows_gpg_bridge_exe_path }}"
         state: absent
 
     - name: Create temporary directory
@@ -83,7 +83,7 @@
         cmd: |
           set -euo pipefail
           sha256sum "{{ temp_dir.path }}/gpg-bridge.zip" \
-            | grep -F "{{ windows_gpg_bridge_target_sha256sum }}"
+            | grep -F "{{ windows_gpg_bridge_target_digest }}"
       changed_when: false
 
     - name: Unzip archive
@@ -97,11 +97,11 @@
         cmd: >-
           mv --force
           "{{ temp_dir.path }}/gpg-bridge.exe"
-          "{{ windows_gpg_bridge_exe }}"
+          "{{ windows_gpg_bridge_exe_path }}"
 
     - name: Set file permissions
       ansible.builtin.file:
-        path: "{{ windows_gpg_bridge_exe }}"
+        path: "{{ windows_gpg_bridge_exe_path }}"
         mode: u=rwx,g=,o=
 
     - name: Get new installed version
@@ -109,7 +109,7 @@
         executable: /usr/bin/bash
         cmd: |
           set -euo pipefail
-          "{{ windows_gpg_bridge_exe }}" --version | sed "s/gpg-bridge //"
+          "{{ windows_gpg_bridge_exe_path }}" --version | sed "s/gpg-bridge //"
       register: windows_gpg_bridge_get_new_installed_version
       changed_when: false
 
