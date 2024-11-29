@@ -2,6 +2,4 @@
 
 Sets up [Git Extras](https://github.com/tj/git-extras).
 
-Git Extras is installed with APT.
-
-Git Extras is not kept up to date.
+Git Extras is installed with APT. It is not kept up to date.
