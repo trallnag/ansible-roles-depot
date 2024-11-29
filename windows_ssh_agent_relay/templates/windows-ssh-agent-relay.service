@@ -8,15 +8,15 @@ After=ssh.service
 
 Type=simple
 
-ExecStartPre=mkdir -p {{ windows_ssh_agent_relay_socket | dirname }}
-ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} {{ windows_ssh_agent_relay_socket | dirname  }}
-ExecStartPre=chmod u=rwx,g=,o= {{ windows_ssh_agent_relay_socket | dirname  }}
-ExecStartPre=rm -rf {{ windows_ssh_agent_relay_socket }}
+ExecStartPre=mkdir -p {{ windows_ssh_agent_relay_socket_path | dirname }}
+ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} {{ windows_ssh_agent_relay_socket_path | dirname  }}
+ExecStartPre=chmod u=rwx,g=,o= {{ windows_ssh_agent_relay_socket_path | dirname  }}
+ExecStartPre=rm -rf {{ windows_ssh_agent_relay_socket_path }}
 
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_ssh_agent_relay_home }}/windows-ssh-agent-relay.sh
+ExecStart={{ windows_ssh_agent_relay_data_dir_path }}/windows-ssh-agent-relay.sh
 
 Restart=always
 RestartSec=15

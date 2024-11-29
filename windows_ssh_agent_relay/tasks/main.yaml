@@ -1,39 +1,39 @@
 - name: Set facts
   ansible.builtin.set_fact:
     # Data related to this role is stored here.
-    windows_ssh_agent_relay_home: >-
-      {{ xdg_data_home }}/windows-ssh-agent-relay
+    windows_ssh_agent_relay_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/windows-ssh-agent-relay
 
     # Path to the OpenSSH executable in Windows. Must be the special Windows
     # fork of OpenSSH that stores keys within a Windows security context.
-    windows_ssh_agent_relay_ssh_exe: >-
+    windows_ssh_agent_relay_ssh_exe_path: >-
       /mnt/c/Windows/System32/OpenSSH/ssh.exe
 
     # Paths to the OpenSSH agent socket in Linux. This is the destination of the
     # relay action. In Linux, OpenSSH is then configured to use this socket.
-    windows_ssh_agent_relay_socket: "\
+    windows_ssh_agent_relay_socket_path: "\
       /run/user/{{ ansible_facts.user_uid }}\
       /windows-ssh-agent-relay/windows-ssh-agent-relay.sock"
 
-- name: Create home directory
+- name: Create data dir
   ansible.builtin.file:
     state: directory
-    path: "{{ windows_ssh_agent_relay_home }}"
+    path: "{{ windows_ssh_agent_relay_data_dir_path }}"
     mode: u=rwx,g=,o=
 
 - name: Validate executable existence
   ansible.builtin.stat:
-    path: "{{ windows_ssh_agent_relay_ssh_exe }}"
+    path: "{{ windows_ssh_agent_relay_ssh_exe_path }}"
 
 - name: Validate executable usability
   ansible.builtin.command:
-    cmd: "{{ windows_ssh_agent_relay_ssh_exe }} -V"
+    cmd: "{{ windows_ssh_agent_relay_ssh_exe_path }} -V"
   changed_when: false
 
 - name: Render and place windows-ssh-agent-relay.sh
   ansible.builtin.template:
     src: windows-ssh-agent-relay.sh
-    dest: "{{ windows_ssh_agent_relay_home }}/windows-ssh-agent-relay.sh"
+    dest: "{{ windows_ssh_agent_relay_data_dir_path }}/windows-ssh-agent-relay.sh"
     mode: u=rwx,g=,o=
   register: script
 
@@ -64,21 +64,21 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ shell_bash_login }}"
+    path: "{{ shell_bash_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
+      export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket_path }}"
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ shell_zsh_login }}"
+    path: "{{ shell_zsh_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket }}"
+      export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket_path }}"
 
 - name: Validate that agent is available
   ansible.builtin.command:
     cmd: ssh-add -l
   environment:
-    SSH_AUTH_SOCK: "{{ windows_ssh_agent_relay_socket }}"
+    SSH_AUTH_SOCK: "{{ windows_ssh_agent_relay_socket_path }}"
   changed_when: false

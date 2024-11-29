@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "Connecting to target with SSH..."
 
-exec "{{ windows_ssh_agent_relay_ssh_exe }}" \
+exec "{{ windows_ssh_agent_relay_ssh_exe_path }}" \
   -o ServerAliveInterval=60 \
   "{{ ansible_user }}@localhost" \
   -A \
@@ -17,7 +17,7 @@ exec "{{ windows_ssh_agent_relay_ssh_exe }}" \
     echo "Creating symlink..."
 
     target="$SSH_AUTH_SOCK"
-    link="{{ windows_ssh_agent_relay_socket }}"
+    link="{{ windows_ssh_agent_relay_socket_path }}"
     ln -sf "$target" "$link"
 
     echo "Created symlink. target='$target' link='$link'"
