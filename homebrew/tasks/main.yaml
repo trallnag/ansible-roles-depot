@@ -1,10 +1,10 @@
-- name: Set Homebrew prefix fact
+- name: Set data dir path fact
   ansible.builtin.set_fact:
-    homebrew_prefix: /home/linuxbrew/.linuxbrew
+    homebrew_data_dir_path: /home/linuxbrew/.linuxbrew
 
-- name: Set Homebrew exe dir fact
+- name: Set exe dir path fact
   ansible.builtin.set_fact:
-    homebrew_exe_dir: "{{ homebrew_prefix }}/bin"
+    homebrew_exe_dir_path: "{{ homebrew_data_dir_path }}/bin"
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -31,18 +31,18 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_profile_file }}"
+    path: "{{ bash_profile_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$({{ homebrew_exe_dir }}/brew shellenv)"
-      export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
+      eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
+      export HOMEBREW_PREFIX="{{ homebrew_data_dir_path }}"
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_file }}"
+    path: "{{ bash_bashrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
-      source "$HOMEBREW_PREFIX/etc/bash_completion.d/"*
+      source "{{ homebrew_data_dir_path }}/etc/bash_completion.d/"*
 
 #
 # ------------------------------------------------------------------------------
@@ -52,15 +52,15 @@
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zprofile_file }}"
+    path: "{{ zsh_zprofile_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      eval "$({{ homebrew_exe_dir }}/brew shellenv)"
-      export HOMEBREW_PREFIX="{{ homebrew_prefix }}"
+      eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
+      export HOMEBREW_PREFIX="{{ homebrew_data_dir_path }}"
 
 - name: Set up completion in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_compinit_pre_file }}"
+    path: "{{ zsh_zshrc_compinit_pre_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
-      FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
+      FPATH="{{ homebrew_data_dir_path }}/share/zsh/site-functions:$FPATH"
