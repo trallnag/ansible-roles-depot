@@ -1,21 +1,21 @@
-- name: Set config dir fact
+- name: Set config dir path fact
   ansible.builtin.set_fact:
-    git_config_dir: "{{ xdg_config_home_dir }}/git"
+    git_config_dir_path: "{{ xdg_config_home_dir_path }}/git"
 
-- name: Set config file facts
+- name: Set config path facts
   ansible.builtin.set_fact:
-    git_config_file: "{{ git_config_dir }}/config"
-    git_managed_config_file: "{{ git_config_dir }}/managed_config"
+    git_config_path: "{{ git_config_dir_path }}/config"
+    git_managed_config_path: "{{ git_config_dir_path }}/managed_config"
 
 - name: Create config dir
   ansible.builtin.file:
     state: directory
-    path: "{{ git_config_dir }}"
+    path: "{{ git_config_dir_path }}"
     mode: u=rwx,g=,o=
 
 - name: Touch config file
   ansible.builtin.file:
-    path: "{{ git_config_file }}"
+    path: "{{ git_config_path }}"
     state: touch
     mode: u=rw,g=,o=
     modification_time: preserve
@@ -27,11 +27,13 @@
     cmd: |
       set -euxo pipefail
 
-      hash_before=$(sha256sum "{{ git_config_file }}")
+      hash_before=$(sha256sum "{{ git_config_path }}")
 
-      git config --file "{{ git_config_file }}" include.path "{{ git_managed_config_file }}"
+      git="git config --file {{ git_config_path }}"
 
-      hash_after=$(sha256sum "{{ git_config_file }}")
+      $git include.path "{{ git_managed_config_path }}"
+
+      hash_after=$(sha256sum "{{ git_config_path }}")
 
       if [ "$hash_before" != "$hash_after" ]; then
         echo status=changed
@@ -41,7 +43,7 @@
 
 - name: Place managed config file
   ansible.builtin.copy:
-    dest: "{{ git_managed_config_file }}"
+    dest: "{{ git_managed_config_path }}"
     content: |
       [user]
         email = tim@trallnag.com
