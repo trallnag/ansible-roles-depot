@@ -1,9 +1,9 @@
 - name: Tap repository
   community.general.homebrew_tap:
     name: weaveworks/tap
-    path: "{{ homebrew_exe_dir }}"
+    path: "{{ homebrew_exe_dir_path }}"
 
 - name: Install formula
   community.general.homebrew:
     name: weaveworks/tap/eksctl
-    path: "{{ homebrew_exe_dir }}"
+    path: "{{ homebrew_exe_dir_path }}"
