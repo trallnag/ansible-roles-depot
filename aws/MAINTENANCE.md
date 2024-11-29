@@ -2,4 +2,4 @@
 
 ## Update
 
-Run this role to update all components.
+Run this role to update the AWS CLI and related components.
