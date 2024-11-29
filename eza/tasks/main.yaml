@@ -1,9 +1,9 @@
 - name: Install
   community.general.homebrew:
     name: eza
-    path: "{{ homebrew_exe_dir }}"
+    path: "{{ homebrew_exe_dir_path }}"
 
-- name: Set alias facts
+- name: Set aliases fact
   ansible.builtin.set_fact:
     eza_aliases:
       - word: es
@@ -66,7 +66,7 @@
 
 - name: Set up aliases in bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_aliases_file }}"
+    path: "{{ bash_aliases_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in eza_aliases %}
@@ -75,7 +75,7 @@
 
 - name: Set up aliases in zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_aliases_file }}"
+    path: "{{ zsh_aliases_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
     block: |
       {% for alias in eza_aliases %}
