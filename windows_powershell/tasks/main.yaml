@@ -1,0 +1,16 @@
+- name: Trust PowerShell repository PSGallery
+  ansible.builtin.shell:
+    executable: pwsh.exe
+    cmd: "{{ lookup('ansible.builtin.file', 'trust-repo-psgallery.ps1') }}"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Create dir for profile script
+  ansible.builtin.file:
+    path: "{{ windows_home_dir_path }}/Documents/PowerShell"
+    state: directory
+
+- name: Render and place profile script
+  ansible.builtin.template:
+    src: "Profile.ps1"
+    dest: "{{ windows_home_dir_path }}/Documents/PowerShell/Profile.ps1"
