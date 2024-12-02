@@ -24,7 +24,6 @@
           eza
           --all
           --classify
-          --color-scale
           --group-directories-first
           --header
           --long
@@ -34,7 +33,6 @@
           eza
           --all
           --classify
-          --color-scale
           --group-directories-first
           --header
           --long
@@ -46,7 +44,6 @@
           --all
           --binary
           --blocksize
-          --color-scale
           --created
           --extended
           --group
