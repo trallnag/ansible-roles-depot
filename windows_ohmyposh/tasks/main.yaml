@@ -1,0 +1,12 @@
+- name: Install with WinGet
+  ansible.builtin.command:
+    cmd: winget.exe install --exact --id=JanDeDobbeleer.OhMyPosh
+  when: windows_winget_installed_packages is not contains('JanDeDobbeleer.OhMyPosh')
+
+- name: Set up in PowerShell
+  ansible.builtin.blockinfile:
+    path: "{{ windows_powershell_profile_bottom_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    block: |
+      $config = "$HOME\AppData\Local\Programs\oh-my-posh\themes\pure.omp.json"
+      oh-my-posh init pwsh --config $config | Invoke-Expression
