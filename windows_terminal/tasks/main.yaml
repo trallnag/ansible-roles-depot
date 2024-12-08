@@ -1,4 +1,4 @@
-- name: Install
+- name: Install with WinGet
   ansible.builtin.command:
     cmd: winget.exe install --exact --id=Microsoft.WindowsTerminal
   when: windows_winget_installed_packages is not contains('Microsoft.WindowsTerminal')
@@ -19,3 +19,9 @@
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
       }
       precmd_functions+=(keep_current_path)
+
+- name: Place config file
+  ansible.builtin.copy:
+    src: settings.json
+    dest: "{{ windows_home_dir_path }}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
+    backup: true

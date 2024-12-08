@@ -1,4 +1,5 @@
 dependencies:
   - { role: bash, tags: [bash] }
+  - { role: windows_powershell, tags: [windows_powershell] }
   - { role: windows_winget, tags: [windows_winget] }
   - { role: zsh, tags: [zsh] }
