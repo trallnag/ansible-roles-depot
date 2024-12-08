@@ -1,16 +1,20 @@
-- name: Install PowerShell module
-  ansible.builtin.shell:
-    executable: pwsh.exe
-    cmd: "{{ lookup('ansible.builtin.file', 'install-powershell-module.ps1') }}"
+- name: Install module WinGetClient
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'install-module-client.ps1') }}"
   register: task
   changed_when: "'status=changed' in task.stdout"
 
 - name: Get installed packages
-  ansible.builtin.shell:
-    executable: pwsh.exe
-    cmd: "{{ lookup('ansible.builtin.file', 'get-installed-packages.ps1') }}"
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'get-installed-packages.ps1') }}"
   register: get_installed_packages
-  changed_when: false
+  changed_when: "'status=changed' in task.stdout"
 
 - name: Set installed packages fact
   ansible.builtin.set_fact:

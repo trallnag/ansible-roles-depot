@@ -1,3 +1,5 @@
-# Ansible Role `windows_terminal`
+# Ansible Role `windows_winget`
 
-Sets up WinGet.
+Sets up WinGet on Windows.
+
+WinGet is not installed. It is not kept up to date.
