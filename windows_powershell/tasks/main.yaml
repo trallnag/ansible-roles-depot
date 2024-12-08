@@ -1,16 +1,68 @@
-- name: Trust PowerShell repository PSGallery
-  ansible.builtin.shell:
-    executable: pwsh.exe
-    cmd: "{{ lookup('ansible.builtin.file', 'trust-repo-psgallery.ps1') }}"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
+- name: Set config dir path fact
+  ansible.builtin.set_fact:
+    windows_powershell_config_dir_path: "{{ windows_home_dir_path }}/Documents/PowerShell"
 
-- name: Create dir for profile script
+- name: Set script path facts
+  ansible.builtin.set_fact:
+    windows_powershell_profile_top_script_path: >-
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Top.ps1
+    windows_powershell_profile_middle_script_path: >-
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Middle.ps1
+    windows_powershell_profile_bottom_script_path: >-
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Bottom.ps1
+
+- name: Set script win path facts
+  ansible.builtin.set_fact:
+    windows_powershell_profile_top_script_win_path: >-
+      $HOME\Documents\PowerShell\Profile-Top.ps1
+    windows_powershell_profile_middle_script_win_path: >-
+      $HOME\Documents\PowerShell\Profile-Middle.ps1
+    windows_powershell_profile_bottom_script_win_path: >-
+      $HOME\Documents\PowerShell\Profile-Bottom.ps1
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Create config dir
   ansible.builtin.file:
-    path: "{{ windows_home_dir_path }}/Documents/PowerShell"
+    path: "{{ windows_powershell_config_dir_path }}"
     state: directory
+
+- name: Create scripts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ windows_powershell_profile_top_script_path }}"
+    - "{{ windows_powershell_profile_middle_script_path }}"
+    - "{{ windows_powershell_profile_bottom_script_path }}"
 
 - name: Render and place profile script
   ansible.builtin.template:
     src: "Profile.ps1"
-    dest: "{{ windows_home_dir_path }}/Documents/PowerShell/Profile.ps1"
+    dest: "{{ windows_powershell_config_dir_path }}/Profile.ps1"
+
+#
+# ------------------------------------------------------------------------------
+#
+
+- name: Trust repository PSGallery
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'trust-repo-psgallery.ps1') }}"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Install module CompletionPredictor
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'install-module-completionpredictor.ps1') }}"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
