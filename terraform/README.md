@@ -1,5 +1,6 @@
 # Ansible Role `terraform`
 
-- Integration with `complete_alias` does not work. See
-  [this issue](https://github.com/cykerway/complete-alias/issues/30) for more
-  info. There is a pull request open for this upstream.
+Sets up Terraform.
+
+Terraform is installed with Tenv. With every run of this role, the latest
+available version is installed. Previously installed versions are kept.

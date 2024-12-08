@@ -11,16 +11,16 @@
   ansible.builtin.set_fact:
     terraform_config_path: "{{ terraform_config_dir_path }}/terraform.tfrc"
 
-- name: Uninstall unused
+- name: Install latest
   ansible.builtin.command:
-    cmd: "{{ tenv_exe_path }} tf uninstall not-used-for:3m"
+    cmd: "{{ tenv_exe_path }} tf install latest"
   environment:
     TENV_ROOT: "{{ tenv_data_dir_path }}"
   changed_when: false
 
-- name: Install latest
+- name: Validate executable
   ansible.builtin.command:
-    cmd: "{{ tenv_exe_path }} tf install latest"
+    cmd: "{{ homebrew_exe_dir_path }}/terraform version"
   environment:
     TENV_ROOT: "{{ tenv_data_dir_path }}"
   changed_when: false
