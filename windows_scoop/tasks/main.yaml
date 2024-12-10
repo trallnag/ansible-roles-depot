@@ -1,0 +1,45 @@
+- name: Set up
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'set-up.ps1') }}"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Get installed packages
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: |
+      Set-StrictMode -Version Latest
+      (scoop list 6> $null).Name
+  register: task
+  changed_when: false
+
+- name: Set installed packages fact
+  ansible.builtin.set_fact:
+    windows_scoop_installed_packages: "{{ task.stdout_lines }}"
+
+- name: Print installed packages
+  ansible.builtin.debug:
+    var: windows_scoop_installed_packages
+
+- name: Install packages
+  ansible.builtin.command:
+    argv:
+      - pwsh.exe
+      - -NoLogo
+      - -NoProfile
+      - -NonInteractive
+      - -Command
+      - |
+        Set-StrictMode -Version Latest
+        scoop install {{ item }}
+  when: windows_scoop_installed_packages is not contains(item)
+  loop:
+    - 7zip
+    - fastfetch
+    - just
+    - task
