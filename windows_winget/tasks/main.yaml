@@ -14,7 +14,7 @@
     cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
     script: "{{ lookup('ansible.builtin.file', 'get-installed-packages.ps1') }}"
   register: get_installed_packages
-  changed_when: "'status=changed' in task.stdout"
+  changed_when: false
 
 - name: Set installed packages fact
   ansible.builtin.set_fact:
