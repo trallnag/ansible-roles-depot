@@ -26,7 +26,7 @@
     src: windows-gpg-agent-relay.sh
     dest: "{{ windows_gpg_agent_relay_data_dir_path }}/windows-gpg-agent-relay.sh"
     mode: u=rwx,g=,o=
-  register: script
+  register: windows_gpg_agent_relay_script
 
 - name: Set up systemd unit windows-gpg-agent-relay.service
   ansible.builtin.include_role:
@@ -36,7 +36,7 @@
     systemd_unit_activate: true
     systemd_unit_running_check: true
     systemd_unit_running_check_delay: "3"
-    systemd_unit_restart: "{{ script.changed }}"
+    systemd_unit_restart: "{{ windows_gpg_agent_relay_script.changed }}"
     systemd_unit_content: >-
       {{
         lookup(
