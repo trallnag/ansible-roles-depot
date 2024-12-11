@@ -5,5 +5,5 @@
 
 - name: Install formula
   community.general.homebrew:
-    name: weaveworks/tap/eksctl
+    name: eksctl
     path: "{{ homebrew_exe_dir_path }}"
