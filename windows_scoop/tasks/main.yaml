@@ -41,6 +41,7 @@
   loop:
     - 7zip
     - fastfetch
+    - ffmpeg
     - jq
     - just
     - task
