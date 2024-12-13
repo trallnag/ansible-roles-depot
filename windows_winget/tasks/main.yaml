@@ -19,3 +19,29 @@
 - name: Set installed packages fact
   ansible.builtin.set_fact:
     windows_winget_installed_packages: "{{ get_installed_packages.stdout_lines }}"
+
+- name: Install packages
+  ansible.builtin.command:
+    argv:
+      - pwsh.exe
+      - -NoLogo
+      - -NoProfile
+      - -NonInteractive
+      - -Command
+      - |
+        Set-StrictMode -Version Latest
+        winget install --exact --source=winget --id={{ item }}
+  when: windows_winget_installed_packages is not contains(item)
+  loop:
+    - Git.Git
+    - Greenshot.Greenshot
+    - JGraph.Draw
+    - KeePassXCTeam.KeePassXC
+    - MartiCliment.UniGetUI
+    - Microsoft.PowerToys
+    - Microsoft.VisualStudioCode
+    - Microsoft.WingetCreate
+    - Notepad++.Notepad++
+    - Obsidian.Obsidian
+    - VideoLAN.VLC
+    - xanderfrangos.twinkletray
