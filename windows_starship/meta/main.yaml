@@ -1,0 +1,3 @@
+dependencies:
+  - { role: windows_powershell, tags: [windows_powershell] }
+  - { role: windows_winget, tags: [windows_winget] }

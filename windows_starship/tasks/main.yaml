@@ -1,0 +1,29 @@
+- name: Install with WinGet
+  ansible.builtin.command:
+    cmd: "winget.exe install --exact --id={{ id }}"
+  when: windows_winget_installed_packages is not contains(id)
+  vars:
+    id: Starship.Starship
+
+- name: Set config dir path fact
+  ansible.builtin.set_fact:
+    windows_starship_config_dir_path: "{{ windows_home_dir_path }}/Config/Starship"
+    windows_starship_config_dir_win_path: "{{ windows_home_dir_win_path }}\\Config\\Starship"
+
+- name: Create config dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ windows_starship_config_dir_path }}"
+
+- name: Place config file
+  ansible.builtin.copy:
+    src: starship.toml
+    dest: "{{ windows_starship_config_dir_path }}/starship.toml"
+
+- name: Set up in PowerShell
+  ansible.builtin.blockinfile:
+    path: "{{ windows_powershell_profile_bottom_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }}"
+    block: |
+      $ENV:STARSHIP_CONFIG = "{{ windows_starship_config_dir_win_path }}\starship.toml"
+      Invoke-Expression (&starship init powershell)
