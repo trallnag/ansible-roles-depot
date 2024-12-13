@@ -81,7 +81,7 @@
           "calt": 0
         },
         "size": 11,
-        "weight": "medium"
+        "weight": "normal"
       },
       "intenseTextStyle": "all"
     },
@@ -116,10 +116,10 @@
   },
   "schemes": [
     {
-      "background": "#FCFCFC",
-      "black": "#D4D4D4",
+      "background": "#FFFFFF",
+      "black": "#B8B8B8",
       "blue": "#0087A5",
-      "brightBlack": "#BFBFBF",
+      "brightBlack": "#969696",
       "brightBlue": "#4A86B4",
       "brightCyan": "#0C8696",
       "brightGreen": "#728D3D",
@@ -134,7 +134,7 @@
       "name": "HCL",
       "purple": "#7B7FBA",
       "red": "#B37460",
-      "selectionBackground": "#8C8C8C",
+      "selectionBackground": "#ADD6FF",
       "white": "#595959",
       "yellow": "#8E8535"
     }
