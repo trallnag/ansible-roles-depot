@@ -23,6 +23,7 @@
   loop:
     - amazonwebservices.aws-toolkit-vscode
     - bierner.markdown-preview-github-styles
+    - bmalehorn.vscode-fish
     - donjayamanne.githistory
     - editorconfig.editorconfig
     - formulahendry.code-runner
@@ -35,11 +36,16 @@
     - gruntfuggly.todo-tree
     - hangxingliu.vscode-systemd-support
     - hashicorp.terraform
+    - iliazeus.vscode-ansi
+    - janisdd.vscode-edit-csv
+    - mechatroner.rainbow-csv
     - mhutchie.git-graph
     - ms-python.python
     - ms-vscode.powershell
+    - ms-vsliveshare.vsliveshare
     - nefrob.vscode-just-syntax
     - oderwat.indent-rainbow
+    - ombratteng.nftables
     - qufiwefefwoyn.inline-sql-syntax
     - redhat.ansible
     - redhat.vscode-yaml
