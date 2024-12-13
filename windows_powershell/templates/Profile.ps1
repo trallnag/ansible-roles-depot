@@ -16,13 +16,12 @@ Set-PSReadLineOption -Colors @{
 
 $PSStyle.FileInfo.Directory = "`e[94m" # Bright blue.
 
-# Set the prediction source to both history and plugin.
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
-# Override default tab completion to use menu complete feature.
+Set-PSReadLineOption -PredictionViewStyle ListView
+
 Set-PSReadlineKeyHandler -Chord Tab -Function MenuComplete
 
-# Import module for enhanced command completion. Must be installed.
 Import-Module -Name CompletionPredictor
 
 . "{{ windows_powershell_profile_middle_script_win_path }}"
