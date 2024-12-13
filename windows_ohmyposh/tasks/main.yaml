@@ -1,7 +1,9 @@
 - name: Install with WinGet
   ansible.builtin.command:
-    cmd: winget.exe install --exact --id=JanDeDobbeleer.OhMyPosh
-  when: windows_winget_installed_packages is not contains('JanDeDobbeleer.OhMyPosh')
+    cmd: "winget.exe install --exact --id={{ id }}"
+  when: windows_winget_installed_packages is not contains(id)
+  vars:
+    id: JanDeDobbeleer.OhMyPosh
 
 - name: Create config dir
   ansible.builtin.file:
