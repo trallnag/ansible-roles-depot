@@ -24,7 +24,7 @@ function Install-CompletionPredictorModule {
   $module = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue
 
   if ($module -eq $null) {
-    Install-Module -Name $moduleName -Repository PSGallery
+    Install-Module -Name $moduleName
     Write-Output "status=changed"
   }
 }
