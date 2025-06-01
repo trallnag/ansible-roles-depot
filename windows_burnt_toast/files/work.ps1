@@ -28,7 +28,7 @@ Install-BurntToastModule
 # Based on: https://github.com/Windos/BurntToast/issues/236.
 #
 
-Function Register-NotificationApp {
+function Register-NotificationApp {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory=$true)]
@@ -45,28 +45,34 @@ Function Register-NotificationApp {
     )
 
     $CurrentUserRegPath = "HKCU:\Software\Classes\AppUserModelId"
-    If (!(Test-Path $CurrentUserRegPath)) {
+    if (!(Test-Path $CurrentUserRegPath)) {
         New-Item -Path $CurrentUserRegPath -Force
     }
 
     $RegPath = Join-Path -Path $CurrentUserRegPath -ChildPath $AppID
-    If (!(Test-Path $RegPath)) {
+    if (!(Test-Path $RegPath)) {
         New-Item -Path $CurrentUserRegPath -Name $AppID -Force
     }
 
     $DisplayName = (Get-ItemProperty -Path $RegPath -Name DisplayName -ErrorAction SilentlyContinue).DisplayName
-    If ($DisplayName -ne $AppDisplayName) {
+    if ($DisplayName -ne $AppDisplayName) {
         New-ItemProperty -Path $RegPath -Name DisplayName -Value $AppDisplayName -PropertyType String -Force
     }
 
     $ShowInSettingsValue = (Get-ItemProperty -Path $RegPath -Name ShowInSettings -ErrorAction SilentlyContinue).ShowInSettings
-    If ($ShowInSettingsValue -ne $ShowInSettings) {
+    if ($ShowInSettingsValue -ne $ShowInSettings) {
         New-ItemProperty -Path $RegPath -Name ShowInSettings -Value $ShowInSettings -PropertyType DWORD -Force
     }
 
-    If ($IconPath -and (Test-Path $IconPath -PathType Leaf)) {
+    if ($IconPath -and (Test-Path $IconPath -PathType Leaf)) {
         New-ItemProperty -Path $RegPath -Name IconUri -Value $IconPath -PropertyType String -Force
     }
 }
 
-Register-NotificationApp -AppID Trallnag.Toast -AppDisplayName "Trallnag Toast"
+$iconPath = Get-Item -Path Env:\ICON_PATH
+
+Register-NotificationApp `
+    -AppID Trallnag.Toast `
+    -AppDisplayName "Trallnag Toast" `
+    -ShowInSettings 1 `
+    -IconPath $iconPath
