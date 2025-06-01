@@ -1,0 +1,8 @@
+- name: Work
+  ansible.builtin.command:
+    argv: "{{ cmd + [script] }}"
+  vars:
+    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
+    script: "{{ lookup('ansible.builtin.file', 'work.ps1') }}"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
