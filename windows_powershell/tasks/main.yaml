@@ -20,10 +20,6 @@
     windows_powershell_profile_bottom_script_win_path: >-
       $HOME\Documents\PowerShell\Profile-Bottom.ps1
 
-#
-# ------------------------------------------------------------------------------
-#
-
 - name: Create config dir
   ansible.builtin.file:
     path: "{{ windows_powershell_config_dir_path }}"
@@ -45,24 +41,11 @@
     src: "Profile.ps1"
     dest: "{{ windows_powershell_config_dir_path }}/Profile.ps1"
 
-#
-# ------------------------------------------------------------------------------
-#
-
-- name: Trust repository PSGallery
+- name: Work
   ansible.builtin.command:
     argv: "{{ cmd + [script] }}"
   vars:
     cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'trust-repo-psgallery.ps1') }}"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
-
-- name: Install module CompletionPredictor
-  ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'install-module-completionpredictor.ps1') }}"
+    script: "{{ lookup('ansible.builtin.file', 'work.ps1') }}"
   register: task
   changed_when: "'status=changed' in task.stdout"
