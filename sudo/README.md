@@ -1,3 +1,3 @@
-# Ansible Role `sudo`
+# Ansible role `sudo`
 
 Configures sudo.
