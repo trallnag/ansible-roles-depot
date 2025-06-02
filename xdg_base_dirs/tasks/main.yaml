@@ -6,6 +6,10 @@
     xdg_exe_home_dir_path: /home/{{ ansible_user }}/.local/bin
     xdg_state_home_dir_path: /home/{{ ansible_user }}/.local/state
 
+- name: Set custom dir path facts
+  ansible.builtin.set_fact:
+    opt_provider_dir_path: /opt/{{ ansible_user }}
+
 - name: Create home dirs
   ansible.builtin.file:
     path: "{{ item }}"
@@ -17,3 +21,12 @@
     - "{{ xdg_data_home_dir_path }}"
     - "{{ xdg_exe_home_dir_path }}"
     - "{{ xdg_state_home_dir_path }}"
+
+- name: Create custom dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  become: true
+  loop:
+    - "{{ opt_provider_dir_path }}"
