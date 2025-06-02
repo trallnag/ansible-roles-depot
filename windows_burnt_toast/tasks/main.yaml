@@ -1,11 +1,13 @@
 - name: Set path facts
   ansible.builtin.set_fact:
-    windows_burnt_toast_appdata_local_dir_path:
-      "{{ windows_home_dir_path }}/AppData/Local/BurntToast"
-    windows_burnt_toast_icon_path:
-      "{{ windows_home_dir_path }}/AppData/Local/BurntToast/trallnag-toast-icon.png"
-    windows_burnt_toast_icon_win_path:
-      "{{ windows_home_dir_win_path }}\\AppData\\Local\\BurntToast\\trallnag-toast-icon.png"
+    windows_burnt_toast_appdata_local_dir_path: "\
+      {{ windows_home_dir_path }}/AppData/Local/BurntToast"
+
+    windows_burnt_toast_icon_path: "\
+      {{ windows_home_dir_path }}/AppData/Local/BurntToast/trallnag-toast-icon.png"
+
+    windows_burnt_toast_icon_win_path: "\
+      {{ windows_home_dir_win_path }}\\AppData\\Local\\BurntToast\\trallnag-toast-icon.png"
 
 - name: Create appdata local dir
   ansible.builtin.file:

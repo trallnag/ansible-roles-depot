@@ -1,24 +1,25 @@
 - name: Set config dir path fact
   ansible.builtin.set_fact:
-    windows_powershell_config_dir_path: "{{ windows_home_dir_path }}/Documents/PowerShell"
+    windows_powershell_config_dir_path: "\
+      {{ windows_home_dir_path }}/Documents/PowerShell"
 
 - name: Set script path facts
   ansible.builtin.set_fact:
-    windows_powershell_profile_top_script_path: >-
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Top.ps1
-    windows_powershell_profile_middle_script_path: >-
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Middle.ps1
-    windows_powershell_profile_bottom_script_path: >-
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Bottom.ps1
+    windows_powershell_profile_top_script_path: "\
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Top.ps1"
+    windows_powershell_profile_middle_script_path: "\
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Middle.ps1"
+    windows_powershell_profile_bottom_script_path: "\
+      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Bottom.ps1"
 
 - name: Set script win path facts
   ansible.builtin.set_fact:
-    windows_powershell_profile_top_script_win_path: >-
-      $HOME\Documents\PowerShell\Profile-Top.ps1
-    windows_powershell_profile_middle_script_win_path: >-
-      $HOME\Documents\PowerShell\Profile-Middle.ps1
-    windows_powershell_profile_bottom_script_win_path: >-
-      $HOME\Documents\PowerShell\Profile-Bottom.ps1
+    windows_powershell_profile_top_script_win_path: "\
+      $HOME\\Documents\\PowerShell\\Profile-Top.ps1"
+    windows_powershell_profile_middle_script_win_path: "\
+      $HOME\\Documents\\PowerShell\\Profile-Middle.ps1"
+    windows_powershell_profile_bottom_script_win_path: "\
+      $HOME\\Documents\\PowerShell\\Profile-Bottom.ps1"
 
 - name: Create config dir
   ansible.builtin.file:
@@ -38,7 +39,7 @@
 
 - name: Render and place profile script
   ansible.builtin.template:
-    src: "Profile.ps1"
+    src: Profile.ps1
     dest: "{{ windows_powershell_config_dir_path }}/Profile.ps1"
 
 - name: Work
