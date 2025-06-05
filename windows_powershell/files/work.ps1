@@ -13,7 +13,6 @@ function Set-PSGalleryTrusted {
 
 Set-PSGalleryTrusted
 
-
 #
 # Install the CompletionPredictor module.
 #

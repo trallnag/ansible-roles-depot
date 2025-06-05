@@ -1,23 +1,40 @@
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$IconPath
+)
+
 Set-StrictMode -Version Latest
+
+if (-not (Test-Path -Path $IconPath -PathType Leaf)) {
+    Write-Error "Given IconPath does not point to a file: `"$IconPath`"."
+    exit 1
+}
 
 #
 # Install the BurntToast module.
 #
 
 function Install-BurntToastModule {
-  $moduleName = "BurntToast"
-  $moduleVersion = "0.8.5"
+    $moduleName = "BurntToast"
+    $moduleVersion = "0.8.5"
 
-  $module = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue
+    $module = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue
 
-  if ($module -eq $null) {
-    Install-Module -Name $moduleName -RequiredVersion $moduleVersion -Scope CurrentUser
-    Write-Output "status=changed"
-  } elseif ($module.Version -ne $moduleVersion) {
-    Uninstall-Module -Name $moduleName -AllVersions
-    Install-Module -Name $moduleName -RequiredVersion $moduleVersion -Scope CurrentUser
-    Write-Output "status=changed"
-  }
+    if ($module -eq $null) {
+        Install-Module `
+            -Name $moduleName `
+            -RequiredVersion $moduleVersion `
+            -Scope CurrentUser
+        Write-Output status=changed
+    }
+    elseif ($module.Version -ne $moduleVersion) {
+        Uninstall-Module -Name $moduleName -AllVersions
+        Install-Module `
+            -Name $moduleName `
+            -RequiredVersion $moduleVersion `
+            -Scope CurrentUser
+        Write-Output status=changed
+    }
 }
 
 Install-BurntToastModule
@@ -30,49 +47,74 @@ Install-BurntToastModule
 
 function Register-NotificationApp {
     [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory=$true)]
+    param(
+        [Parameter(Mandatory = $true)]
         $AppID,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         $AppDisplayName,
 
-        [Parameter(Mandatory=$false)]
-        [int]$ShowInSettings=0,
+        [Parameter(Mandatory = $false)]
+        [int]$ShowInSettings = 0,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         $IconPath
     )
 
-    $CurrentUserRegPath = "HKCU:\Software\Classes\AppUserModelId"
-    if (!(Test-Path $CurrentUserRegPath)) {
-        New-Item -Path $CurrentUserRegPath -Force
+    $currentUserRegPath = "HKCU:\Software\Classes\AppUserModelId"
+
+    if (!(Test-Path $currentUserRegPath)) {
+        New-Item -Path $currentUserRegPath -Force
     }
 
-    $RegPath = Join-Path -Path $CurrentUserRegPath -ChildPath $AppID
-    if (!(Test-Path $RegPath)) {
-        New-Item -Path $CurrentUserRegPath -Name $AppID -Force
+    $regPath = Join-Path -Path $currentUserRegPath -ChildPath $AppID
+
+    if (!(Test-Path $regPath)) {
+        New-Item -Path $currentUserRegPath -Name $AppID -Force
     }
 
-    $DisplayName = (Get-ItemProperty -Path $RegPath -Name DisplayName -ErrorAction SilentlyContinue).DisplayName
-    if ($DisplayName -ne $AppDisplayName) {
-        New-ItemProperty -Path $RegPath -Name DisplayName -Value $AppDisplayName -PropertyType String -Force
+    $displayName = (Get-ItemProperty `
+        -Path $regPath `
+        -Name DisplayName `
+        -ErrorAction SilentlyContinue
+    ).DisplayName
+
+    if ($displayName -ne $AppDisplayName) {
+        New-ItemProperty `
+            -Path $regPath `
+            -Name DisplayName `
+            -Value $AppDisplayName `
+            -PropertyType String `
+            -Force
     }
 
-    $ShowInSettingsValue = (Get-ItemProperty -Path $RegPath -Name ShowInSettings -ErrorAction SilentlyContinue).ShowInSettings
-    if ($ShowInSettingsValue -ne $ShowInSettings) {
-        New-ItemProperty -Path $RegPath -Name ShowInSettings -Value $ShowInSettings -PropertyType DWORD -Force
+    $showInSettingsValue = (Get-ItemProperty `
+        -Path $regPath `
+        -Name ShowInSettings `
+        -ErrorAction SilentlyContinue
+    ).ShowInSettings
+
+    if ($showInSettingsValue -ne $ShowInSettings) {
+        New-ItemProperty `
+            -Path $regPath `
+            -Name ShowInSettings `
+            -Value $ShowInSettings `
+            -PropertyType DWORD `
+            -Force
     }
 
     if ($IconPath -and (Test-Path $IconPath -PathType Leaf)) {
-        New-ItemProperty -Path $RegPath -Name IconUri -Value $IconPath -PropertyType String -Force
+        New-ItemProperty `
+            -Path $regPath `
+            -Name IconUri `
+            -Value $IconPath `
+            -PropertyType String `
+            -Force
     }
 }
-
-$iconPath = Get-Item -Path Env:\ICON_PATH
 
 Register-NotificationApp `
     -AppID Trallnag.Toast `
     -AppDisplayName "Trallnag Toast" `
     -ShowInSettings 1 `
-    -IconPath $iconPath
+    -IconPath $IconPath

@@ -1,31 +1,36 @@
-- name: Set path facts
+- name: Set data dir path facts
   ansible.builtin.set_fact:
-    windows_burnt_toast_appdata_local_dir_path: "\
-      {{ windows_home_dir_path }}/AppData/Local/BurntToast"
+    windows_burnt_toast_data_dir_path: >-
+      {{ windows_home_dir_path }}/Share/BurntToast
+    windows_burnt_toast_data_dir_win_path: >-
+      {{ windows_home_dir_win_path }}\Share\BurntToast
 
-    windows_burnt_toast_icon_path: "\
-      {{ windows_home_dir_path }}/AppData/Local/BurntToast/trallnag-toast-icon.png"
+- name: Set misc path facts
+  ansible.builtin.set_fact:
+    windows_burnt_toast_icon_path: >-
+      {{ windows_burnt_toast_data_dir_path }}/toast-icon.png
+    windows_burnt_toast_icon_win_path: >-
+      {{ windows_burnt_toast_data_dir_win_path }}\toast-icon.png
 
-    windows_burnt_toast_icon_win_path: "\
-      {{ windows_home_dir_win_path }}\\AppData\\Local\\BurntToast\\trallnag-toast-icon.png"
-
-- name: Create appdata local dir
+- name: Create data dir
   ansible.builtin.file:
-    path: "{{ windows_burnt_toast_appdata_local_dir_path }}"
+    path: "{{ windows_burnt_toast_data_dir_path }}"
     state: directory
 
-- name: Place Trallnag Toast icon
+- name: Place toast icon
   ansible.builtin.copy:
-    src: "trallnag-toast-icon.png"
+    src: toast-icon.png
     dest: "{{ windows_burnt_toast_icon_path }}"
+
+- name: Print windows_burnt_toast_icon_win_path
+  ansible.builtin.debug:
+    var: windows_burnt_toast_icon_win_path
 
 - name: Work
   ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'work.ps1') }}"
-  environment:
-    ICON_PATH: "{{ windows_burnt_toast_icon_win_path }}"
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/work.ps1"
+      -IconPath "{{ windows_burnt_toast_icon_win_path }}"
   register: task
   changed_when: "'status=changed' in task.stdout"

@@ -1,25 +1,26 @@
-- name: Set config dir path fact
+- name: Set config dir path facts
   ansible.builtin.set_fact:
-    windows_powershell_config_dir_path: "\
-      {{ windows_home_dir_path }}/Documents/PowerShell"
+    windows_powershell_config_dir_path: >-
+      {{ windows_home_dir_path }}/Documents/PowerShell
+    windows_powershell_config_dir_win_path: >-
+      {{ windows_home_dir_win_path }}\Documents\PowerShell
 
 - name: Set script path facts
   ansible.builtin.set_fact:
-    windows_powershell_profile_top_script_path: "\
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Top.ps1"
-    windows_powershell_profile_middle_script_path: "\
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Middle.ps1"
-    windows_powershell_profile_bottom_script_path: "\
-      {{ windows_home_dir_path }}/Documents/PowerShell/Profile-Bottom.ps1"
+    windows_powershell_profile_top_script_path: >-
+      {{ windows_powershell_config_dir_path }}/Profile-Top.ps1
+    windows_powershell_profile_top_script_win_path: >-
+      {{ windows_powershell_config_dir_win_path }}\Profile-Top.ps1
 
-- name: Set script win path facts
-  ansible.builtin.set_fact:
-    windows_powershell_profile_top_script_win_path: "\
-      $HOME\\Documents\\PowerShell\\Profile-Top.ps1"
-    windows_powershell_profile_middle_script_win_path: "\
-      $HOME\\Documents\\PowerShell\\Profile-Middle.ps1"
-    windows_powershell_profile_bottom_script_win_path: "\
-      $HOME\\Documents\\PowerShell\\Profile-Bottom.ps1"
+    windows_powershell_profile_middle_script_path: >-
+      {{ windows_powershell_config_dir_path }}/Profile-Middle.ps1
+    windows_powershell_profile_middle_script_win_path: >-
+      {{ windows_powershell_config_dir_win_path }}\Profile-Middle.ps1
+
+    windows_powershell_profile_bottom_script_path: >-
+      {{ windows_powershell_config_dir_path }}/Profile-Bottom.ps1
+    windows_powershell_profile_bottom_script_win_path: >-
+      {{ windows_powershell_config_dir_win_path }}\Profile-Bottom.ps1
 
 - name: Create config dir
   ansible.builtin.file:
@@ -44,9 +45,8 @@
 
 - name: Work
   ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'work.ps1') }}"
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/work.ps1"
   register: task
   changed_when: "'status=changed' in task.stdout"

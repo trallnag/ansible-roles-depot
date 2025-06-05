@@ -34,10 +34,6 @@
     - "{{ bash_bashrc_script_path }}"
     - "{{ bash_aliases_script_path }}"
 
-#
-# ------------------------------------------------------------------------------
-#
-
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login_script_path }}"
@@ -77,21 +73,24 @@
       export DOT_BASH_BASHRC_SCRIPT_PATH="{{ bash_bashrc_script_path }}"
       export DOT_BASH_ALIASES_SCRIPT_PATH="{{ bash_aliases_script_path }}"
 
-#
-# ------------------------------------------------------------------------------
-#
-
-- name: Delete .bash_profile
+- name: Delete .bash_profile from home
   ansible.builtin.file:
     path: $HOME/.bash_profile
     state: absent
 
-- name: Render and place files
+- name: Place files in home
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "$HOME/{{ item }}"
+    mode: u=rw,g=,o=
+  loop:
+    - .bashrc
+    - .bash_logout
+
+- name: Render and place files in home
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "$HOME/{{ item }}"
     mode: u=rw,g=,o=
   loop:
     - .profile
-    - .bashrc
-    - .bash_logout

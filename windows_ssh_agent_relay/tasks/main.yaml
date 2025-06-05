@@ -1,18 +1,17 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    # Data related to this role is stored here.
-    windows_ssh_agent_relay_data_dir_path:
-      "{{ xdg_data_home_dir_path }}/windows-ssh-agent-relay"
+    windows_ssh_agent_relay_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/windows-ssh-agent-relay
 
     # Path to the OpenSSH executable in Windows. Must be the special Windows
     # fork of OpenSSH that stores keys within a Windows security context.
-    windows_ssh_agent_relay_ssh_exe_path:
-      "{{ windows_mount_dir_path }}/Windows/System32/OpenSSH/ssh.exe"
+    windows_ssh_agent_relay_ssh_exe_path: >-
+      {{ windows_mount_dir_path }}/Windows/System32/OpenSSH/ssh.exe
 
     # Paths to the OpenSSH agent socket in Linux. This is the destination of the
     # relay action. In Linux, OpenSSH is then configured to use this socket.
-    windows_ssh_agent_relay_socket_path:
-      "/run/user/{{ ansible_facts.user_uid }}/windows-ssh-agent-relay/windows-ssh-agent-relay.sock"
+    windows_ssh_agent_relay_socket_path: >-
+      /run/user/{{ ansible_facts.user_uid }}/windows-ssh-agent-relay/windows-ssh-agent-relay.sock
 
 - name: Create data dir
   ansible.builtin.file:
@@ -20,11 +19,11 @@
     path: "{{ windows_ssh_agent_relay_data_dir_path }}"
     mode: u=rwx,g=,o=
 
-- name: Validate executable existence
+- name: Check executable existence
   ansible.builtin.stat:
     path: "{{ windows_ssh_agent_relay_ssh_exe_path }}"
 
-- name: Validate executable usability
+- name: Check executable usability
   ansible.builtin.command:
     cmd: "{{ windows_ssh_agent_relay_ssh_exe_path }} -V"
   changed_when: false
@@ -48,8 +47,8 @@
     systemd_unit_content: >-
       {{
         lookup(
-          'ansible.builtin.template',
-          'windows-ssh-agent-relay.service'
+          "ansible.builtin.template",
+          "windows-ssh-agent-relay.service"
         )
       }}
 
@@ -58,8 +57,15 @@
     path: "{{ path_parts | join }}"
   vars:
     path_parts:
-      - "/etc/systemd/system/multi-user.target.wants/"
-      - "windows-ssh-agent-relay.service"
+      - /etc/systemd/system/multi-user.target.wants/
+      - windows-ssh-agent-relay.service
+
+- name: Validate key existence in agent
+  ansible.builtin.command:
+    cmd: ssh-add -l
+  environment:
+    SSH_AUTH_SOCK: "{{ windows_ssh_agent_relay_socket_path }}"
+  changed_when: false
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
@@ -74,10 +80,3 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export SSH_AUTH_SOCK="{{ windows_ssh_agent_relay_socket_path }}"
-
-- name: Validate that agent is available
-  ansible.builtin.command:
-    cmd: ssh-add -l
-  environment:
-    SSH_AUTH_SOCK: "{{ windows_ssh_agent_relay_socket_path }}"
-  changed_when: false

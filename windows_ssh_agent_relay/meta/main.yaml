@@ -1,3 +1,4 @@
 dependencies:
   - { role: shell, tags: [shell] }
+  - { role: windows_burnt_toast, tags: [windows_burnt_toast] }
   - { role: xdg_base_dirs, tags: [xdg_base_dirs] }

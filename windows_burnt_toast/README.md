@@ -1,4 +1,4 @@
-# Ansible Role `windows_burnt_toast`
+# Ansible role `windows_burnt_toast`
 
 Sets up [BurntToast](https://github.com/Windos/BurntToast) on Windows.
 
