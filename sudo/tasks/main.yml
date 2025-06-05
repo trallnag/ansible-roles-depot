@@ -2,7 +2,7 @@
   ansible.builtin.copy:
     dest: /etc/sudoers.d/10-{{ ansible_user }}
     mode: u=r,g=,o=
-    validate: sh -c 'visudo -cf %s && visudo -cf /etc/sudoers'
+    validate: sh -c "visudo -cf %s && visudo -cf /etc/sudoers"
     content: |
       Defaults:{{ ansible_user }} timestamp_timeout=60
   become: true
