@@ -1,0 +1,41 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    gnupg_pinentry_exe_path: "{{ windows_mount_dir_path }}/Program Files (x86)/Gpg4win/bin/pinentry.exe"
+
+- name: Check executable existence
+  ansible.builtin.stat:
+    path: "{{ gnupg_pinentry_exe_path }}"
+
+- name: Render and place configs
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: $HOME/.gnupg/
+    mode: u=rw,g=,o=
+  loop:
+    - gpg-agent.conf
+    - gpg.conf
+  register: configs
+
+- name: Set up environment in Bash
+  ansible.builtin.blockinfile:
+    path: "{{ bash_bashrc_top_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export GPG_TTY=$(tty)
+  register: bash
+
+- name: Set up environment in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ zsh_zshrc_interactive_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export GPG_TTY=$TTY
+  register: zsh
+
+- name: Reload agent
+  when: >-
+    configs | json_query('results[*].changed') is any
+    or bash.changed
+    or zsh.changed
+  ansible.builtin.command: gpg-connect-agent reloadagent /bye
+  changed_when: false
