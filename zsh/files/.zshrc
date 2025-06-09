@@ -63,6 +63,9 @@ fpath=("$DOT_ZSH_FUNCTIONS_DIR_PATH" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
+# Make / not be considered a word.
+WORDCHARS=${WORDCHARS/\/}
+
 #endregion
 
 #region history
