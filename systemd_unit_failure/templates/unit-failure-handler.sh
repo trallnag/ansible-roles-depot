@@ -23,7 +23,7 @@ if ! find "$lock_file" -mmin -10 -print -quit 2>/dev/null | grep -q .; then
   "{{ windows_burnt_toast_send_script_path }}" \
     --id "$unit_name.$(date +%s)" \
     --subject "Systemd: $unit_name" \
-    --message "Unit \"$unit_name\" has failed."
+    --message "Unit has failed."
 
   echo "Finished sending notification. unit='$unit_name'" >&2
 else

@@ -1,0 +1,41 @@
+- name: Set data dir path fact
+  ansible.builtin.set_fact:
+    systemd_unit_failure_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/systemd-unit-failure
+
+- name: Set miscellaneous facts
+  ansible.builtin.set_fact:
+    systemd_unit_failure_unit_name: unit-failure-handler@.service
+
+    systemd_unit_failure_handler_script_path: >-
+      {{ systemd_unit_failure_data_dir_path }}/unit-failure-handler.sh
+
+- name: Create dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ systemd_unit_failure_data_dir_path }}"
+
+- name: Render and place handler script
+  ansible.builtin.template:
+    src: "{{ systemd_unit_failure_handler_script_path | basename }}"
+    dest: "{{ systemd_unit_failure_handler_script_path }}"
+    mode: u=rwx,g=,o=
+  register: systemd_unit_failure_handler_script
+
+- name: Set up systemd unit
+  ansible.builtin.include_role:
+    name: trallnag.systemd_unit
+  vars:
+    systemd_unit_name: "{{ systemd_unit_failure_unit_name }}"
+    systemd_unit_restart: "{{ systemd_unit_failure_handler_script.changed }}"
+    systemd_unit_activate: false
+    systemd_unit_running_check: false
+    systemd_unit_content: >-
+      {{
+        lookup(
+          "ansible.builtin.template",
+          systemd_unit_failure_unit_name
+        )
+      }}

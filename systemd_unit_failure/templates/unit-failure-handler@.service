@@ -1,6 +1,6 @@
 [Unit]
 
-Description=Unit Failure Handle %i
+Description=Unit Failure Handler %i
 
 [Service]
 
@@ -9,6 +9,6 @@ Type=oneshot
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ systemd_failure_script_path }} %i
+ExecStart={{ systemd_unit_failure_handler_script_path }} %i
 
 TimeoutStartSec=5s
