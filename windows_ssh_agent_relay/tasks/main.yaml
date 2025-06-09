@@ -35,7 +35,7 @@
     cmd: "{{ windows_ssh_agent_relay_ssh_exe_path }} -V"
   changed_when: false
 
-- name: Render and place relay script
+- name: Render and place script
   ansible.builtin.template:
     src: "{{ windows_ssh_agent_relay_script_path | basename }}"
     dest: "{{ windows_ssh_agent_relay_script_path }}"
@@ -59,7 +59,7 @@
         )
       }}
 
-- name: Validate wants symlink existence
+- name: Check wants symlink existence
   ansible.builtin.stat:
     path: "{{ path_parts | join }}"
   vars:
@@ -67,7 +67,7 @@
       - /etc/systemd/system/multi-user.target.wants/
       - "{{ windows_ssh_agent_relay_unit_name }}"
 
-- name: Validate key existence in agent
+- name: Check key existence in agent
   ansible.builtin.command:
     cmd: ssh-add -l
   environment:
