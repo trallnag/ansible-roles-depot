@@ -21,6 +21,8 @@ ExecStart={{ windows_ssh_agent_relay_data_dir_path }}/windows-ssh-agent-relay.sh
 Restart=always
 RestartSec=15
 
+OnFailure={{ systemd_failure_unit_name }}
+
 [Install]
 
 WantedBy=multi-user.target
