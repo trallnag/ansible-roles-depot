@@ -22,6 +22,11 @@
     windows_powershell_profile_bottom_script_win_path: >-
       {{ windows_powershell_config_dir_win_path }}\Profile-Bottom.ps1
 
+- name: Set misc facts
+  ansible.builtin.set_fact:
+    windows_powershell_exe_path: >-
+      {{ windows_mount_dir_path }}/Program Files/PowerShell/7/pwsh.exe
+
 - name: Create config dir
   ansible.builtin.file:
     path: "{{ windows_powershell_config_dir_path }}"
