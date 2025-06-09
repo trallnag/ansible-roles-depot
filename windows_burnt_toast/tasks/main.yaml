@@ -1,30 +1,47 @@
 - name: Set data dir path facts
   ansible.builtin.set_fact:
     windows_burnt_toast_data_dir_path: >-
+      {{ xdg_data_home_dir_path }}/windows-burnt-toast
+
+    windows_burnt_toast_win_data_dir_path: >-
       {{ windows_home_dir_path }}/Share/BurntToast
-    windows_burnt_toast_data_dir_win_path: >-
+    windows_burnt_toast_win_data_dir_win_path: >-
       {{ windows_home_dir_win_path }}\Share\BurntToast
 
-- name: Set misc path facts
+- name: Set misc facts
   ansible.builtin.set_fact:
-    windows_burnt_toast_icon_path: >-
-      {{ windows_burnt_toast_data_dir_path }}/toast-icon.png
-    windows_burnt_toast_icon_win_path: >-
-      {{ windows_burnt_toast_data_dir_win_path }}\toast-icon.png
+    windows_burnt_toast_send_script_path: >-
+      {{ windows_burnt_toast_data_dir_path }}/send-burnt-toast.sh
 
-- name: Create data dir
+    windows_burnt_toast_icon_path: >-
+      {{ windows_burnt_toast_win_data_dir_path }}/toast-icon.png
+    windows_burnt_toast_icon_win_path: >-
+      {{ windows_burnt_toast_win_data_dir_win_path }}\toast-icon.png
+
+- name: Create dirs
   ansible.builtin.file:
-    path: "{{ windows_burnt_toast_data_dir_path }}"
+    path: "{{ item }}"
     state: directory
+  loop:
+    - "{{ windows_burnt_toast_data_dir_path }}"
+    - "{{ windows_burnt_toast_win_data_dir_path }}"
 
 - name: Place toast icon
   ansible.builtin.copy:
     src: toast-icon.png
     dest: "{{ windows_burnt_toast_icon_path }}"
 
-- name: Print windows_burnt_toast_icon_win_path
-  ansible.builtin.debug:
-    var: windows_burnt_toast_icon_win_path
+- name: Render and place send script
+  ansible.builtin.template:
+    src: send-burnt-toast.sh
+    dest: "{{ windows_burnt_toast_send_script_path }}"
+    mode: u=rwx,g=,o=
+
+- name: Symlink send script
+  ansible.builtin.file:
+    src: "{{ windows_burnt_toast_send_script_path }}"
+    dest: $HOME/.local/bin/send-burnt-toast
+    state: link
 
 - name: Work
   ansible.builtin.command:

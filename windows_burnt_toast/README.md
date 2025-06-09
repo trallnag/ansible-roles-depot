@@ -15,6 +15,8 @@ A custom application is added to the registry
 to improve the notification experience with BurntToast
 (based on [this issue](https://github.com/Windos/BurntToast/issues/236)).
 
+Includes tiny script that wraps creating a notification from Linux.
+
 ## Maintenance
 
 ### Update
