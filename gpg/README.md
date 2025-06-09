@@ -1,4 +1,4 @@
-# Ansible role `gnupg`
+# Ansible role `gpg`
 
 Sets up GnuPG. For pin entry the executable on Windows is used.
 
