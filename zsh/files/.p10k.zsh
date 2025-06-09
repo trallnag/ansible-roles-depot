@@ -1649,21 +1649,11 @@
   # Custom prefix.
   typeset -g POWERLEVEL9K_TIME_PREFIX='%fat '
 
-  #
-  #
-  # ----------------------------------------------------------------------------
-  #
-  #
-
+  #region custom
   source "$ZDOTDIR/p10k-pre.zsh"
   source "$DOT_ZSH_P10K_SCRIPT_PATH"
   source "$ZDOTDIR/p10k-post.zsh"
-
-  #
-  #
-  # ----------------------------------------------------------------------------
-  #
-  #
+  #endregion
 
   # Example of a user-defined prompt segment. Function prompt_example will be called on every
   # prompt if `example` prompt segment is added to POWERLEVEL9K_LEFT_PROMPT_ELEMENTS or

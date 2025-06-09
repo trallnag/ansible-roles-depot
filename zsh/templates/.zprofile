@@ -15,14 +15,12 @@
 #
 # Online man page regarding Zsh options: https://linux.die.net/man/1/zshoptions
 #
-# ------------------------------------------------------------------------------
-#
 
+#region source_dyn_shell
 source "{{ shell_zsh_login_script_path }}"
+#endregion
 
-#
-# ------------------------------------------------------------------------------
-#
+#region misc
 
 # Ensure arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path
@@ -33,8 +31,8 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-#
-# ------------------------------------------------------------------------------
-#
+#endregion
 
+#region source_dyn_default
 source "$DOT_ZSH_ZPROFILE_SCRIPT_PATH"
+#endregion

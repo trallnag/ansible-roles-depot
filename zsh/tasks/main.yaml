@@ -75,10 +75,6 @@
     - { name: zsh-history-substring-search, src: https://github.com/zsh-users/zsh-history-substring-search.git }
     - { name: zsh-syntax-highlighting, src: https://github.com/zsh-users/zsh-syntax-highlighting.git }
 
-#
-# ------------------------------------------------------------------------------
-#
-
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell_bash_login_script_path }}"
@@ -139,10 +135,6 @@
       export DOT_ZSH_ZLOGOUT_SCRIPT_PATH="{{ zsh_zlogout_script_path }}"
       export DOT_ZSH_P10K_SCRIPT_PATH="{{ zsh_p10k_script_path }}"
 
-#
-# ------------------------------------------------------------------------------
-#
-
 - name: Delete files
   ansible.builtin.file:
     path: "{{ item }}"
@@ -192,5 +184,5 @@
 - name: Set default shell
   ansible.builtin.user:
     name: "{{ ansible_user }}"
-    shell: /bin/zsh
+    shell: /usr/bin/zsh
   become: true

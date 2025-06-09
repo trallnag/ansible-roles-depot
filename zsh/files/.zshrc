@@ -1,28 +1,8 @@
-#
-# Sourced in interactive shells. It should contain commands to set up aliases,
-# functions, options, key bindings, etc.
-#
-# Here is how Zsh loads its configuration files:
-#
-# 1. `.zshenv`
-# 2. `.zprofile` if login
-# 3. `.zshrc` if interactive
-# 4. `.zlogin` if login
-# 5. `.zlogout`
-#
-# References:
-#
-# 1. https://linux.die.net/man/1/zshoptions
-# 2. https://zsh.sourceforge.io/Intro/intro_3.html
-#
-# ------------------------------------------------------------------------------
-#
-
+#region source_dyn_interactive
 source "$DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH"
+#endregion
 
-#
-# ------------------------------------------------------------------------------
-#
+#region powerlevel10k
 
 # Initialize direnv if available. For more information, see:
 # https://github.com/romkatv/powerlevel10k#how-do-i-initialize-direnv-when-using-instant-prompt
@@ -32,7 +12,7 @@ source "$DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH"
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Initialize direnv if available. For more information, see:
@@ -42,9 +22,9 @@ fi
 source "$DOT_ZSH_PLUGINS_DIR_PATH/powerlevel10k/powerlevel10k.zsh-theme"
 source "$ZDOTDIR/.p10k.zsh"
 
-#
-# ------------------------------------------------------------------------------
-#
+#endregion
+
+#region miscellaneous
 
 # Job Control.
 setopt LONG_LIST_JOBS
@@ -83,11 +63,9 @@ fpath=("$DOT_ZSH_FUNCTIONS_DIR_PATH" $fpath)
 lines=$(find $fpath[1] -maxdepth 1 -type f | wc -l)
 if [ $lines -ne 0 ]; then autoload -U $fpath[1]/*(.:t); fi
 
-#
-# ------------------------------------------------------------------------------
-#
-# History.
-#
+#endregion
+
+#region history
 
 # Loaded into memory from the history file.
 export HISTSIZE=987654
@@ -117,12 +95,11 @@ export HISTORY_IGNORE="(history(| *)|cd(| *)|ls(| *))|mkdir(| *))"
 
 alias history='fc -il 1'
 
+#endregion
+
+#region completion
 #
-# ------------------------------------------------------------------------------
-#
-# Completion.
-#
-# This block is based on:
+# Based on:
 #
 # - f1e24d3 https://github.com/sorin-ionescu/prezto/blob/master/modules/completion/init.zsh
 # - 02d07f3 https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/completion.zsh
@@ -234,11 +211,9 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
-#
-# ------------------------------------------------------------------------------
-#
-# Correction.
-#
+#endregion
+
+#region correction
 
 setopt correct
 
@@ -270,11 +245,9 @@ alias rsync='noglob rsync'
 alias scp='noglob scp'
 alias sftp='noglob sftp'
 
-#
-# ------------------------------------------------------------------------------
-#
-# Init zsh-syntax-highlighting.
-#
+#endregion
+
+#region zsh_syntax_highlighting
 
 source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
@@ -286,14 +259,9 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 ZSH_HIGHLIGHT_MAXLENGTH=512
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
 
-#
-# ------------------------------------------------------------------------------
-#
-# zsh-history-substring-search
-#
-# If you want to use zsh-syntax-highlighting along with this script, then make
-# sure that you load it before you load this script.
-#
+#endregion
+
+#region zsh_history_substring_search
 
 source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
@@ -307,14 +275,9 @@ if [[ -n "$terminfo[kcud1]" ]]; then
   bindkey -M viins "$terminfo[kcud1]" history-substring-search-down
 fi
 
-#
-# ------------------------------------------------------------------------------
-#
-# Init zsh-autosuggestions.
-#
-# Must be setup after both zsh-syntax-highlighting and
-# zsh-history-substring-search to work properly.
-#
+#endregion
+
+#region zsh_autosuggestions
 
 source "$DOT_ZSH_PLUGINS_DIR_PATH/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -328,54 +291,47 @@ ZSH_AUTOSUGGEST_COMPLETION_IGNORE="?(#c100,)|*/mnt/c/*"
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-#
-# ------------------------------------------------------------------------------
-#
-# Init ohmyzsh.
-#
+#endregion
+
+#region oh_my_zsh
 
 source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/clipboard.zsh"
 source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/functions.zsh"
 source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/key-bindings.zsh"
 source "$DOT_ZSH_PLUGINS_DIR_PATH/ohmyzsh/lib/termsupport.zsh"
 
-#
-# ------------------------------------------------------------------------------
-#
+#endregion
 
+#region source_dyn_default
 source "$DOT_ZSH_ZSHRC_SCRIPT_PATH"
+#endregion
 
-#
-# ------------------------------------------------------------------------------
-#
-
+#region source_dyn_compinit_pre
 source "$DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH"
+#endregion
 
-#
-# ------------------------------------------------------------------------------
-#
-# Compinit & Bashcompinit.
-#
+#region comp_bash_init
 
 autoload -Uz compinit bashcompinit
 compinit -u -d ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump
 bashcompinit
 
-#
-# ------------------------------------------------------------------------------
-#
+#endregion
 
+#region source_dyn_compinit_pre
 source "$DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH"
+#endregion
 
-#
-# ------------------------------------------------------------------------------
-#
-# Aliases.
-#
+#region aliases
 
-# Path for humans.
-alias path='echo -e ${PATH//:/\\n}'
+# Path, but readable for humans.
+alias printpath='echo -e ${PATH//:/\\n}'
 
-alias rmi='rm -I'
+# Retry the last command with sudo.
+alias pls='sudo $(history -p !!)'
 
+#endregion
+
+#region source_dyn_aliases
 source "$DOT_ZSH_ALIASES_SCRIPT_PATH"
+#endregion

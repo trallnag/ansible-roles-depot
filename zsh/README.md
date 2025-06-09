@@ -1,4 +1,4 @@
-# Ansible Role `zsh`
+# Ansible role `zsh`
 
 Sets up Zsh and plugins.
 
@@ -15,3 +15,11 @@ Here is a list of the plugins and their source code repositories:
 - Zsh syntax highlighting: <https://github.com/zsh-users/zsh-syntax-highlighting>
 - Zsh history substring search: <https://github.com/zsh-users/zsh-history-substring-search>
 - Zsh autosuggestions: <https://github.com/zsh-users/zsh-autosuggestions>
+
+## Maintenance
+
+### Update
+
+Use APT to update Zsh.
+
+Run this role to update the plugins.
