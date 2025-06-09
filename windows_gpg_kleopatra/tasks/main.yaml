@@ -1,7 +1,6 @@
-- name: Create shortcut
+- name: Work
   ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'create-shortcut.ps1') | string }}"
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/work.ps1"
   changed_when: false
