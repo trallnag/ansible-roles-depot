@@ -4,6 +4,8 @@ Description=Windows SSH Agent Relay
 
 After=ssh.service
 
+OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+
 [Service]
 
 Type=simple
@@ -16,12 +18,10 @@ ExecStartPre=rm -rf {{ windows_ssh_agent_relay_socket_path }}
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_ssh_agent_relay_data_dir_path }}/windows-ssh-agent-relay.sh
+ExecStart={{ windows_ssh_agent_relay_script_path }}
 
 Restart=always
 RestartSec=15
-
-OnFailure={{ systemd_failure_unit_name }}
 
 [Install]
 

@@ -1,5 +1,5 @@
 dependencies:
   - { role: shell, tags: [shell] }
-  - { role: systemd_failure, tags: [systemd_failure] }
+  - { role: systemd_unit_failure, tags: [systemd_unit_failure] }
   - { role: windows_burnt_toast, tags: [windows_burnt_toast] }
   - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
