@@ -2,6 +2,8 @@
 
 Description=Windows GPG Agent Trigger
 
+OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+
 [Service]
 
 Type=simple
@@ -9,7 +11,7 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_gpg_agent_trigger_data_dir_path }}/windows-gpg-agent-trigger.sh
+ExecStart={{ windows_gpg_agent_trigger_script_path }}
 
 Restart=always
 RestartSec=60
