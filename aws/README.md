@@ -1,4 +1,4 @@
-# Ansible Role `aws`
+# Ansible role `aws`
 
 Sets up the AWS CLI and related components.
 
@@ -10,3 +10,9 @@ All components are installed without the use of package managers like APT.
 
 The latest available versions of all components are installed. Previously
 installed versions are overwritten.
+
+## Maintenance
+
+### Update
+
+Run this role to update the AWS CLI and related components.
