@@ -1,8 +1,8 @@
-#!/usr/bin/bash
+#!/usr/bin/sh
 
-set -euo pipefail
+set -eu
 
-echo "Connecting to target with SSH..."
+echo "Connecting to target with SSH..." >&2
 
 exec "{{ windows_ssh_agent_relay_ssh_exe_path }}" \
   -o ServerAliveInterval=60 \
@@ -10,18 +10,18 @@ exec "{{ windows_ssh_agent_relay_ssh_exe_path }}" \
   -A \
   sh -s \
   <<- 'EOF'
-    set -e
+    set -eu
 
-    echo "Connected to target with SSH."
+    echo "Connected to target with SSH." >&2
 
-    echo "Creating symlink..."
+    echo "Creating symlink..." >&2
 
     target="$SSH_AUTH_SOCK"
     link="{{ windows_ssh_agent_relay_socket_path }}"
     ln -sf "$target" "$link"
 
-    echo "Created symlink. target='$target' link='$link'"
+    echo "Created symlink. target='$target' link='$link'" >&2
 
-    echo "Sleeping forever..."
+    echo "Sleeping forever..." >&2
     sleep infinity
 EOF
