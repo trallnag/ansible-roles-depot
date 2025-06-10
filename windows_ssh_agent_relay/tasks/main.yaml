@@ -54,7 +54,7 @@
     systemd_unit_content: >-
       {{
         lookup(
-          "ansible.builtin.template",
+          'ansible.builtin.template',
           windows_ssh_agent_relay_unit_name
         )
       }}
