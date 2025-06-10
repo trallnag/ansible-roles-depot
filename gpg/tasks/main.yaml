@@ -6,6 +6,10 @@
   ansible.builtin.stat:
     path: "{{ gnupg_pinentry_exe_path }}"
 
+- name: Check executable usability
+  ansible.builtin.command: "'{{ gnupg_pinentry_exe_path }}' --version"
+  changed_when: false
+
 - name: Render and place configs
   ansible.builtin.template:
     src: "{{ item }}"
