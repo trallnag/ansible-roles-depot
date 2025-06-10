@@ -27,6 +27,15 @@
     windows_powershell_exe_path: >-
       {{ windows_mount_dir_path }}/Program Files/PowerShell/7/pwsh.exe
 
+- name: Check executable existence
+  ansible.builtin.stat:
+    path: "{{ windows_powershell_exe_path }}"
+
+- name: Check executable usability
+  ansible.builtin.command:
+    cmd: "'{{ windows_powershell_exe_path }}' --version"
+  changed_when: false
+
 - name: Create config dir
   ansible.builtin.file:
     path: "{{ windows_powershell_config_dir_path }}"
