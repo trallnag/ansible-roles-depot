@@ -20,20 +20,20 @@
     windows_ssh_agent_relay_socket_path: >-
       /run/user/{{ ansible_facts.user_uid }}/windows-ssh-agent-relay/windows-ssh-agent-relay.sock
 
-- name: Create data dir
-  ansible.builtin.file:
-    state: directory
-    path: "{{ windows_ssh_agent_relay_data_dir_path }}"
-    mode: u=rwx,g=,o=
-
 - name: Check executable existence
   ansible.builtin.stat:
     path: "{{ windows_ssh_agent_relay_ssh_exe_path }}"
 
 - name: Check executable usability
   ansible.builtin.command:
-    cmd: "{{ windows_ssh_agent_relay_ssh_exe_path }} -V"
+    cmd: "'{{ windows_ssh_agent_relay_ssh_exe_path }}' -V"
   changed_when: false
+
+- name: Create data dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ windows_ssh_agent_relay_data_dir_path }}"
+    mode: u=rwx,g=,o=
 
 - name: Render and place script
   ansible.builtin.template:
