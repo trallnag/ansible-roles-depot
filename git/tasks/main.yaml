@@ -25,7 +25,7 @@
   ansible.builtin.shell:
     executable: /usr/bin/bash
     cmd: |
-      set -euxo pipefail
+      set -euo pipefail
 
       hash_before=$(sha256sum "{{ git_config_path }}")
 
