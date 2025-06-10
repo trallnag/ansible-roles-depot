@@ -35,7 +35,7 @@
     systemd_unit_content: >-
       {{
         lookup(
-          "ansible.builtin.template",
+          'ansible.builtin.template',
           systemd_unit_failure_unit_name
         )
       }}
