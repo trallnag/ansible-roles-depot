@@ -1,2 +1,3 @@
 dependencies:
+  - { role: systemd_unit_failure, tags: [systemd_unit_failure] }
   - { role: xdg_base_dirs, tags: [xdg_base_dirs] }

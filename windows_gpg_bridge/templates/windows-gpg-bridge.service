@@ -2,6 +2,8 @@
 
 Description=Windows GPG Bridge
 
+OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+
 [Service]
 
 Type=simple
