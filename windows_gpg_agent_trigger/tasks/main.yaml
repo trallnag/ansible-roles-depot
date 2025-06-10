@@ -62,5 +62,5 @@
     path: "{{ path_parts | join }}"
   vars:
     path_parts:
-      - "/etc/systemd/system/multi-user.target.wants/"
+      - /etc/systemd/system/multi-user.target.wants/
       - "{{ windows_gpg_agent_trigger_unit_name }}"
