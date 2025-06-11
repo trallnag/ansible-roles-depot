@@ -19,15 +19,9 @@
 - name: Install
   ansible.builtin.shell:
     executable: /usr/bin/bash
-    cmd: "{{ lookup('ansible.builtin.template', 'install.bash') }}"
+    cmd: "{{ lookup('ansible.builtin.template', 'install.sh') }}"
   register: homebrew_install
   changed_when: "'status=changed' in homebrew_install.stdout"
-
-#
-# ------------------------------------------------------------------------------
-#
-# Bash integration.
-#
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
@@ -43,12 +37,6 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       source "{{ homebrew_data_dir_path }}/etc/bash_completion.d/"*
-
-#
-# ------------------------------------------------------------------------------
-#
-# Zsh integration.
-#
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
