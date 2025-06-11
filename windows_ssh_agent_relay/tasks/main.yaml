@@ -61,11 +61,7 @@
 
 - name: Check wants symlink existence
   ansible.builtin.stat:
-    path: "{{ path_parts | join }}"
-  vars:
-    path_parts:
-      - /etc/systemd/system/multi-user.target.wants/
-      - "{{ windows_ssh_agent_relay_unit_name }}"
+    path: /etc/systemd/system/multi-user.target.wants/{{ windows_ssh_agent_relay_unit_name }}
 
 - name: Check key existence in agent
   ansible.builtin.command:

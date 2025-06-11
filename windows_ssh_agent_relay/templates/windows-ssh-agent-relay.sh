@@ -2,7 +2,7 @@
 
 set -eu
 
-echo "Connecting to target with SSH..." >&2
+echo "Connecting to target with OpenSSH..." >&2
 
 exec "{{ windows_ssh_agent_relay_ssh_exe_path }}" \
   -o ServerAliveInterval=60 \
@@ -12,7 +12,7 @@ exec "{{ windows_ssh_agent_relay_ssh_exe_path }}" \
   <<- 'EOF'
     set -eu
 
-    echo "Connected to target with SSH." >&2
+    echo "Connected to target with OpenSSH." >&2
 
     echo "Creating symlink..." >&2
 
