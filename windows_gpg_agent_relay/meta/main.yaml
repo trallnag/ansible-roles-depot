@@ -1,4 +1,5 @@
 dependencies:
+  - { role: systemd_unit_failure, tags: [systemd_unit_failure] }
   - { role: windows_gpg_agent_trigger, tags: [windows_gpg_agent_trigger] }
   - { role: windows_gpg_bridge, tags: [windows_gpg_bridge] }
   - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
