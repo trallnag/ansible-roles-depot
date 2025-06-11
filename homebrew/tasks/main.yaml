@@ -30,6 +30,7 @@
     block: |
       eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
       export HOMEBREW_PREFIX="{{ homebrew_data_dir_path }}"
+      export HOMEBREW_GITHUB_API_TOKEN="{{ github_scopeless_token }}"
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
@@ -45,6 +46,7 @@
     block: |
       eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
       export HOMEBREW_PREFIX="{{ homebrew_data_dir_path }}"
+      export HOMEBREW_GITHUB_API_TOKEN="{{ github_scopeless_token }}"
 
 - name: Set up completion in Zsh
   ansible.builtin.blockinfile:
