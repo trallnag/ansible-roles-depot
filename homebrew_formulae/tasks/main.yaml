@@ -15,3 +15,5 @@
       - watchexec # https://github.com/watchexec/watchexec
       - zellij # https://github.com/zellij-org/zellij
     path: "{{ homebrew_exe_dir_path }}"
+  environment:
+    HOMEBREW_GITHUB_API_TOKEN: "{{ github_scopeless_token }}"
