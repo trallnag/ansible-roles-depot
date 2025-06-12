@@ -1,7 +1,7 @@
 - name: Install with WinGet
+  when: windows_winget_installed_packages is not contains('Microsoft.WindowsTerminal')
   ansible.builtin.command:
     cmd: winget.exe install --exact --id=Microsoft.WindowsTerminal
-  when: windows_winget_installed_packages is not contains('Microsoft.WindowsTerminal')
 
 - name: Set up same dir in Bash
   ansible.builtin.blockinfile:
