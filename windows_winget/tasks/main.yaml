@@ -1,18 +1,16 @@
 - name: Install module WinGetClient
   ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'install-module-client.ps1') }}"
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/install-module-client.ps1"
   register: task
   changed_when: "'status=changed' in task.stdout"
 
 - name: Get installed packages
   ansible.builtin.command:
-    argv: "{{ cmd + [script] }}"
-  vars:
-    cmd: [pwsh.exe, -NoLogo, -NoProfile, -NonInteractive, -Command]
-    script: "{{ lookup('ansible.builtin.file', 'get-installed-packages.ps1') }}"
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/get-installed-packages.ps1"
   register: get_installed_packages
   changed_when: false
 
@@ -33,6 +31,9 @@
         winget install --exact --source=winget --id={{ item }}
   when: windows_winget_installed_packages is not contains(item)
   loop:
+    - Anki.Anki
+    - Cryptomator.Cryptomator
+    - DigitalScholar.Zotero
     - Git.Git
     - Greenshot.Greenshot
     - JGraph.Draw
