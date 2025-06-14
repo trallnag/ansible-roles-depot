@@ -10,10 +10,11 @@ OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
 
 Type=simple
 
-ExecStartPre=mkdir -p {{ windows_ssh_agent_relay_socket_path | dirname }}
-ExecStartPre=chown {{ ansible_user }}:{{ ansible_user }} {{ windows_ssh_agent_relay_socket_path | dirname  }}
-ExecStartPre=chmod u=rwx,g=,o= {{ windows_ssh_agent_relay_socket_path | dirname  }}
-ExecStartPre=rm -rf {{ windows_ssh_agent_relay_socket_path }}
+ExecStartPre=sleep 3s
+ExecStartPre=+mkdir -p {{ windows_ssh_agent_relay_socket_path | dirname }}
+ExecStartPre=+chown {{ ansible_user }}:{{ ansible_user }} {{ windows_ssh_agent_relay_socket_path | dirname  }}
+ExecStartPre=+chmod u=rwx,g=,o= {{ windows_ssh_agent_relay_socket_path | dirname  }}
+ExecStartPre=+rm -rf {{ windows_ssh_agent_relay_socket_path }}
 
 User={{ ansible_user }}
 Group={{ ansible_user }}
