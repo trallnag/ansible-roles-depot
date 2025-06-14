@@ -43,11 +43,20 @@
     dest: $HOME/.local/bin/send-burnt-toast
     state: link
 
-- name: Work
+- name: Install module
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
-      "{{ role_path }}/files/work.ps1"
+      "{{ role_path }}/files/install-module.ps1"
       -IconPath "{{ windows_burnt_toast_icon_win_path }}"
   register: task
   changed_when: "'status=changed' in task.stdout"
+
+- name: Register app
+  ansible.builtin.command:
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/register-app.ps1"
+      -IconPath "{{ windows_burnt_toast_icon_win_path }}"
+  register: task
+  changed_when: false
