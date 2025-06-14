@@ -57,10 +57,26 @@
     src: Profile.ps1
     dest: "{{ windows_powershell_config_dir_path }}/Profile.ps1"
 
-- name: Work
+- name: Trust gallery
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
-      "{{ role_path }}/files/work.ps1"
+      "{{ role_path }}/files/trust-gallery.ps1"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Install modules
+  ansible.builtin.command:
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/install-modules.ps1"
+  register: task
+  changed_when: "'status=changed' in task.stdout"
+
+- name: Set up misc
+  ansible.builtin.command:
+    cmd: >-
+      pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
+      "{{ role_path }}/files/set-up-misc.ps1"
   register: task
   changed_when: "'status=changed' in task.stdout"
