@@ -18,12 +18,20 @@
     TENV_ROOT: "{{ tenv_data_dir_path }}"
   changed_when: false
 
-- name: Validate executable
+- name: Check executable
   ansible.builtin.command:
     cmd: "{{ homebrew_exe_dir_path }}/terraform version"
   environment:
     TENV_ROOT: "{{ tenv_data_dir_path }}"
   changed_when: false
+
+- name: Uninstall old
+  ansible.builtin.command:
+    cmd: "{{ tenv_exe_path }} tf uninstall not-used-for:90d"
+  environment:
+    TENV_ROOT: "{{ tenv_data_dir_path }}"
+  register: task
+  changed_when: "'No matching Terraform versions' not in task.stdout"
 
 - name: Create dirs
   ansible.builtin.file:
