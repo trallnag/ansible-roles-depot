@@ -2,6 +2,7 @@
   community.general.homebrew:
     name:
       - age # https://github.com/FiloSottile/age
+      - cosign # https://github.com/sigstore/cosign
       - fd # https://github.com/sharkdp/fd
       - gh # https://github.com/cli/cli
       - go-task # https://taskfile.dev
@@ -15,5 +16,3 @@
       - watchexec # https://github.com/watchexec/watchexec
       - zellij # https://github.com/zellij-org/zellij
     path: "{{ homebrew_exe_dir_path }}"
-  environment:
-    HOMEBREW_GITHUB_API_TOKEN: "{{ github_scopeless_token }}"
