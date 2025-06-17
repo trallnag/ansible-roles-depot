@@ -1,10 +1,9 @@
-# Ansible Role `homebrew`
+# Ansible role `homebrew`
 
 Sets up Homebrew.
 
 Homebrew is installed using the official installer script.
-
-Homebrew is not kept up to date.
+It is not kept up to date.
 
 ## Maintenance
 

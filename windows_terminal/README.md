@@ -8,4 +8,4 @@ Windows Terminal is installed with WinGet. It is not kept up to date.
 
 ### Update
 
-Use WinGet to update Windows Terminal.
+Use WinGet (via UniGetUI) to update Windows Terminal (`Microsoft.WindowsTerminal`).

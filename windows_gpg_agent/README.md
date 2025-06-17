@@ -2,6 +2,8 @@
 
 Sets up the GnuPG agent on Windows to start automatically.
 
+GnuPG is not installed. It is not kept up to date.
+
 ## Maintenance
 
 ### Update

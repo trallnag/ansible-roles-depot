@@ -5,12 +5,8 @@ Sets up [BurntToast](https://github.com/Windos/BurntToast) on Windows.
 BurntToast is installed from the PowerShell Gallery
 [here](https://www.powershellgallery.com/packages/BurntToast).
 
-BurntToast is pinned to a specific version.
-
-The version is specified in
+BurntToast is pinned to a specific version. The version is specified in
 [`./files/install-module.ps1`](./files/install-module.ps1).
-
-BurntToast is not kept up to date.
 
 A custom application is added to the registry
 to improve the notification experience with BurntToast

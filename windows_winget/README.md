@@ -16,6 +16,6 @@ to date.
 
 Use the Microsoft Store to update WinGet.
 
-Use WinGet to update the various packages.
+Use WinGet (via UniGetUI) to update the various packages.
 
-Use PowerShell to update the `Microsoft.WinGet.Client` module.
+Use PowerShell (via UniGetUI) to update the module `Microsoft.WinGet.Client`.

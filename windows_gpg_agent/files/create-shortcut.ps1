@@ -1,11 +1,15 @@
+$Env:__SuppressAnsiEscapeSequences = "1"
+$Env:NO_COLOR = "1"
+$Env:TERM = "dumb"
+$ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
 #
 # Set variables.
 #
 
-$shortcutName = "Kleopatra"
-$executablePath = "C:\Program Files (x86)\Gpg4win\bin\kleopatra.exe"
+$shortcutName = "GPG Agent"
+$executablePath = "C:\Program Files (x86)\GnuPG\bin\gpg-connect-agent.exe"
 $startupPath = [System.Environment]::GetFolderPath("Startup")
 $shortcutPath = [System.IO.Path]::Combine($startupPath, $shortcutName)
 $shortcutPath += ".lnk"
@@ -26,7 +30,7 @@ $WScriptShell = New-Object -ComObject WScript.Shell
 
 $shortcut = $WScriptShell.CreateShortcut($shortcutPath)
 $shortcut.TargetPath = $executablePath
-$shortcut.Arguments = "--daemon"
+$shortcut.Arguments = "/bye"
 $shortcut.WindowStyle = 7
 
 $shortcut.Save()
@@ -35,11 +39,11 @@ $shortcut.Save()
 # Start if not already running.
 #
 
-$process = Get-Process -Name kleopatra -ErrorAction SilentlyContinue
+$process = Get-Process -Name gpg-agent -ErrorAction SilentlyContinue
 
 if (-not $process) {
     Start-Process `
         -WindowStyle Hidden `
         -FilePath $executablePath `
-        -ArgumentList "--daemon"
+        -ArgumentList "/bye"
 }

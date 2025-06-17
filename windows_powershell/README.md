@@ -9,12 +9,12 @@ Several modules from the PowerShell Gallery are installed:
 - [CompletionPredictor](https://github.com/PowerShell/CompletionPredictor)
 - [PSScriptTools](https://github.com/jdhitsolutions/PSScriptTools)
 
-These modules are installed. They are not kept up to date.
+These modules are not kept up to date.
 
 ## Maintenance
 
 ### Update
 
-Use WinGet (via UniGetUI) to update PowerShell.
+Use WinGet (via UniGetUI) to update PowerShell (`Microsoft.PowerShell`).
 
 Use PowerShell (via UniGetUI) to update the modules.

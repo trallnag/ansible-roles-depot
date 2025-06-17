@@ -2,7 +2,7 @@
 
 Sets up Git.
 
-Git is installed with APT. It is not kept up to date.
+Git is not installed. It is not kept up to date.
 
 ## Maintenance
 

@@ -1,7 +1,6 @@
-- name: Work
+- name: Create shortcut
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
-      "{{ role_path }}/files/work.ps1"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
+      "{{ role_path }}/files/create-shortcut.ps1"
+  changed_when: false
