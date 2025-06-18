@@ -31,6 +31,7 @@ set -gx PAGER less
 set -gx XDG_CACHE_HOME "{{ xdg_cache_home_dir_path }}"
 set -gx XDG_CONFIG_HOME "{{ xdg_config_home_dir_path }}"
 set -gx XDG_DATA_HOME "{{ xdg_data_home_dir_path }}"
+set -gx XDG_EXE_HOME "{{ xdg_exe_home_dir_path }}"
 set -gx XDG_STATE_HOME "{{ xdg_state_home_dir_path }}"
 
 # This.

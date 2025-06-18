@@ -31,6 +31,7 @@ export PAGER=less
 export XDG_CACHE_HOME="{{ xdg_cache_home_dir_path }}"
 export XDG_CONFIG_HOME="{{ xdg_config_home_dir_path }}"
 export XDG_DATA_HOME="{{ xdg_data_home_dir_path }}"
+export XDG_EXE_HOME="{{ xdg_exe_home_dir_path }}"
 export XDG_STATE_HOME="{{ xdg_state_home_dir_path }}"
 
 # This.
