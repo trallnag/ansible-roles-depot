@@ -18,7 +18,7 @@
     windows_burnt_toast_icon_win_path: >-
       {{ windows_burnt_toast_win_dir_win_path }}\toast-icon.png
 
-- name: Create win dir
+- name: Create dir
   ansible.builtin.file:
     path: "{{ windows_burnt_toast_dir_path }}"
     state: directory
@@ -37,7 +37,15 @@
 - name: Render and place script
   ansible.builtin.template:
     src: send-burnt-toast.sh
+    dest: "{{ windows_burnt_toast_dir_path }}/send-burnt-toast.sh"
+    mode: u=rwx,g=rx,o=rx
+  become: true
+
+- name: Symlink script
+  ansible.builtin.file:
+    src: "{{ windows_burnt_toast_dir_path }}/send-burnt-toast.sh"
     dest: "{{ windows_burnt_toast_send_exe_path }}"
+    state: link
     mode: u=rwx,g=rx,o=rx
   become: true
 
