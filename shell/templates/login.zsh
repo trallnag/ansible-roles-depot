@@ -1,4 +1,5 @@
 # PATH.
+x="{{ fhs_opt_exe_dir_path }}" && [[ -d $x && :$PATH: != *:$x:* ]] && PATH="$x:$PATH"
 x=/usr/local/sbin && [[ -d $x && :$PATH: != *:$x:* ]] && PATH="$x:$PATH"
 x=/usr/local/bin && [[ -d $x && :$PATH: != *:$x:* ]] && PATH="$x:$PATH"
 x=$HOME/bin && [[ -d $x && :$PATH: != *:$x:* ]] && PATH="$x:$PATH"

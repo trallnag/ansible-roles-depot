@@ -1,4 +1,5 @@
 # PATH.
+set x "{{ fhs_opt_exe_dir_path }}" && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x /usr/local/sbin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x /usr/local/bin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x $HOME/bin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
