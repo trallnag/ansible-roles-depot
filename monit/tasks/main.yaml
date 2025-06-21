@@ -1,0 +1,38 @@
+- name: Install
+  ansible.builtin.apt:
+    name: monit
+    state: present
+  become: true
+
+- name: Set daemon cycle
+  ansible.builtin.lineinfile:
+    path: /etc/monit/monitrc
+    regexp: "^set daemon.+$"
+    line: "set daemon 60"
+  become: true
+  register: monit_daemon_cycle
+
+- name: Place httpd.conf
+  ansible.builtin.copy:
+    dest: /etc/monit/conf.d/httpd.conf
+    content: |
+      set httpd
+        port 2812
+        allow 127.0.0.1
+        allow ::1
+    mode: u=rw,g=,o=
+  become: true
+  register: monit_httpd_conf
+
+- name: Check syntax
+  ansible.builtin.command:
+    cmd: monit -t
+  changed_when: false
+  become: true
+
+- name: Reload
+  when: monit_httpd_conf.changed or monit_daemon_cycle.changed
+  ansible.builtin.systemd:
+    name: monit
+    state: reloaded
+  become: true
