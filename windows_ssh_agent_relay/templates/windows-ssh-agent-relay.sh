@@ -2,14 +2,15 @@
 
 set -eu
 
-
+# Create socket directory if it does not exist yet.
 if ! [ -d "{{ windows_ssh_agent_relay_socket_path | dirname }}" ]; then
   echo "Creating socket directory..." >&2
   mkdir "{{ windows_ssh_agent_relay_socket_path | dirname }}"
   echo "Created socket directory." >&2
 fi
 
-if ! [ -z "{{ windows_ssh_agent_relay_socket_path }}" ]; then
+# Remove socket if it already exists.
+if [ -z "{{ windows_ssh_agent_relay_socket_path }}" ]; then
   echo "Removing socket..." >&2
   rm "{{ windows_ssh_agent_relay_socket_path }}"
   echo "Removed socket." >&2
