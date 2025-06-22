@@ -1,44 +1,44 @@
 - name: Set config dir path facts
   ansible.builtin.set_fact:
-    windows_powershell_config_dir_path: >-
+    windows_powershell__config_dir_path: >-
       {{ windows_home_dir_path }}/Documents/PowerShell
-    windows_powershell_config_dir_win_path: >-
+    windows_powershell__config_dir_win_path: >-
       {{ windows_home_dir_win_path }}\Documents\PowerShell
 
 - name: Set script path facts
   ansible.builtin.set_fact:
-    windows_powershell_profile_top_script_path: >-
-      {{ windows_powershell_config_dir_path }}/Profile-Top.ps1
-    windows_powershell_profile_top_script_win_path: >-
-      {{ windows_powershell_config_dir_win_path }}\Profile-Top.ps1
+    windows_powershell__profile_top_script_path: >-
+      {{ windows_powershell__config_dir_path }}/Profile-Top.ps1
+    windows_powershell__profile_top_script_win_path: >-
+      {{ windows_powershell__config_dir_win_path }}\Profile-Top.ps1
 
-    windows_powershell_profile_middle_script_path: >-
-      {{ windows_powershell_config_dir_path }}/Profile-Middle.ps1
-    windows_powershell_profile_middle_script_win_path: >-
-      {{ windows_powershell_config_dir_win_path }}\Profile-Middle.ps1
+    windows_powershell__profile_middle_script_path: >-
+      {{ windows_powershell__config_dir_path }}/Profile-Middle.ps1
+    windows_powershell__profile_middle_script_win_path: >-
+      {{ windows_powershell__config_dir_win_path }}\Profile-Middle.ps1
 
-    windows_powershell_profile_bottom_script_path: >-
-      {{ windows_powershell_config_dir_path }}/Profile-Bottom.ps1
-    windows_powershell_profile_bottom_script_win_path: >-
-      {{ windows_powershell_config_dir_win_path }}\Profile-Bottom.ps1
+    windows_powershell__profile_bottom_script_path: >-
+      {{ windows_powershell__config_dir_path }}/Profile-Bottom.ps1
+    windows_powershell__profile_bottom_script_win_path: >-
+      {{ windows_powershell__config_dir_win_path }}\Profile-Bottom.ps1
 
 - name: Set misc facts
   ansible.builtin.set_fact:
-    windows_powershell_exe_path: >-
+    windows_powershell__exe_path: >-
       {{ windows_mount_dir_path }}/Program Files/PowerShell/7/pwsh.exe
 
 - name: Check executable existence
   ansible.builtin.stat:
-    path: "{{ windows_powershell_exe_path }}"
+    path: "{{ windows_powershell__exe_path }}"
 
 - name: Check executable usability
   ansible.builtin.command:
-    cmd: "'{{ windows_powershell_exe_path }}' --version"
+    cmd: "'{{ windows_powershell__exe_path }}' --version"
   changed_when: false
 
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ windows_powershell_config_dir_path }}"
+    path: "{{ windows_powershell__config_dir_path }}"
     state: directory
 
 - name: Create scripts
@@ -48,35 +48,35 @@
     modification_time: preserve
     access_time: preserve
   loop:
-    - "{{ windows_powershell_profile_top_script_path }}"
-    - "{{ windows_powershell_profile_middle_script_path }}"
-    - "{{ windows_powershell_profile_bottom_script_path }}"
+    - "{{ windows_powershell__profile_top_script_path }}"
+    - "{{ windows_powershell__profile_middle_script_path }}"
+    - "{{ windows_powershell__profile_bottom_script_path }}"
 
 - name: Render and place profile script
   ansible.builtin.template:
     src: Profile.ps1
-    dest: "{{ windows_powershell_config_dir_path }}/Profile.ps1"
+    dest: "{{ windows_powershell__config_dir_path }}/Profile.ps1"
 
 - name: Trust gallery
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
       "{{ role_path }}/files/trust-gallery.ps1"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
+  register: this
+  changed_when: "'status=changed' in this.stdout"
 
 - name: Install modules
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
       "{{ role_path }}/files/install-modules.ps1"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
+  register: this
+  changed_when: "'status=changed' in this.stdout"
 
 - name: Set up misc
   ansible.builtin.command:
     cmd: >-
       pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File
       "{{ role_path }}/files/set-up-misc.ps1"
-  register: task
-  changed_when: "'status=changed' in task.stdout"
+  register: this
+  changed_when: "'status=changed' in this.stdout"

@@ -1,4 +1,4 @@
-. "{{ windows_powershell_profile_top_script_win_path }}"
+. "{{ windows_powershell__profile_top_script_win_path }}"
 
 Set-PSReadLineOption -Colors @{
   Command = "`e[95m" # Bright magenta.
@@ -24,6 +24,6 @@ Set-PSReadlineKeyHandler -Chord Tab -Function MenuComplete
 
 Import-Module -Name CompletionPredictor
 
-. "{{ windows_powershell_profile_middle_script_win_path }}"
+. "{{ windows_powershell__profile_middle_script_win_path }}"
 
-. "{{ windows_powershell_profile_bottom_script_win_path }}"
+. "{{ windows_powershell__profile_bottom_script_win_path }}"
