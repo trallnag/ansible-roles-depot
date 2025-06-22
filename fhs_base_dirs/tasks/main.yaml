@@ -1,7 +1,7 @@
 - name: Set facts
   ansible.builtin.set_fact:
-    fhs_opt_exe_dir_path: /opt/bin
-    fhs_opt_provider_dir_path: /opt/{{ ansible_user }}
+    fhs_base_dirs__opt_exe_dir_path: /opt/bin
+    fhs_base_dirs__opt_provider_dir_path: /opt/{{ ansible_user }}
 
 - name: Create dirs
   ansible.builtin.file:
@@ -10,5 +10,5 @@
     mode: u=rwx,g=rx,o=rx
   become: true
   loop:
-    - "{{ fhs_opt_exe_dir_path }}"
-    - "{{ fhs_opt_provider_dir_path }}"
+    - "{{ fhs_base_dirs__opt_exe_dir_path }}"
+    - "{{ fhs_base_dirs__opt_provider_dir_path }}"
