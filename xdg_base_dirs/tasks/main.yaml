@@ -1,18 +1,18 @@
 - name: Set home dir path facts
   ansible.builtin.set_fact:
-    xdg_cache_home_dir_path: /home/{{ ansible_user }}/.cache
-    xdg_config_home_dir_path: /home/{{ ansible_user }}/.config
-    xdg_data_home_dir_path: /home/{{ ansible_user }}/.local/share
-    xdg_exe_home_dir_path: /home/{{ ansible_user }}/.local/bin
-    xdg_state_home_dir_path: /home/{{ ansible_user }}/.local/state
+    xdg_base_dirs__cache_dir_path: /home/{{ ansible_user }}/.cache
+    xdg_base_dirs__config_dir_path: /home/{{ ansible_user }}/.config
+    xdg_base_dirs__data_dir_path: /home/{{ ansible_user }}/.local/share
+    xdg_base_dirs__exe_dir_path: /home/{{ ansible_user }}/.local/bin
+    xdg_base_dirs__state_dir_path: /home/{{ ansible_user }}/.local/state
 
 - name: Set root home dir path facts
   ansible.builtin.set_fact:
-    xdg_root_cache_home_dir_path: /root/.cache
-    xdg_root_config_home_dir_path: /root/.config
-    xdg_root_data_home_dir_path: /root/.local/share
-    xdg_root_exe_home_dir_path: /root/.local/bin
-    xdg_root_state_home_dir_path: /root/.local/state
+    xdg_base_dirs__root_cache_dir_path: /root/.cache
+    xdg_base_dirs__root_config_dir_path: /root/.config
+    xdg_base_dirs__root_data_dir_path: /root/.local/share
+    xdg_base_dirs__root_exe_dir_path: /root/.local/bin
+    xdg_base_dirs__root_state_dir_path: /root/.local/state
 
 - name: Create home dirs
   ansible.builtin.file:
@@ -20,11 +20,11 @@
     state: directory
     mode: u=rwx,g=,o=
   loop:
-    - "{{ xdg_cache_home_dir_path }}"
-    - "{{ xdg_config_home_dir_path }}"
-    - "{{ xdg_data_home_dir_path }}"
-    - "{{ xdg_exe_home_dir_path }}"
-    - "{{ xdg_state_home_dir_path }}"
+    - "{{ xdg_base_dirs__cache_dir_path }}"
+    - "{{ xdg_base_dirs__config_dir_path }}"
+    - "{{ xdg_base_dirs__data_dir_path }}"
+    - "{{ xdg_base_dirs__exe_dir_path }}"
+    - "{{ xdg_base_dirs__state_dir_path }}"
 
 - name: Create root home dirs
   ansible.builtin.file:
@@ -33,8 +33,8 @@
     mode: u=rwx,g=,o=
   become: true
   loop:
-    - "{{ xdg_root_cache_home_dir_path }}"
-    - "{{ xdg_root_config_home_dir_path }}"
-    - "{{ xdg_root_data_home_dir_path }}"
-    - "{{ xdg_root_exe_home_dir_path }}"
-    - "{{ xdg_root_state_home_dir_path }}"
+    - "{{ xdg_base_dirs__root_cache_dir_path }}"
+    - "{{ xdg_base_dirs__root_config_dir_path }}"
+    - "{{ xdg_base_dirs__root_data_dir_path }}"
+    - "{{ xdg_base_dirs__root_exe_dir_path }}"
+    - "{{ xdg_base_dirs__root_state_dir_path }}"
