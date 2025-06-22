@@ -31,7 +31,7 @@ done
 command=\
 'New-BurntToastNotification '\
 '-AppId Trallnag.Toast '\
-'-AppLogo "{{ windows_burnt_toast_icon_win_path }}" '\
+'-AppLogo "{{ windows_burnt_toast__icon_win_path }}" '\
 '-UniqueIdentifier Trallnag.Toast.$Env:ID '\
 '-Text $Env:SUBJECT, $Env:MESSAGE'
 
@@ -39,7 +39,7 @@ echo "Creating BurntToast notification... id='$id'" >&2
 
 # Pass env vars to Windows and execute PowerShell command.
 WSLENV=SUBJECT/w:MESSAGE/w ID="$id" SUBJECT="$subject" MESSAGE="$message" \
-  "{{ windows_powershell_exe_path }}" \
+  "{{ windows_powershell__exe_path }}" \
   -NoLogo -NoProfile -NonInteractive -Command "$command"
 
 echo "Created BurntToast notification... id='$id'" >&2
