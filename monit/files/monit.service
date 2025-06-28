@@ -1,0 +1,23 @@
+[Unit]
+
+Description=Monit
+
+After=network-online.target
+
+[Service]
+
+Type=simple
+
+KillMode=process
+
+ExecStart=/usr/bin/monit -I
+
+ExecStop=/usr/bin/monit quit
+
+ExecReload=/usr/bin/monit reload
+
+Restart=always
+
+[Install]
+
+WantedBy=multi-user.target

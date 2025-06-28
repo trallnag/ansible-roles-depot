@@ -1,16 +1,65 @@
+- name: Set dir path facts
+  ansible.builtin.set_fact:
+    monit__data_dir_path: >-
+      {{ fhs_base_dirs__opt_data_dir_path }}/monit
+
+- name: Set misc facts
+  ansible.builtin.set_fact:
+    monit__systemd_unit_name: monit.service
+
+    monit__check_monit_logs_for_errors_script_path: >-
+      {{ monit__data_dir_path }}/check-monit-logs-for-errors.sh
+
+    monit__echo_something_went_wrong_script_path: >-
+      {{ monit__data_dir_path }}/echo-something-went-wrong.sh
+
+    monit__send_alert_for_monit_exec_errors_script_path: >-
+      {{ monit__data_dir_path }}/send-alert-for-monit-exec-errors.sh
+
+    monit__send_alert_for_systemd_unit_failing_script_path: >-
+      {{ monit__data_dir_path }}/send-alert-for-systemd-unit-failing.sh
+
+- name: Create dir
+  ansible.builtin.file:
+    path: "{{ monit__data_dir_path }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  become: true
+
+- name: Render and place scripts
+  ansible.builtin.template:
+    src: "{{ item | basename }}"
+    dest: "{{ item }}"
+    mode: u=rwx,g=r,o=r
+  become: true
+  loop:
+    - "{{ monit__check_monit_logs_for_errors_script_path }}"
+    - "{{ monit__echo_something_went_wrong_script_path }}"
+    - "{{ monit__send_alert_for_monit_exec_errors_script_path }}"
+    - "{{ monit__send_alert_for_systemd_unit_failing_script_path }}"
+
 - name: Install
   ansible.builtin.apt:
     name: monit
     state: present
   become: true
+  register: _monit__install
 
-- name: Set daemon cycle
+- name: Set cycle
   ansible.builtin.lineinfile:
     path: /etc/monit/monitrc
-    regexp: "^set daemon.+$"
-    line: "set daemon 60"
+    regexp: ^set daemon .+$
+    line: set daemon 60
   become: true
-  register: monit_daemon_cycle
+  register: _monit__set_cycle
+
+- name: Set log
+  ansible.builtin.lineinfile:
+    path: /etc/monit/monitrc
+    regexp: ^set log .+$
+    state: absent
+  become: true
+  register: _monit__set_log
 
 - name: Place httpd.conf
   ansible.builtin.copy:
@@ -20,9 +69,55 @@
         port 2812
         allow 127.0.0.1
         allow ::1
-    mode: u=rw,g=,o=
+    mode: u=rw,g=r,o=r
   become: true
-  register: monit_httpd_conf
+  register: _monit__place_httpd_conf
+
+- name: Place check-always-true.conf
+  ansible.builtin.copy:
+    dest: /etc/monit/conf.d/check-always-true.conf
+    content: |
+      check program check-always-true
+        with path "/usr/bin/true"
+        with timeout 5 seconds
+        every 10 cycles
+      if status != 0
+        then exec "{{ monit__echo_something_went_wrong_script_path }}"
+        repeat every 11 cycles
+    mode: u=rw,g=r,o=r
+  become: true
+  register: _monit__place_check_always_true_conf
+
+- name: Place check-always-false.conf
+  ansible.builtin.copy:
+    dest: /etc/monit/conf.d/check-always-false.conf
+    content: |
+      check program check-always-false
+        with path "/usr/bin/false"
+        with timeout 5 seconds
+        every 10 cycles
+      if status != 1
+        then exec "{{ monit__echo_something_went_wrong_script_path }}"
+        repeat every 11 cycles
+    mode: u=rw,g=r,o=r
+  become: true
+  register: _monit__place_check_always_false_conf
+
+
+- name: Place check-monit-logs-for-errors.conf
+  ansible.builtin.copy:
+    dest: /etc/monit/conf.d/check-monit-logs-for-errors.conf
+    content: |
+      check program check-for-monit-exec-errors
+        with path "{{ monit__check_monit_logs_for_errors_script_path }}"
+        with timeout 5 seconds
+        every 5 cycles
+      if status != 0 then
+        exec "{{ monit__send_alert_for_monit_exec_errors_script_path }}"
+        repeat every 6 cycles
+    mode: u=rw,g=r,o=r
+  become: true
+  register: _monit__place_check_monit_logs_for_errors_conf
 
 - name: Check syntax
   ansible.builtin.command:
@@ -30,9 +125,81 @@
   changed_when: false
   become: true
 
-- name: Reload
-  when: monit_httpd_conf.changed or monit_daemon_cycle.changed
-  ansible.builtin.systemd:
-    name: monit
-    state: reloaded
+- name: Place systemd unit file
+  ansible.builtin.copy:
+    src: "{{ monit__systemd_unit_name }}"
+    dest: /etc/systemd/system/{{ monit__systemd_unit_name }}
+    mode: u=rw,g=r,o=r
+  become: true
+  register: _monit__place_systemd_unit_file
+
+- name: Verify systemd unit file
+  when: _monit__place_systemd_unit_file.changed
+  ansible.builtin.command: systemd-analyze verify {{ monit__systemd_unit_name }}
+  become: true
+  changed_when: false
+
+- name: Reload systemd daemon
+  when: _monit__install.changed or _monit__place_systemd_unit_file.changed
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  become: true
+
+- name: Enable systemd unit
+  ansible.builtin.systemd_service:
+    name: "{{ monit__systemd_unit_name }}"
+    enabled: true
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ monit__systemd_unit_name }}
+  changed_when: false
+  failed_when: false
+  become: true
+  register: _monit__check_systemd_unit_activity
+
+- name: Start systemd unit
+  when: _monit__check_systemd_unit_activity.rc != 0
+  ansible.builtin.systemd_service:
+    name: "{{ monit__systemd_unit_name }}"
+    state: started
+  become: true
+  register: _monit__start_systemd_unit
+
+- name: Restart systemd unit
+  when: >-
+    _monit__check_systemd_unit_activity.rc == 0
+    and (
+      _monit__place_systemd_unit_file.changed
+      or _monit__set_cycle.changed
+      or _monit__set_log.changed
+      or _monit__place_httpd_conf.changed
+      or _monit__place_check_monit_logs_for_errors_conf.changed
+    )
+  ansible.builtin.systemd_service:
+    name: "{{ monit__systemd_unit_name }}"
+    state: restarted
+  register: _monit__restart_systemd_unit
+  become: true
+
+- name: Pause before checking systemd unit
+  when: >-
+    _monit__install.changed
+    or _monit__start_systemd_unit.changed
+    or _monit__restart_systemd_unit.changed
+  ansible.builtin.command: sleep 5
+  changed_when: false
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ monit__systemd_unit_name }}
+  changed_when: false
+  become: true
+
+- name: Delete log file
+  ansible.builtin.file:
+    path: /var/log/monit.log
+    state: absent
   become: true
