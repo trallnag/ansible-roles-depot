@@ -15,4 +15,4 @@ UNIT_NAME="$1"
 
 "{{ windows_burnt_toast__send_burnt_toast_exe_path }}" \
   --id "monit.$(echo "$UNIT_NAME" | tr . -).$(date +%s)" \
-  --message "Systemd unit \"$UNIT_NAME\" is failing."
+  --message "Monit: Systemd unit \"$UNIT_NAME\" is failing."

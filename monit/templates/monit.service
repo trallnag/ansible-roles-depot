@@ -4,6 +4,10 @@ Description=Monit
 
 After=network-online.target
 
+StartLimitIntervalSec=0
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
+
 [Service]
 
 Type=simple
@@ -17,6 +21,8 @@ ExecStop=/usr/bin/monit quit
 ExecReload=/usr/bin/monit reload
 
 Restart=always
+
+RestartSec=15
 
 [Install]
 

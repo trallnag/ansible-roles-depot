@@ -1,3 +1,4 @@
 dependencies:
   - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
+  - { role: onfailure_alert, tags: [onfailure_alert] }
   - { role: windows_burnt_toast, tags: [windows_burnt_toast] }
