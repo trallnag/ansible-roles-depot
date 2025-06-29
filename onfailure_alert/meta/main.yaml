@@ -1,0 +1,3 @@
+dependencies:
+  - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
+  - { role: windows_burnt_toast, tags: [windows_burnt_toast] }

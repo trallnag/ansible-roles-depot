@@ -1,0 +1,17 @@
+[Unit]
+
+Description=OnFailure Alert Example
+
+StartLimitIntervalSec=0
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
+
+[Service]
+
+Type=simple
+
+ExecStart=/usr/bin/sh -c 'echo "It is time to fail." && exit 1'
+
+Restart=always
+
+RestartSec=15

@@ -1,0 +1,11 @@
+[Unit]
+
+Description=OnFailure Alert %i
+
+[Service]
+
+Type=oneshot
+
+ExecStart={{ onfailure_alert__exe_path }} %i
+
+TimeoutStartSec=5s

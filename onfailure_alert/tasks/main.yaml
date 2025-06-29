@@ -1,0 +1,64 @@
+- name: Set data dir path fact
+  ansible.builtin.set_fact:
+    onfailure_alert__data_dir_path: >-
+      {{ fhs_base_dirs__opt_data_dir_path }}/onfailure-alert
+
+- name: Set miscellaneous facts
+  ansible.builtin.set_fact:
+    onfailure_alert__systemd_unit_name: onfailure-alert@.service
+    onfailure_alert__example_systemd_unit_name: onfailure-alert-example.service
+
+    onfailure_alert__exe_path: >-
+      {{ onfailure_alert__data_dir_path }}/alert.sh
+
+- name: Create dir
+  ansible.builtin.file:
+    path: "{{ onfailure_alert__data_dir_path }}"
+    state: directory
+  become: true
+
+- name: Render and place exe
+  ansible.builtin.template:
+    src: "{{ onfailure_alert__exe_path | basename }}"
+    dest: "{{ onfailure_alert__exe_path }}"
+    mode: u=rwx,g=r,o=r
+  become: true
+  register: onfailure_alert__render_and_place_exe
+
+- name: Render and place systemd unit file
+  ansible.builtin.template:
+    src: "{{ onfailure_alert__systemd_unit_name }}"
+    dest: /etc/systemd/system/{{ onfailure_alert__systemd_unit_name }}
+    mode: u=rw,g=r,o=r
+  become: true
+  register: onfailure_alert__render_and_place_systemd_unit
+
+- name: Verify systemd unit file
+  when: onfailure_alert__render_and_place_systemd_unit.changed
+  ansible.builtin.command:
+    cmd: systemd-analyze verify {{ onfailure_alert__systemd_unit_name }}
+  become: true
+  changed_when: false
+
+- name: Render and place example systemd unit file
+  ansible.builtin.template:
+    src: "{{ onfailure_alert__example_systemd_unit_name }}"
+    dest: /etc/systemd/system/{{ onfailure_alert__example_systemd_unit_name }}
+    mode: u=rw,g=r,o=r
+  become: true
+  register: onfailure_alert__render_and_place_example_systemd_unit
+
+- name: Verify example systemd unit file
+  when: onfailure_alert__render_and_place_example_systemd_unit.changed
+  ansible.builtin.command:
+    cmd: systemd-analyze verify {{ onfailure_alert__example_systemd_unit_name }}
+  become: true
+  changed_when: false
+
+- name: Reload systemd daemon
+  when: >-
+    onfailure_alert__render_and_place_systemd_unit.changed
+    or onfailure_alert__render_and_place_example_systemd_unit.changed
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  become: true
