@@ -28,7 +28,7 @@
     mode: u=rwx,g=rx,o=rx
   become: true
 
-- name: Render and place scripts
+- name: Render and place exes
   ansible.builtin.template:
     src: "{{ item | basename }}"
     dest: "{{ item }}"
