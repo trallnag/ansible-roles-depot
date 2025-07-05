@@ -1,0 +1,40 @@
+- name: Install
+  ansible.builtin.apt:
+    name:
+      - bsd-mailx
+      - msmtp
+      - msmtp-mta
+  become: true
+
+- name: Add to msmtp group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: msmtp
+    append: true
+  become: true
+
+- name: Place aliases
+  ansible.builtin.copy:
+    src: aliases
+    dest: /etc/aliases
+    mode: u=rw,g=r,o=r
+    backup: true
+  become: true
+
+- name: Place mail.rc
+  ansible.builtin.copy:
+    src: mail.rc
+    dest: /etc/mail.rc
+    mode: u=rw,g=r,o=r
+    backup: true
+  become: true
+
+- name: Render and place msmtprc
+  ansible.builtin.template:
+    src: msmtprc.jinja
+    dest: /etc/msmtprc
+    owner: root
+    group: msmtp
+    mode: u=rw,g=r,o=
+    backup: true
+  become: true

@@ -1,0 +1,30 @@
+defaults
+
+host email-smtp.eu-central-1.amazonaws.com
+port 465
+
+domain trallnag.com
+
+auth on
+user {{ amazon_ses_smtp_user }}
+password {{ amazon_ses_smtp_password }}
+
+tls on
+tls_starttls off
+tls_trust_file system
+tls_certcheck on
+
+from {{ device_name | lower }}.device@trallnag.com
+from_full_name {{ device_name | title }} Device
+
+allow_from_override on
+
+set_from_header auto
+
+syslog LOG_MAIL
+
+account trallnag
+
+account default: trallnag
+
+aliases /etc/aliases

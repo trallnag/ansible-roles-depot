@@ -1,0 +1,5 @@
+set mta="/usr/bin/msmtp"
+
+alias default tim@trallnag.com
+alias root tim@trallnag.com
+alias trallnag tim@trallnag.com
