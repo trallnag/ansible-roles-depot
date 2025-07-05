@@ -6,7 +6,7 @@
     xdg_base_dirs__exe_dir_path: /home/{{ ansible_user }}/.local/bin
     xdg_base_dirs__state_dir_path: /home/{{ ansible_user }}/.local/state
 
-- name: Set root home dir path facts
+- name: Set home dir path facts for root
   ansible.builtin.set_fact:
     xdg_base_dirs__root_cache_dir_path: /root/.cache
     xdg_base_dirs__root_config_dir_path: /root/.config
@@ -26,7 +26,7 @@
     - "{{ xdg_base_dirs__exe_dir_path }}"
     - "{{ xdg_base_dirs__state_dir_path }}"
 
-- name: Create root home dirs
+- name: Create home dirs for root
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory

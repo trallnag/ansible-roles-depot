@@ -18,14 +18,30 @@
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_script_path }}"
+    path: "{{ bash__bashrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       complete -C /usr/local/bin/aws_completer aws
 
-- name: Set up completion in Zsh
+- name: Set up completion in Bash for root
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_compinit_post_script_path }}"
+    path: "{{ bash__root_bashrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       complete -C /usr/local/bin/aws_completer aws
+  become: true
+
+- name: Set up completion in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ zsh__zshrc_compinit_post_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
+    block: |
+      complete -C /usr/local/bin/aws_completer aws
+
+- name: Set up completion in Zsh for root
+  ansible.builtin.blockinfile:
+    path: "{{ zsh__root_zshrc_compinit_post_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
+    block: |
+      complete -C /usr/local/bin/aws_completer aws
+  become: true

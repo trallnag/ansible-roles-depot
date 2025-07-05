@@ -1,0 +1,8 @@
+- name: Install
+  ansible.builtin.apt:
+    name:
+      - graphviz
+      - jq
+      - unzip
+      - zip
+  become: true

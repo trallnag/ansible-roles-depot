@@ -5,8 +5,7 @@ Sets up Zsh and plugins.
 Zsh is installed with APT. It is not kept up to date.
 
 The plugins are installed directly from their source code repositories based on
-the latest commits of their default branches. Already checked out repositories
-are synchronized with their origins and therefore kept up to date.
+pinned commits. The plugins are not kept up to date.
 
 Here is a list of the plugins and their source code repositories:
 
@@ -22,4 +21,6 @@ Here is a list of the plugins and their source code repositories:
 
 Use APT to update Zsh.
 
-Run this role to update the plugins.
+To update the plugins, check the plugin repositories on GitHub for new commits.
+Bump the commit hashes in [`./tasks/main.yaml`](./tasks/main.yaml) and run this
+role.

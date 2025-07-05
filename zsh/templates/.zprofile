@@ -17,7 +17,7 @@
 #
 
 #region source_dyn_shell
-source "{{ shell_zsh_login_script_path }}"
+source "{{ shell__zsh_login_script_path }}"
 #endregion
 
 #region misc

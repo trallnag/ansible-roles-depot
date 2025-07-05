@@ -1,0 +1,3 @@
+dependencies:
+  - { role: aws, tags: [aws] }
+  - { role: shell, tags: [bash] }

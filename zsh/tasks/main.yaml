@@ -1,30 +1,68 @@
-- name: Install zsh
+- name: Install
   ansible.builtin.apt:
     name: zsh
   become: true
 
+- name: Set shared dir path facts
+  ansible.builtin.set_fact:
+    zsh__shared_dir_path: "{{ fhs_base_dirs__opt_data_dir_path }}/zsh"
+    zsh__shared_plugins_dir_path: "{{ fhs_base_dirs__opt_data_dir_path }}/zsh/plugins"
+
 - name: Set dir path facts
   ansible.builtin.set_fact:
-    zsh_config_dir_path: "{{ xdg_config_home_dir_path }}/zsh"
-    zsh_cache_dir_path: "{{ xdg_cache_home_dir_path }}/zsh"
-    zsh_state_dir_path: "{{ xdg_state_home_dir_path }}/zsh"
-    zsh_dynrc_dir_path: "{{ xdg_config_home_dir_path }}/zsh/dynrc"
-    zsh_completions_dir_path: "{{ xdg_data_home_dir_path }}/zsh/completions"
-    zsh_functions_dir_path: "{{ xdg_data_home_dir_path }}/zsh/functions"
-    zsh_plugins_dir_path: "{{ xdg_data_home_dir_path }}/zsh/plugins"
-    zsh_scripts_dir_path: "{{ xdg_data_home_dir_path }}/zsh/scripts"
+    zsh__config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/zsh"
+    zsh__cache_dir_path: "{{ xdg_base_dirs__cache_dir_path }}/zsh"
+    zsh__state_dir_path: "{{ xdg_base_dirs__state_dir_path }}/zsh"
+    zsh__dynrc_dir_path: "{{ xdg_base_dirs__config_dir_path }}/zsh/dynrc"
+    zsh__completions_dir_path: "{{ xdg_base_dirs__data_dir_path }}/zsh/completions"
+    zsh__functions_dir_path: "{{ xdg_base_dirs__data_dir_path }}/zsh/functions"
+    zsh__plugins_dir_path: "{{ xdg_base_dirs__data_dir_path }}/zsh/plugins"
+    zsh__scripts_dir_path: "{{ xdg_base_dirs__data_dir_path }}/zsh/scripts"
+
+- name: Set dir path facts for root
+  ansible.builtin.set_fact:
+    zsh__root_config_dir_path: "{{ xdg_base_dirs__root_config_dir_path }}/zsh"
+    zsh__root_cache_dir_path: "{{ xdg_base_dirs__root_cache_dir_path }}/zsh"
+    zsh__root_state_dir_path: "{{ xdg_base_dirs__root_state_dir_path }}/zsh"
+    zsh__root_dynrc_dir_path: "{{ xdg_base_dirs__root_config_dir_path }}/zsh/dynrc"
+    zsh__root_completions_dir_path: "{{ xdg_base_dirs__root_data_dir_path }}/zsh/completions"
+    zsh__root_functions_dir_path: "{{ xdg_base_dirs__root_data_dir_path }}/zsh/functions"
+    zsh__root_plugins_dir_path: "{{ xdg_base_dirs__root_data_dir_path }}/zsh/plugins"
+    zsh__root_scripts_dir_path: "{{ xdg_base_dirs__root_data_dir_path }}/zsh/scripts"
 
 - name: Set script path facts
   ansible.builtin.set_fact:
-    zsh_zprofile_script_path: "{{ zsh_dynrc_dir_path }}/zprofile.zsh"
-    zsh_zshrc_interactive_script_path: "{{ zsh_dynrc_dir_path }}/zshrc-interactive.zsh"
-    zsh_zshrc_script_path: "{{ zsh_dynrc_dir_path }}/zshrc.zsh"
-    zsh_zshrc_compinit_pre_script_path: "{{ zsh_dynrc_dir_path }}/zshrc-compinit-pre.zsh"
-    zsh_zshrc_compinit_post_script_path: "{{ zsh_dynrc_dir_path }}/zshrc-compinit-post.zsh"
-    zsh_aliases_script_path: "{{ zsh_dynrc_dir_path }}/aliases.zsh"
-    zsh_zlogin_script_path: "{{ zsh_dynrc_dir_path }}/zlogin.zsh"
-    zsh_zlogout_script_path: "{{ zsh_dynrc_dir_path }}/zlogout.zsh"
-    zsh_p10k_script_path: "{{ zsh_dynrc_dir_path }}/p10k.zsh"
+    zsh__zprofile_script_path: "{{ zsh__dynrc_dir_path }}/zprofile.zsh"
+    zsh__zshrc_interactive_script_path: "{{ zsh__dynrc_dir_path }}/zshrc-interactive.zsh"
+    zsh__zshrc_script_path: "{{ zsh__dynrc_dir_path }}/zshrc.zsh"
+    zsh__zshrc_compinit_pre_script_path: "{{ zsh__dynrc_dir_path }}/zshrc-compinit-pre.zsh"
+    zsh__zshrc_compinit_post_script_path: "{{ zsh__dynrc_dir_path }}/zshrc-compinit-post.zsh"
+    zsh__aliases_script_path: "{{ zsh__dynrc_dir_path }}/aliases.zsh"
+    zsh__zlogin_script_path: "{{ zsh__dynrc_dir_path }}/zlogin.zsh"
+    zsh__zlogout_script_path: "{{ zsh__dynrc_dir_path }}/zlogout.zsh"
+    zsh__p10k_script_path: "{{ zsh__dynrc_dir_path }}/p10k.zsh"
+
+- name: Set script path facts for root
+  ansible.builtin.set_fact:
+    zsh__root_zprofile_script_path: "{{ zsh__root_dynrc_dir_path }}/zprofile.zsh"
+    zsh__root_zshrc_interactive_script_path: "{{ zsh__root_dynrc_dir_path }}/zshrc-interactive.zsh"
+    zsh__root_zshrc_script_path: "{{ zsh__root_dynrc_dir_path }}/zshrc.zsh"
+    zsh__root_zshrc_compinit_pre_script_path: "{{ zsh__root_dynrc_dir_path }}/zshrc-compinit-pre.zsh"
+    zsh__root_zshrc_compinit_post_script_path: "{{ zsh__root_dynrc_dir_path }}/zshrc-compinit-post.zsh"
+    zsh__root_aliases_script_path: "{{ zsh__root_dynrc_dir_path }}/aliases.zsh"
+    zsh__root_zlogin_script_path: "{{ zsh__root_dynrc_dir_path }}/zlogin.zsh"
+    zsh__root_zlogout_script_path: "{{ zsh__root_dynrc_dir_path }}/zlogout.zsh"
+    zsh__root_p10k_script_path: "{{ zsh__root_dynrc_dir_path }}/p10k.zsh"
+
+- name: Create shared dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  become: true
+  loop:
+    - "{{ zsh__shared_dir_path }}"
+    - "{{ zsh__shared_plugins_dir_path }}"
 
 - name: Create dirs
   ansible.builtin.file:
@@ -32,14 +70,30 @@
     state: directory
     mode: u=rwx,g=,o=
   loop:
-    - "{{ zsh_config_dir_path }}"
-    - "{{ zsh_cache_dir_path }}"
-    - "{{ zsh_state_dir_path }}"
-    - "{{ zsh_dynrc_dir_path }}"
-    - "{{ zsh_completions_dir_path }}"
-    - "{{ zsh_functions_dir_path }}"
-    - "{{ zsh_plugins_dir_path }}"
-    - "{{ zsh_scripts_dir_path }}"
+    - "{{ zsh__config_dir_path }}"
+    - "{{ zsh__cache_dir_path }}"
+    - "{{ zsh__state_dir_path }}"
+    - "{{ zsh__dynrc_dir_path }}"
+    - "{{ zsh__completions_dir_path }}"
+    - "{{ zsh__functions_dir_path }}"
+    - "{{ zsh__plugins_dir_path }}"
+    - "{{ zsh__scripts_dir_path }}"
+
+- name: Create dirs for root
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=,o=
+  become: true
+  loop:
+    - "{{ zsh__root_config_dir_path }}"
+    - "{{ zsh__root_cache_dir_path }}"
+    - "{{ zsh__root_state_dir_path }}"
+    - "{{ zsh__root_dynrc_dir_path }}"
+    - "{{ zsh__root_completions_dir_path }}"
+    - "{{ zsh__root_functions_dir_path }}"
+    - "{{ zsh__root_plugins_dir_path }}"
+    - "{{ zsh__root_scripts_dir_path }}"
 
 - name: Create scripts
   ansible.builtin.file:
@@ -49,120 +103,282 @@
     modification_time: preserve
     access_time: preserve
   loop:
-    - "{{ zsh_zprofile_script_path }}"
-    - "{{ zsh_zshrc_interactive_script_path }}"
-    - "{{ zsh_zshrc_script_path }}"
-    - "{{ zsh_zshrc_compinit_pre_script_path }}"
-    - "{{ zsh_zshrc_compinit_post_script_path }}"
-    - "{{ zsh_aliases_script_path }}"
-    - "{{ zsh_zlogin_script_path }}"
-    - "{{ zsh_zlogout_script_path }}"
-    - "{{ zsh_p10k_script_path }}"
+    - "{{ zsh__zprofile_script_path }}"
+    - "{{ zsh__zshrc_interactive_script_path }}"
+    - "{{ zsh__zshrc_script_path }}"
+    - "{{ zsh__zshrc_compinit_pre_script_path }}"
+    - "{{ zsh__zshrc_compinit_post_script_path }}"
+    - "{{ zsh__aliases_script_path }}"
+    - "{{ zsh__zlogin_script_path }}"
+    - "{{ zsh__zlogout_script_path }}"
+    - "{{ zsh__p10k_script_path }}"
 
-- name: Clone plugins  # noqa: latest
+- name: Create scripts for root
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  become: true
+  loop:
+    - "{{ zsh__root_zprofile_script_path }}"
+    - "{{ zsh__root_zshrc_interactive_script_path }}"
+    - "{{ zsh__root_zshrc_script_path }}"
+    - "{{ zsh__root_zshrc_compinit_pre_script_path }}"
+    - "{{ zsh__root_zshrc_compinit_post_script_path }}"
+    - "{{ zsh__root_aliases_script_path }}"
+    - "{{ zsh__root_zlogin_script_path }}"
+    - "{{ zsh__root_zlogout_script_path }}"
+    - "{{ zsh__root_p10k_script_path }}"
+
+- name: Clone plugins
   ansible.builtin.git:
     repo: "{{ item.src }}"
-    dest: "{{ zsh_plugins_dir_path }}/{{ item.name }}"
+    version: "{{ item.version }}"
+    dest: "{{ zsh__shared_plugins_dir_path }}/{{ item.name }}"
     umask: "022"
     force: true
-    single_branch: true
-    update: true
+  become: true
   loop:
-    - { name: ohmyzsh, src: https://github.com/ohmyzsh/ohmyzsh.git }
-    - { name: powerlevel10k, src: https://github.com/romkatv/powerlevel10k.git }
-    - { name: zsh-autosuggestions, src: https://github.com/zsh-users/zsh-autosuggestions.git }
-    - { name: zsh-completions, src: https://github.com/zsh-users/zsh-completions.git }
-    - { name: zsh-history-substring-search, src: https://github.com/zsh-users/zsh-history-substring-search.git }
-    - { name: zsh-syntax-highlighting, src: https://github.com/zsh-users/zsh-syntax-highlighting.git }
+    - name: ohmyzsh
+      src: https://github.com/ohmyzsh/ohmyzsh.git
+      version: 3e7ef0182f59c7990a52cf6ec2981adb56d5b368
+    - name: powerlevel10k
+      src: https://github.com/romkatv/powerlevel10k.git
+      version: 36f3045d69d1ba402db09d09eb12b42eebe0fa3b
+    - name: zsh-autosuggestions
+      src: https://github.com/zsh-users/zsh-autosuggestions.git
+      version: 85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5
+    - name: zsh-completions
+      src: https://github.com/zsh-users/zsh-completions.git
+      version: e07f6fb780725e9c0f50a7666700cf91ded30222
+    - name: zsh-history-substring-search
+      src: https://github.com/zsh-users/zsh-history-substring-search.git
+      version: 87ce96b1862928d84b1afe7c173316614b30e301
+    - name: zsh-syntax-highlighting
+      src: https://github.com/zsh-users/zsh-syntax-highlighting.git
+      version: 5eb677bb0fa9a3e60f0eff031dc13926e093df92
+  register: zsh__clone_plugins
+
+- name: Copy plugins from shared to user
+  when: zsh__clone_plugins | json_query('results[*].changed') is any
+  ansible.builtin.shell:
+    executable: /usr/bin/sh
+    cmd: |
+      set -eu
+      rm -rf {{ zsh__plugins_dir_path }}/*
+      cp -r {{ zsh__shared_plugins_dir_path }}/* {{ zsh__plugins_dir_path }}/
+      chown -R {{ ansible_user }}:{{ ansible_user }} {{ zsh__plugins_dir_path }}
+  become: true
+
+- name: Copy plugins from shared to user for root
+  when: zsh__clone_plugins | json_query('results[*].changed') is any
+  ansible.builtin.shell:
+    executable: /usr/bin/sh
+    cmd: |
+      set -eu
+      rm -rf {{ zsh__root_plugins_dir_path }}/*
+      cp -r {{ zsh__shared_plugins_dir_path }}/* {{ zsh__root_plugins_dir_path }}/
+  become: true
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ shell_bash_login_script_path }}"
+    path: "{{ shell__bash_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export DOT_ZSH_DYNRC_DIR_PATH="{{ zsh_dynrc_dir_path }}"
-      export DOT_ZSH_COMPLETIONS_DIR_PATH="{{ zsh_completions_dir_path }}"
-      export DOT_ZSH_FUNCTIONS_DIR_PATH="{{ zsh_functions_dir_path }}"
-      export DOT_ZSH_PLUGINS_DIR_PATH="{{ zsh_plugins_dir_path }}"
-      export DOT_ZSH_SCRIPTS_DIR_PATH="{{ zsh_scripts_dir_path }}"
-      export DOT_ZSH_ZPROFILE_SCRIPT_PATH="{{ zsh_zprofile_script_path }}"
-      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH="{{ zsh_zshrc_interactive_script_path }}"
-      export DOT_ZSH_ZSHRC_SCRIPT_PATH="{{ zsh_zshrc_script_path }}"
-      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH="{{ zsh_zshrc_compinit_pre_script_path }}"
-      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH="{{ zsh_zshrc_compinit_post_script_path }}"
-      export DOT_ZSH_ALIASES_SCRIPT_PATH="{{ zsh_aliases_script_path }}"
-      export DOT_ZSH_ZLOGIN_SCRIPT_PATH="{{ zsh_zlogin_script_path }}"
-      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH="{{ zsh_zlogout_script_path }}"
-      export DOT_ZSH_P10K_SCRIPT_PATH="{{ zsh_p10k_script_path }}"
+      export DOT_ZSH_DYNRC_DIR_PATH={{ zsh__dynrc_dir_path }}
+      export DOT_ZSH_COMPLETIONS_DIR_PATH={{ zsh__completions_dir_path }}
+      export DOT_ZSH_FUNCTIONS_DIR_PATH={{ zsh__functions_dir_path }}
+      export DOT_ZSH_PLUGINS_DIR_PATH={{ zsh__plugins_dir_path }}
+      export DOT_ZSH_SCRIPTS_DIR_PATH={{ zsh__scripts_dir_path }}
+      export DOT_ZSH_ZPROFILE_SCRIPT_PATH={{ zsh__zprofile_script_path }}
+      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH={{ zsh__zshrc_interactive_script_path }}
+      export DOT_ZSH_ZSHRC_SCRIPT_PATH={{ zsh__zshrc_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH={{ zsh__zshrc_compinit_pre_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH={{ zsh__zshrc_compinit_post_script_path }}
+      export DOT_ZSH_ALIASES_SCRIPT_PATH={{ zsh__aliases_script_path }}
+      export DOT_ZSH_ZLOGIN_SCRIPT_PATH={{ zsh__zlogin_script_path }}
+      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH={{ zsh__zlogout_script_path }}
+      export DOT_ZSH_P10K_SCRIPT_PATH={{ zsh__p10k_script_path }}
+
+- name: Set up environment in Bash for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_bash_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export DOT_ZSH_DYNRC_DIR_PATH={{ zsh__root_dynrc_dir_path }}
+      export DOT_ZSH_COMPLETIONS_DIR_PATH={{ zsh__root_completions_dir_path }}
+      export DOT_ZSH_FUNCTIONS_DIR_PATH={{ zsh__root_functions_dir_path }}
+      export DOT_ZSH_PLUGINS_DIR_PATH={{ zsh__root_plugins_dir_path }}
+      export DOT_ZSH_SCRIPTS_DIR_PATH={{ zsh__root_scripts_dir_path }}
+      export DOT_ZSH_ZPROFILE_SCRIPT_PATH={{ zsh__root_zprofile_script_path }}
+      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH={{ zsh__root_zshrc_interactive_script_path }}
+      export DOT_ZSH_ZSHRC_SCRIPT_PATH={{ zsh__root_zshrc_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH={{ zsh__root_zshrc_compinit_pre_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH={{ zsh__root_zshrc_compinit_post_script_path }}
+      export DOT_ZSH_ALIASES_SCRIPT_PATH={{ zsh__root_aliases_script_path }}
+      export DOT_ZSH_ZLOGIN_SCRIPT_PATH={{ zsh__root_zlogin_script_path }}
+      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH={{ zsh__root_zlogout_script_path }}
+      export DOT_ZSH_P10K_SCRIPT_PATH={{ zsh__root_p10k_script_path }}
+  become: true
 
 - name: Set up environment in Fish
   ansible.builtin.blockinfile:
-    path: "{{ shell_fish_login_script_path }}"
+    path: "{{ shell__fish_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      set -x DOT_ZSH_DYNRC_DIR_PATH "{{ zsh_dynrc_dir_path }}"
-      set -x DOT_ZSH_COMPLETIONS_DIR_PATH "{{ zsh_completions_dir_path }}"
-      set -x DOT_ZSH_FUNCTIONS_DIR_PATH "{{ zsh_functions_dir_path }}"
-      set -x DOT_ZSH_PLUGINS_DIR_PATH "{{ zsh_plugins_dir_path }}"
-      set -x DOT_ZSH_SCRIPTS_DIR_PATH "{{ zsh_scripts_dir_path }}"
-      set -x DOT_ZSH_ZPROFILE_SCRIPT_PATH "{{ zsh_zprofile_script_path }}"
-      set -x DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH "{{ zsh_zshrc_interactive_script_path }}"
-      set -x DOT_ZSH_ZSHRC_SCRIPT_PATH "{{ zsh_zshrc_script_path }}"
-      set -x DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH "{{ zsh_zshrc_compinit_pre_script_path }}"
-      set -x DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH "{{ zsh_zshrc_compinit_post_script_path }}"
-      set -x DOT_ZSH_ALIASES_SCRIPT_PATH "{{ zsh_aliases_script_path }}"
-      set -x DOT_ZSH_ZLOGIN_SCRIPT_PATH "{{ zsh_zlogin_script_path }}"
-      set -x DOT_ZSH_ZLOGOUT_SCRIPT_PATH "{{ zsh_zlogout_script_path }}"
-      set -x DOT_ZSH_P10K_SCRIPT_PATH "{{ zsh_p10k_script_path }}"
+      set -x DOT_ZSH_DYNRC_DIR_PATH {{ zsh__dynrc_dir_path }}
+      set -x DOT_ZSH_COMPLETIONS_DIR_PATH {{ zsh__completions_dir_path }}
+      set -x DOT_ZSH_FUNCTIONS_DIR_PATH {{ zsh__functions_dir_path }}
+      set -x DOT_ZSH_PLUGINS_DIR_PATH {{ zsh__plugins_dir_path }}
+      set -x DOT_ZSH_SCRIPTS_DIR_PATH {{ zsh__scripts_dir_path }}
+      set -x DOT_ZSH_ZPROFILE_SCRIPT_PATH {{ zsh__zprofile_script_path }}
+      set -x DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH {{ zsh__zshrc_interactive_script_path }}
+      set -x DOT_ZSH_ZSHRC_SCRIPT_PATH {{ zsh__zshrc_script_path }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH {{ zsh__zshrc_compinit_pre_script_path }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH {{ zsh__zshrc_compinit_post_script_path }}
+      set -x DOT_ZSH_ALIASES_SCRIPT_PATH {{ zsh__aliases_script_path }}
+      set -x DOT_ZSH_ZLOGIN_SCRIPT_PATH {{ zsh__zlogin_script_path }}
+      set -x DOT_ZSH_ZLOGOUT_SCRIPT_PATH {{ zsh__zlogout_script_path }}
+      set -x DOT_ZSH_P10K_SCRIPT_PATH {{ zsh__p10k_script_path }}
+
+- name: Set up environment in Fish for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_fish_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      set -x DOT_ZSH_DYNRC_DIR_PATH {{ zsh__root_dynrc_dir_path }}
+      set -x DOT_ZSH_COMPLETIONS_DIR_PATH {{ zsh__root_completions_dir_path }}
+      set -x DOT_ZSH_FUNCTIONS_DIR_PATH {{ zsh__root_functions_dir_path }}
+      set -x DOT_ZSH_PLUGINS_DIR_PATH {{ zsh__root_plugins_dir_path }}
+      set -x DOT_ZSH_SCRIPTS_DIR_PATH {{ zsh__root_scripts_dir_path }}
+      set -x DOT_ZSH_ZPROFILE_SCRIPT_PATH {{ zsh__root_zprofile_script_path }}
+      set -x DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH {{ zsh__root_zshrc_interactive_script_path }}
+      set -x DOT_ZSH_ZSHRC_SCRIPT_PATH {{ zsh__root_zshrc_script_path }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH {{ zsh__root_zshrc_compinit_pre_script_path }}
+      set -x DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH {{ zsh__root_zshrc_compinit_post_script_path }}
+      set -x DOT_ZSH_ALIASES_SCRIPT_PATH {{ zsh__root_aliases_script_path }}
+      set -x DOT_ZSH_ZLOGIN_SCRIPT_PATH {{ zsh__root_zlogin_script_path }}
+      set -x DOT_ZSH_ZLOGOUT_SCRIPT_PATH {{ zsh__root_zlogout_script_path }}
+      set -x DOT_ZSH_P10K_SCRIPT_PATH {{ zsh__root_p10k_script_path }}
+  become: true
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ shell_zsh_login_script_path }}"
+    path: "{{ shell__zsh_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
-      export DOT_ZSH_DYNRC_DIR_PATH="{{ zsh_dynrc_dir_path }}"
-      export DOT_ZSH_COMPLETIONS_DIR_PATH="{{ zsh_completions_dir_path }}"
-      export DOT_ZSH_FUNCTIONS_DIR_PATH="{{ zsh_functions_dir_path }}"
-      export DOT_ZSH_PLUGINS_DIR_PATH="{{ zsh_plugins_dir_path }}"
-      export DOT_ZSH_SCRIPTS_DIR_PATH="{{ zsh_scripts_dir_path }}"
-      export DOT_ZSH_ZPROFILE_SCRIPT_PATH="{{ zsh_zprofile_script_path }}"
-      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH="{{ zsh_zshrc_interactive_script_path }}"
-      export DOT_ZSH_ZSHRC_SCRIPT_PATH="{{ zsh_zshrc_script_path }}"
-      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH="{{ zsh_zshrc_compinit_pre_script_path }}"
-      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH="{{ zsh_zshrc_compinit_post_script_path }}"
-      export DOT_ZSH_ALIASES_SCRIPT_PATH="{{ zsh_aliases_script_path }}"
-      export DOT_ZSH_ZLOGIN_SCRIPT_PATH="{{ zsh_zlogin_script_path }}"
-      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH="{{ zsh_zlogout_script_path }}"
-      export DOT_ZSH_P10K_SCRIPT_PATH="{{ zsh_p10k_script_path }}"
+      export DOT_ZSH_DYNRC_DIR_PATH={{ zsh__dynrc_dir_path }}
+      export DOT_ZSH_COMPLETIONS_DIR_PATH={{ zsh__completions_dir_path }}
+      export DOT_ZSH_FUNCTIONS_DIR_PATH={{ zsh__functions_dir_path }}
+      export DOT_ZSH_PLUGINS_DIR_PATH={{ zsh__plugins_dir_path }}
+      export DOT_ZSH_SCRIPTS_DIR_PATH={{ zsh__scripts_dir_path }}
+      export DOT_ZSH_ZPROFILE_SCRIPT_PATH={{ zsh__zprofile_script_path }}
+      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH={{ zsh__zshrc_interactive_script_path }}
+      export DOT_ZSH_ZSHRC_SCRIPT_PATH={{ zsh__zshrc_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH={{ zsh__zshrc_compinit_pre_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH={{ zsh__zshrc_compinit_post_script_path }}
+      export DOT_ZSH_ALIASES_SCRIPT_PATH={{ zsh__aliases_script_path }}
+      export DOT_ZSH_ZLOGIN_SCRIPT_PATH={{ zsh__zlogin_script_path }}
+      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH={{ zsh__zlogout_script_path }}
+      export DOT_ZSH_P10K_SCRIPT_PATH={{ zsh__p10k_script_path }}
 
-- name: Delete files
+- name: Set up environment in Zsh for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_zsh_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    block: |
+      export DOT_ZSH_DYNRC_DIR_PATH={{ zsh__root_dynrc_dir_path }}
+      export DOT_ZSH_COMPLETIONS_DIR_PATH={{ zsh__root_completions_dir_path }}
+      export DOT_ZSH_FUNCTIONS_DIR_PATH={{ zsh__root_functions_dir_path }}
+      export DOT_ZSH_PLUGINS_DIR_PATH={{ zsh__root_plugins_dir_path }}
+      export DOT_ZSH_SCRIPTS_DIR_PATH={{ zsh__root_scripts_dir_path }}
+      export DOT_ZSH_ZPROFILE_SCRIPT_PATH={{ zsh__root_zprofile_script_path }}
+      export DOT_ZSH_ZSHRC_INTERACTIVE_SCRIPT_PATH={{ zsh__root_zshrc_interactive_script_path }}
+      export DOT_ZSH_ZSHRC_SCRIPT_PATH={{ zsh__root_zshrc_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_PRE_SCRIPT_PATH={{ zsh__root_zshrc_compinit_pre_script_path }}
+      export DOT_ZSH_ZSHRC_COMPINIT_POST_SCRIPT_PATH={{ zsh__root_zshrc_compinit_post_script_path }}
+      export DOT_ZSH_ALIASES_SCRIPT_PATH={{ zsh__root_aliases_script_path }}
+      export DOT_ZSH_ZLOGIN_SCRIPT_PATH={{ zsh__root_zlogin_script_path }}
+      export DOT_ZSH_ZLOGOUT_SCRIPT_PATH={{ zsh__root_zlogout_script_path }}
+      export DOT_ZSH_P10K_SCRIPT_PATH={{ zsh__root_p10k_script_path }}
+  become: true
+
+- name: Delete files frome home
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   loop:
-    - $HOME/.zshrc
-    - $HOME/.zsh_history
-    - $HOME/.zcompdump
+    - /home/{{ ansible_user }}/.zshrc
+    - /home/{{ ansible_user }}/.zsh_history
+    - /home/{{ ansible_user }}/.zcompdump
 
-- name: Place $HOME/.zshenv
+- name: Delete files from home for root
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true
+  loop:
+    - /root/.zshrc
+    - /root/.zsh_history
+    - /root/.zcompdump
+
+- name: Place .zshenv in home
   ansible.builtin.copy:
-    dest: $HOME/.zshenv
-    content: ZDOTDIR={{ zsh_config_dir_path }}
+    dest: /home/{{ ansible_user }}/.zshenv
+    content: ZDOTDIR={{ zsh__config_dir_path }}
     mode: u=rw,g=,o=
+
+- name: Place .zshenv in home for root
+  ansible.builtin.copy:
+    dest: /root/.zshenv
+    content: ZDOTDIR={{ zsh__root_config_dir_path }}
+    mode: u=rw,g=,o=
+  become: true
 
 - name: Render and place files
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: "{{ zsh_config_dir_path }}/"
+    dest: "{{ zsh__config_dir_path }}/"
     mode: u=rw,g=,o=
+  loop:
+    - .zprofile
+
+- name: Render and place files for root
+  ansible.builtin.copy:
+    dest: "{{ zsh__root_config_dir_path }}/{{ item }}"
+    mode: u=rw,g=,o=
+    content: >-
+      {{
+        lookup('ansible.builtin.template', item, template_vars={
+          'shell__zsh_login_script_path': shell__root_zsh_login_script_path,
+        })
+      }}
+  become: true
   loop:
     - .zprofile
 
 - name: Place files
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: "{{ zsh_config_dir_path }}/"
+    dest: "{{ zsh__config_dir_path }}/"
     mode: u=rw,g=,o=
+  loop:
+    - .zshenv
+    - .zshrc
+    - .zlogin
+    - .zlogout
+    - .p10k.zsh
+    - p10k-pre.zsh
+    - p10k-post.zsh
+
+- name: Place files for root
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ zsh__root_config_dir_path }}/"
+    mode: u=rw,g=,o=
+  become: true
   loop:
     - .zshenv
     - .zshrc
@@ -175,8 +391,18 @@
 - name: Place scripts
   ansible.builtin.copy:
     src: "scripts/{{ item }}"
-    dest: "{{ zsh_scripts_dir_path }}/"
+    dest: "{{ zsh__scripts_dir_path }}/"
     mode: u=rwx,g=,o=
+  loop:
+    - zcompile-stuff.zsh
+    - zcompile-zcompdump.zsh
+
+- name: Place scripts for root
+  ansible.builtin.copy:
+    src: "scripts/{{ item }}"
+    dest: "{{ zsh__root_scripts_dir_path }}/"
+    mode: u=rwx,g=,o=
+  become: true
   loop:
     - zcompile-stuff.zsh
     - zcompile-zcompdump.zsh
@@ -184,5 +410,11 @@
 - name: Set default shell
   ansible.builtin.user:
     name: "{{ ansible_user }}"
+    shell: /usr/bin/zsh
+  become: true
+
+- name: Set default shell for root
+  ansible.builtin.user:
+    name: root
     shell: /usr/bin/zsh
   become: true

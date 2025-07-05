@@ -1,5 +1,5 @@
 # PATH.
-set x "{{ fhs_opt_exe_dir_path }}" && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
+set x "{{ fhs_base_dirs__opt_exe_dir_path }}" && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x /usr/local/sbin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x /usr/local/bin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
 set x $HOME/bin && contains $x $fish_user_paths && test -d $x && set -Ua fish_user_paths $x
@@ -29,13 +29,13 @@ set -gx VISUAL nano
 set -gx PAGER less
 
 # XDG base directories.
-set -gx XDG_CACHE_HOME "{{ xdg_cache_home_dir_path }}"
-set -gx XDG_CONFIG_HOME "{{ xdg_config_home_dir_path }}"
-set -gx XDG_DATA_HOME "{{ xdg_data_home_dir_path }}"
-set -gx XDG_EXE_HOME "{{ xdg_exe_home_dir_path }}"
-set -gx XDG_STATE_HOME "{{ xdg_state_home_dir_path }}"
+set -gx XDG_CACHE_HOME "{{ xdg_base_dirs__cache_dir_path }}"
+set -gx XDG_CONFIG_HOME "{{ xdg_base_dirs__config_dir_path }}"
+set -gx XDG_DATA_HOME "{{ xdg_base_dirs__data_dir_path }}"
+set -gx XDG_EXE_HOME "{{ xdg_base_dirs__exe_dir_path }}"
+set -gx XDG_STATE_HOME "{{ xdg_base_dirs__state_dir_path }}"
 
 # This.
-set -gx DOT_SHELL_BASH_LOGIN_SCRIPT_PATH "{{ shell_bash_login_script_path }}"
-set -gx DOT_SHELL_FISH_LOGIN_SCRIPT_PATH "{{ shell_fish_login_script_path }}"
-set -gx DOT_SHELL_ZSH_LOGIN_SCRIPT_PATH "{{ shell_zsh_login_script_path }}"
+set -gx DOT_SHELL_BASH_LOGIN_SCRIPT_PATH "{{ shell__bash_login_script_path }}"
+set -gx DOT_SHELL_FISH_LOGIN_SCRIPT_PATH "{{ shell__fish_login_script_path }}"
+set -gx DOT_SHELL_ZSH_LOGIN_SCRIPT_PATH "{{ shell__zsh_login_script_path }}"

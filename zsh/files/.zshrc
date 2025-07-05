@@ -333,6 +333,9 @@ alias printpath='echo -e ${PATH//:/\\n}'
 # Retry the last command with sudo.
 alias pls='sudo $(history -p !!)'
 
+# Remove, but interactive.
+alias rmi='rm -i'
+
 #endregion
 
 #region source_dyn_aliases

@@ -1,5 +1,5 @@
 #region source_dyn_shell
-source "{{ _shell_bash_login_script_path }}"
+source "{{ shell__bash_login_script_path }}"
 #endregion
 
 #region source_dyn_default

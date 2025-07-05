@@ -1,3 +1,4 @@
 dependencies:
+  - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
   - { role: shell, tags: [shell] }
   - { role: xdg_base_dirs, tags: [xdg_base_dirs] }

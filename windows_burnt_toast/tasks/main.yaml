@@ -10,7 +10,7 @@
 
 - name: Set misc facts
   ansible.builtin.set_fact:
-    windows_burnt_toast__send_exe_path: >-
+    windows_burnt_toast__send_burnt_toast_exe_path: >-
       {{ fhs_base_dirs__opt_exe_dir_path }}/send-burnt-toast
 
     windows_burnt_toast__icon_path: >-
@@ -44,7 +44,7 @@
 - name: Symlink script
   ansible.builtin.file:
     src: "{{ windows_burnt_toast__data_dir_path }}/send-burnt-toast.sh"
-    dest: "{{ windows_burnt_toast__send_exe_path }}"
+    dest: "{{ windows_burnt_toast__send_burnt_toast_exe_path }}"
     state: link
   become: true
 
