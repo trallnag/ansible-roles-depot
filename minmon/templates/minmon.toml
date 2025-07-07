@@ -1,0 +1,91 @@
+#region global_config
+
+[general]
+boot_delay = 5
+start_delay = 5
+
+[log]
+level = "Info"
+target = "Journal"
+
+#endregion
+
+#region shared_actions
+
+[[actions]]
+name = "SendBurntToast"
+type = "Process"
+path = "{{ windows_burnt_toast__send_burnt_toast_exe_path }}"
+arguments = ["--message", "{% raw %}MinMon: {{message}} check={{check_name}} alarm={{alarm_name}}{% endraw %}"]
+
+#endregion
+
+#region dummy_checks
+
+[[checks]]
+interval = 300
+name = "AlwaysTrue"
+type = "ProcessExitStatus"
+path = "/usr/bin/true"
+
+  [[checks.alarms]]
+  name = "ShouldNeverFire"
+  action = "SendBurntToast"
+  cycles = 1
+  repeat_cycles = 2
+  status_codes = [0]
+  placeholders = {"message" = "Something is going wrong."}
+
+[[checks]]
+interval = 300
+name = "AlwaysFalse"
+type = "ProcessExitStatus"
+path = "/usr/bin/false"
+
+  [[checks.alarms]]
+  name = "ShouldNeverFire"
+  action = "SendBurntToast"
+  cycles = 1
+  repeat_cycles = 2
+  status_codes = [1]
+  placeholders = {"message" = "Something is going wrong."}
+
+#endregion
+
+#region check_systemd_units_status
+
+[[checks]]
+interval = 60
+name = "SystemdUnitsStatus"
+type = "ProcessExitStatus"
+path = "/usr/bin/systemctl"
+arguments = ["is-failed"]
+
+  [[checks.alarms]]
+  name = "FoundFailedSystemdUnits"
+  action = "HandleFoundFailedSystemdUnits"
+  cycles = 2
+  repeat_cycles = 15
+  recover_action = "HandleFoundFailedSystemdUnitsRecovery"
+  recover_cycles = 1
+  status_codes = [1]
+
+[[actions]]
+name = "HandleFoundFailedSystemdUnits"
+type = "Process"
+path = "{{ minmon__handle_found_failed_systemd_units_exe_path }}"
+arguments = [
+  "{% raw %}{{check_name}}{% endraw %}",
+  "{% raw %}{{alarm_name}}{% endraw %}"
+]
+
+[[actions]]
+name = "HandleFoundFailedSystemdUnitsRecovery"
+type = "Process"
+path = "{{ minmon__handle_found_failed_systemd_units_recovery_exe_path }}"
+arguments = [
+  "{% raw %}{{check_name}}{% endraw %}",
+  "{% raw %}{{alarm_name}}{% endraw %}"
+]
+
+#endregion

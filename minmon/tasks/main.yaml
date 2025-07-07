@@ -1,0 +1,250 @@
+- name: Set data dir path fact
+  ansible.builtin.set_fact:
+    minmon__data_dir_path: >-
+      {{ fhs_base_dirs__opt_data_dir_path }}/minmon
+
+- name: Set target info facts
+  ansible.builtin.set_fact:
+    # Tag of the MinMon release to install.
+    minmon__target_tag: "v0.11.0"
+
+    # Digest of the MinMon archive.
+    minmon__target_digest: >-
+      sha256:cdc0ce5109924c65c4806cb8ba85807f3624d59eba8700d8b3e1dd845437e751
+
+- name: Set misc facts
+  ansible.builtin.set_fact:
+    minmon__systemd_unit_name: minmon.service
+
+    minmon__target_tag_file_path: >-
+      {{ minmon__data_dir_path }}/target-tag.txt
+
+    minmon__config_path: >-
+      {{ minmon__data_dir_path }}/minmon.toml
+
+    minmon__exe_path: >-
+      {{ minmon__data_dir_path }}/minmon
+
+    minmon__handle_found_failed_systemd_units_exe_path: >-
+      {{ minmon__data_dir_path }}/handle-found-failed-systemd-units.sh
+
+    minmon__handle_found_failed_systemd_units_recovery_exe_path: >-
+      {{ minmon__data_dir_path }}/handle-found-failed-systemd-units-recovery.sh
+
+    minmon__monit_check_minmon_logs_for_errors_exe_path: >-
+      {{ minmon__data_dir_path }}/monit-check-minmon-logs-for-errors.sh
+
+    minmon__monit_send_alert_for_minmon_errors_exe_path: >-
+      {{ minmon__data_dir_path }}/monit-send-alert-for-minmon-errors.sh
+
+- name: Create dir
+  ansible.builtin.file:
+    path: "{{ minmon__data_dir_path }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  become: true
+
+- name: Render and place check exes
+  ansible.builtin.template:
+    src: "{{ item | basename }}"
+    dest: "{{ item }}"
+    mode: u=rwx,g=r,o=r
+  become: true
+  loop:
+    - "{{ minmon__handle_found_failed_systemd_units_exe_path }}"
+    - "{{ minmon__handle_found_failed_systemd_units_recovery_exe_path }}"
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - jq
+    state: present
+  become: true
+
+- name: Get installed version
+  ansible.builtin.shell:
+    executable: /usr/bin/sh
+    cmd: |
+      set -eu
+      cat "{{ minmon__target_tag_file_path }}" || true
+  become: true
+  changed_when: false
+  register: minmon__get_installed_version
+
+- name: Install
+  when: minmon__target_tag not in minmon__get_installed_version.stdout
+  become: true
+  block:
+    - name: Download archive
+      ansible.builtin.get_url:
+        url: "{{ url_parts | join }}"
+        checksum: "{{ minmon__target_digest }}"
+        headers:
+          Authorization: Bearer {{ github_scopeless_token }}
+        dest: "{{ minmon__data_dir_path }}/minmon.tar.gz"
+        mode: u=rw,g=r,o=r
+        force: true
+      vars:
+        url_parts:
+          - https://github.com/flo-at/minmon/releases/download/
+          - "{{ minmon__target_tag }}"
+          - /minmon-linux-x86_64.tar.gz
+
+    - name: Extract archive
+      ansible.builtin.unarchive:
+        src: "{{ minmon__data_dir_path }}/minmon.tar.gz"
+        dest: "{{ minmon__data_dir_path }}"
+        remote_src: true
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+
+    - name: Make executable
+      ansible.builtin.file:
+        path: "{{ minmon__exe_path }}"
+        mode: u=rwx,g=rx,o=rx
+
+    - name: Place target tag file
+      ansible.builtin.copy:
+        dest: "{{ minmon__target_tag_file_path }}"
+        mode: u=rw,g=r,o=r
+        content: "{{ minmon__target_tag }}"
+
+- name: Create config
+  ansible.builtin.file:
+    path: "{{ minmon__config_path }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  become: true
+
+- name: Render and place config block
+  ansible.builtin.blockinfile:
+    path: "{{ minmon__config_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} config"
+    insertbefore: BOF
+    block: "{{ lookup('ansible.builtin.template', 'minmon.toml') }}"
+  become: true
+  register: minmon__render_and_place_config_block
+
+- name: Render and place systemd unit file
+  ansible.builtin.template:
+    src: "{{ minmon__systemd_unit_name }}"
+    dest: /etc/systemd/system/{{ minmon__systemd_unit_name }}
+    mode: u=rw,g=r,o=r
+  become: true
+  register: minmon__render_and_place_systemd_unit_file
+
+- name: Verify systemd unit file
+  when: minmon__render_and_place_systemd_unit_file.changed
+  ansible.builtin.command: systemd-analyze verify {{ minmon__systemd_unit_name }}
+  become: true
+  changed_when: false
+
+- name: Reload systemd daemon
+  when: minmon__render_and_place_systemd_unit_file.changed
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  become: true
+
+- name: Enable systemd unit
+  ansible.builtin.systemd_service:
+    name: "{{ minmon__systemd_unit_name }}"
+    enabled: true
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ minmon__systemd_unit_name }}
+  changed_when: false
+  failed_when: false
+  become: true
+  register: minmon__check_systemd_unit_activity
+
+- name: Start systemd unit
+  when: minmon__check_systemd_unit_activity.rc != 0
+  ansible.builtin.systemd_service:
+    name: "{{ minmon__systemd_unit_name }}"
+    state: started
+  become: true
+  register: minmon__start_systemd_unit
+
+- name: Restart systemd unit
+  when: >-
+    minmon__check_systemd_unit_activity.rc == 0
+    and (
+      minmon__render_and_place_systemd_unit_file.changed
+      or minmon__render_and_place_config_block.changed
+      or minmon__target_tag not in minmon__get_installed_version.stdout
+    )
+  ansible.builtin.systemd_service:
+    name: "{{ minmon__systemd_unit_name }}"
+    state: restarted
+  register: minmon__restart_systemd_unit
+  become: true
+
+- name: Pause before checking systemd unit
+  when: >-
+    minmon__start_systemd_unit.changed
+    or minmon__restart_systemd_unit.changed
+  ansible.builtin.command: sleep 5
+  changed_when: false
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ minmon__systemd_unit_name }}
+  changed_when: false
+  become: true
+
+- name: Render and place monit exes
+  ansible.builtin.template:
+    src: "{{ item | basename }}"
+    dest: "{{ item }}"
+    mode: u=rwx,g=r,o=r
+  become: true
+  loop:
+    - "{{ minmon__monit_check_minmon_logs_for_errors_exe_path }}"
+    - "{{ minmon__monit_send_alert_for_minmon_errors_exe_path }}"
+
+- name: Place check-minmon-logs-for-errors.conf
+  ansible.builtin.copy:
+    dest: "{{ monit__config_dir_path }}/check-minmon-logs-for-errors.conf"
+    content: |
+      check program check-minmon-logs-for-errors
+        with path "{{ minmon__monit_check_minmon_logs_for_errors_exe_path }}"
+        with timeout 5 seconds
+        every 5 cycles
+      if status != 0 then
+        exec "{{ minmon__monit_send_alert_for_minmon_errors_exe_path }}"
+        repeat every 6 cycles
+    mode: u=rw,g=r,o=r
+  become: true
+  register: minmon__place_check_minmon_logs_for_errors_conf
+
+- name: Check syntax
+  ansible.builtin.command:
+    cmd: monit -t
+  changed_when: false
+  become: true
+
+- name: Restart Monit systemd unit
+  when: minmon__place_check_minmon_logs_for_errors_conf.changed
+  ansible.builtin.systemd_service:
+    name: "{{ monit__systemd_unit_name }}"
+    state: restarted
+  register: minmon__restart_monit_systemd_unit
+  become: true
+
+- name: Pause before checking Monit systemd unit
+  when: minmon__restart_monit_systemd_unit.changed
+  ansible.builtin.command: sleep 5
+  changed_when: false
+  become: true
+
+- name: Check Monit systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ monit__systemd_unit_name }}
+  changed_when: false
+  become: true
