@@ -8,6 +8,7 @@
   ansible.builtin.copy:
     dest: /home/{{ ansible_user }}/.aws/config
     mode: u=rw,g=,o=
+    backup: true
     content: |
       [profile trallnag]
       sso_session = trallnag
