@@ -169,6 +169,7 @@
     src: "{{ item }}"
     dest: /home/{{ ansible_user }}/{{ item }}
     mode: u=rw,g=,o=
+    backup: true
   loop:
     - .bashrc
     - .bash_logout
@@ -178,6 +179,7 @@
     src: "{{ item }}"
     dest: /root/{{ item }}
     mode: u=rw,g=,o=
+    backup: true
   become: true
   loop:
     - .bashrc
