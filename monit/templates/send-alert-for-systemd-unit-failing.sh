@@ -13,6 +13,7 @@ trap handle_trap EXIT
 
 UNIT_NAME="$1"
 
+# shellcheck disable=SC2288
 "{{ windows_burnt_toast__send_burnt_toast_exe_path }}" \
   --id "monit.$(echo "$UNIT_NAME" | tr . -).$(date +%s)" \
   --message "Monit: Systemd unit \"$UNIT_NAME\" is failing."

@@ -4,7 +4,9 @@ Description=Monit
 
 After=network-online.target
 
-StartLimitIntervalSec=0
+StartLimitIntervalSec=120
+
+StartLimitBurst=5
 
 OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
@@ -22,7 +24,7 @@ ExecReload=/usr/bin/monit reload
 
 Restart=always
 
-RestartSec=15
+RestartSec=10
 
 [Install]
 

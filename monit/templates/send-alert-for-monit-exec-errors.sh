@@ -11,6 +11,7 @@ handle_trap() {
 
 trap handle_trap EXIT
 
+# shellcheck disable=SC2288
 "{{ windows_burnt_toast__send_burnt_toast_exe_path }}" \
   --id "monit.$(date +%s)" \
   --message "Monit is encountering errors."

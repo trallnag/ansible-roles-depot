@@ -52,6 +52,7 @@
     path: /etc/monit/monitrc
     regexp: ^set daemon .+$
     line: set daemon 60
+    backup: true
   become: true
   register: monit__set_cycle
 
@@ -60,6 +61,7 @@
     path: /etc/monit/monitrc
     regexp: ^set log .+$
     state: absent
+    backup: true
   become: true
   register: monit__set_log
 
@@ -71,7 +73,39 @@
         port 2812
         allow 127.0.0.1
         allow ::1
-    mode: u=rw,g=r,o=r
+    mode: u=rw,g=r,o=
+  become: true
+  register: monit__place_httpd_conf
+
+- name: Place mail.conf
+  ansible.builtin.copy:
+    dest: "{{ monit__config_dir_path }}/mail.conf"
+    content: |
+      set alert tim@trallnag.com
+
+      set mailserver
+        email-smtp.eu-central-1.amazonaws.com
+        port 465
+        username {{ amazon_ses_smtp_user }}
+        password {{ amazon_ses_smtp_password }}
+        using ssl
+
+      set mail-format {
+        from: Metro Device <metro.device+monit@trallnag.com>
+        subject: Monit: $SERVICE: $EVENT.
+        message: A Monit event occurred.
+
+                 Date: $DATE
+
+                 Service: $SERVICE
+
+                 Event: $EVENT
+
+                 Action: $ACTION
+
+                 Description: $DESCRIPTION
+      }
+    mode: u=rw,g=r,o=
   become: true
   register: monit__place_httpd_conf
 

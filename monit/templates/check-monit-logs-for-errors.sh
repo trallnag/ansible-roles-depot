@@ -12,7 +12,7 @@ handle_trap() {
 trap handle_trap EXIT
 
 if journalctl -u "{{ monit__systemd_unit_name }}" \
-  --since "5min 30s ago" --case-sensitive --grep ERROR 2>&1 > /dev/null;
+  --since "5min 30s ago" --case-sensitive --grep ERROR;
 then
   exit 100
 fi
