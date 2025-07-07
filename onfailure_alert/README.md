@@ -1,8 +1,8 @@
 # Ansible role `onfailure_alert`
 
 Sets up a systemd unit that can be used for `OnFailure` actions. The unit
-executes a script that creates a Windows notification. The script comes with a
-built-in rate limit scoped to the unit name to prevent spam.
+executes a script that creates a Windows notification and sends an email. The
+script comes with a built-in rate limit scoped to the unit name to prevent spam.
 
 It can be used like this:
 
@@ -20,6 +20,13 @@ With this example, logs can be checked with:
 
 ```sh
 sudo journalctl -u onfailure-alert@onfailure-alert-example.service.service
+```
+
+Clean up once testing is done:
+
+```sh
+sudo systemctl stop onfailure-alert-example.service
+sudo systemctl reset-failed onfailure-alert-example.service
 ```
 
 ## Maintenance

@@ -1,3 +1,4 @@
 dependencies:
   - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
+  - { role: msmtp, tags: [msmtp] }
   - { role: windows_burnt_toast, tags: [windows_burnt_toast] }

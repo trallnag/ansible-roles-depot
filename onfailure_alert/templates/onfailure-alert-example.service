@@ -2,7 +2,9 @@
 
 Description=OnFailure Alert Example
 
-StartLimitIntervalSec=0
+StartLimitIntervalSec=120
+
+StartLimitBurst=5
 
 OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
@@ -14,4 +16,4 @@ ExecStart=/usr/bin/sh -c 'echo "It is time to fail." && exit 1'
 
 Restart=always
 
-RestartSec=15
+RestartSec=10
