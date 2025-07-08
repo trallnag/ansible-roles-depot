@@ -1,5 +1,6 @@
 dependencies:
   - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
   - { role: monit, tags: [monit] }
+  - { role: msmtp, tags: [msmtp] }
   - { role: onfailure_alert, tags: [onfailure_alert] }
   - { role: windows_burnt_toast, tags: [windows_burnt_toast] }
