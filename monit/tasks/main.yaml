@@ -65,95 +65,45 @@
   become: true
   register: monit__set_log
 
-- name: Place httpd.conf
-  ansible.builtin.copy:
+- name: Render and place httpd.conf
+  ansible.builtin.template:
+    src: httpd.conf
     dest: "{{ monit__config_dir_path }}/httpd.conf"
-    content: |
-      set httpd
-        port 2812
-        allow 127.0.0.1
-        allow ::1
     mode: u=rw,g=r,o=
   become: true
-  register: monit__place_httpd_conf
+  register: monit__render_and_place_httpd_conf
 
-- name: Place mail.conf
-  ansible.builtin.copy:
+- name: Render and place mail.conf
+  ansible.builtin.template:
+    src: mail.conf
     dest: "{{ monit__config_dir_path }}/mail.conf"
-    content: |
-      set alert tim@trallnag.com
-
-      set mailserver
-        email-smtp.eu-central-1.amazonaws.com
-        port 465
-        username {{ amazon_ses_smtp_user }}
-        password {{ amazon_ses_smtp_password }}
-        using ssl
-
-      set mail-format {
-        from: Metro Device <metro.device+monit@trallnag.com>
-        subject: Monit: $SERVICE: $EVENT.
-        message: A Monit event occurred.
-
-                 Date: $DATE
-
-                 Service: $SERVICE
-
-                 Event: $EVENT
-
-                 Action: $ACTION
-
-                 Description: $DESCRIPTION
-      }
     mode: u=rw,g=r,o=
   become: true
-  register: monit__place_httpd_conf
+  register: monit__render_and_place_mail_conf
 
-- name: Place check-always-true.conf
-  ansible.builtin.copy:
+- name: Render and place check-always-true.conf
+  ansible.builtin.template:
+    src: check-always-true.conf
     dest: "{{ monit__config_dir_path }}/check-always-true.conf"
-    content: |
-      check program check-always-true
-        with path "/usr/bin/true"
-        with timeout 5 seconds
-        every 10 cycles
-      if status != 0
-        then exec "{{ monit__echo_something_went_wrong_exe_path }}"
-        repeat every 11 cycles
     mode: u=rw,g=r,o=r
   become: true
-  register: monit__place_check_always_true_conf
+  register: monit__render_and_place_check_always_true_conf
 
-- name: Place check-always-false.conf
-  ansible.builtin.copy:
+- name: Render and place check-always-false.conf
+  ansible.builtin.template:
+    src: check-always-false.conf
     dest: "{{ monit__config_dir_path }}/check-always-false.conf"
-    content: |
-      check program check-always-false
-        with path "/usr/bin/false"
-        with timeout 5 seconds
-        every 10 cycles
-      if status != 1
-        then exec "{{ monit__echo_something_went_wrong_exe_path }}"
-        repeat every 11 cycles
     mode: u=rw,g=r,o=r
   become: true
-  register: monit__place_check_always_false_conf
+  register: monit__render_and_place_check_always_false_conf
 
-
-- name: Place check-monit-logs-for-errors.conf
-  ansible.builtin.copy:
+- name: Render and place check-monit-logs-for-errors.conf
+  ansible.builtin.template:
+    src: check-monit-logs-for-errors.conf
     dest: "{{ monit__config_dir_path }}/check-monit-logs-for-errors.conf"
-    content: |
-      check program check-for-monit-exec-errors
-        with path "{{ monit__check_monit_logs_for_errors_exe_path }}"
-        with timeout 5 seconds
-        every 5 cycles
-      if status != 0 then
-        exec "{{ monit__send_alert_for_monit_exec_errors_exe_path }}"
-        repeat every 6 cycles
     mode: u=rw,g=r,o=r
   become: true
-  register: monit__place_check_monit_logs_for_errors_conf
+  register: monit__render_and_place_check_monit_logs_for_errors_conf
 
 - name: Check syntax
   ansible.builtin.command:
@@ -219,10 +169,11 @@
       monit__render_and_place_systemd_unit_file.changed
       or monit__set_cycle.changed
       or monit__set_log.changed
-      or monit__place_httpd_conf.changed
-      or monit__place_check_always_true_conf.changed
-      or monit__place_check_always_false_conf.changed
-      or monit__place_check_monit_logs_for_errors_conf.changed
+      or monit__render_and_place_httpd_conf.changed
+      or monit__render_and_place_mail_conf.changed
+      or monit__render_and_place_check_always_true_conf.changed
+      or monit__render_and_place_check_always_false_conf.changed
+      or monit__render_and_place_check_monit_logs_for_errors_conf.changed
     )
   ansible.builtin.systemd_service:
     name: "{{ monit__systemd_unit_name }}"
