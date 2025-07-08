@@ -6,6 +6,6 @@ Description=OnFailure Alert %i
 
 Type=oneshot
 
-ExecStart={{ onfailure_alert__exe_path }} %i
+ExecStart={{ onfailure_alert__script_path }} %i
 
 TimeoutStartSec=5s

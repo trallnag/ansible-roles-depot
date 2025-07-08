@@ -8,7 +8,7 @@
     onfailure_alert__systemd_unit_name: onfailure-alert@.service
     onfailure_alert__example_systemd_unit_name: onfailure-alert-example.service
 
-    onfailure_alert__exe_path: >-
+    onfailure_alert__script_path: >-
       {{ onfailure_alert__data_dir_path }}/alert.sh
 
 - name: Create dir
@@ -17,13 +17,13 @@
     state: directory
   become: true
 
-- name: Render and place exe
+- name: Render and place script
   ansible.builtin.template:
-    src: "{{ onfailure_alert__exe_path | basename }}"
-    dest: "{{ onfailure_alert__exe_path }}"
+    src: "{{ onfailure_alert__script_path | basename }}"
+    dest: "{{ onfailure_alert__script_path }}"
     mode: u=rwx,g=r,o=r
   become: true
-  register: onfailure_alert__render_and_place_exe
+  register: onfailure_alert__render_and_place_script
 
 - name: Render and place systemd unit file
   ansible.builtin.template:
@@ -31,10 +31,10 @@
     dest: /etc/systemd/system/{{ onfailure_alert__systemd_unit_name }}
     mode: u=rw,g=r,o=r
   become: true
-  register: onfailure_alert__render_and_place_systemd_unit
+  register: onfailure_alert__render_and_place_systemd_unit_file
 
 - name: Verify systemd unit file
-  when: onfailure_alert__render_and_place_systemd_unit.changed
+  when: onfailure_alert__render_and_place_systemd_unit_file.changed
   ansible.builtin.command:
     cmd: systemd-analyze verify {{ onfailure_alert__systemd_unit_name }}
   become: true
@@ -46,10 +46,10 @@
     dest: /etc/systemd/system/{{ onfailure_alert__example_systemd_unit_name }}
     mode: u=rw,g=r,o=r
   become: true
-  register: onfailure_alert__render_and_place_example_systemd_unit
+  register: onfailure_alert__render_and_place_example_systemd_unit_file
 
 - name: Verify example systemd unit file
-  when: onfailure_alert__render_and_place_example_systemd_unit.changed
+  when: onfailure_alert__render_and_place_example_systemd_unit_file.changed
   ansible.builtin.command:
     cmd: systemd-analyze verify {{ onfailure_alert__example_systemd_unit_name }}
   become: true
@@ -57,8 +57,8 @@
 
 - name: Reload systemd daemon
   when: >-
-    onfailure_alert__render_and_place_systemd_unit.changed
-    or onfailure_alert__render_and_place_example_systemd_unit.changed
+    onfailure_alert__render_and_place_systemd_unit_file.changed
+    or onfailure_alert__render_and_place_example_systemd_unit_file.changed
   ansible.builtin.systemd_service:
     daemon_reload: true
   become: true
