@@ -1,6 +1,20 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
-set -eu
+set -euo pipefail
+
+# Print help message if requested.
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+  cat <<EOF
+Usage: $0 [OPTIONS]
+
+Options:
+  --id ID            Unique identifier for the notification.
+  --subject SUBJECT  Subject of the notification.
+  --message MSG      Message body of the notification.
+  -h, --help         Show this help message and exit.
+EOF
+  exit 0
+fi
 
 # Part of unique identifier.
 id=""
@@ -9,7 +23,6 @@ id=""
 subject=""
 message=""
 
-# Parse command line options.
 opts=$(getopt --options "" --longoptions id:,subject:,message: --name "$0" -- "$@")
 
 # Evaluate the parsed options.
