@@ -6,22 +6,11 @@
 
 - name: Place config
   ansible.builtin.copy:
+    src: config
     dest: /home/{{ ansible_user }}/.aws/config
     mode: u=rw,g=,o=
     backup: true
-    content: |
-      [profile trallnag]
-      sso_session = trallnag
-      sso_account_id = 617685949322
-      sso_role_name = AdministratorAccess
-      region = eu-central-1
-      output = yaml
-
-      [sso-session trallnag]
-      sso_start_url = https://d-9967527590.awsapps.com/start/#
-      sso_region = eu-central-1
-      sso_registration_scopes = sso:account:access
-
+   
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
     path: "{{ shell__bash_login_script_path }}"
