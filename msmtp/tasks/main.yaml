@@ -31,7 +31,7 @@
 
 - name: Render and place msmtprc
   ansible.builtin.template:
-    src: msmtprc.jinja
+    src: msmtprc
     dest: /etc/msmtprc
     owner: root
     group: msmtp
