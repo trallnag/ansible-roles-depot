@@ -3,9 +3,11 @@
 Description=Windows SSH Agent Relay
 
 After=ssh.service
-Wants=ssh.service
 
-OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
 [Service]
 
@@ -14,10 +16,10 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_ssh_agent_relay_script_path }}
+ExecStart={{ windows_ssh_agent_relay__script_path }}
 
 Restart=always
-RestartSec=15
+RestartSec=10
 
 [Install]
 
