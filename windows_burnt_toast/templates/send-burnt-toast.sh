@@ -23,6 +23,7 @@ id=""
 subject=""
 message=""
 
+# Parse command line options.
 opts=$(getopt --options "" --longoptions id:,subject:,message: --name "$0" -- "$@")
 
 # Evaluate the parsed options.
