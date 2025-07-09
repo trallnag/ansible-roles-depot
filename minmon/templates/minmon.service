@@ -6,7 +6,6 @@ After=network-online.target
 After={{ monit__systemd_unit_name }}
 
 StartLimitIntervalSec=120
-
 StartLimitBurst=5
 
 OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
@@ -18,7 +17,6 @@ Type=simple
 ExecStart={{ minmon__exe_path }} {{ minmon__config_path }}
 
 Restart=always
-
 RestartSec=10
 
 [Install]

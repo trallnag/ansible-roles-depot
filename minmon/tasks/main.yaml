@@ -25,16 +25,16 @@
     minmon__exe_path: >-
       {{ minmon__data_dir_path }}/minmon
 
-    minmon__handle_found_failed_systemd_units_exe_path: >-
+    minmon__handle_found_failed_systemd_units_script_path: >-
       {{ minmon__data_dir_path }}/handle-found-failed-systemd-units.sh
 
-    minmon__handle_found_failed_systemd_units_recovery_exe_path: >-
+    minmon__handle_found_failed_systemd_units_recovery_script_path: >-
       {{ minmon__data_dir_path }}/handle-found-failed-systemd-units-recovery.sh
 
-    minmon__monit_check_minmon_logs_for_errors_exe_path: >-
+    minmon__monit_check_minmon_logs_for_errors_script_path: >-
       {{ minmon__data_dir_path }}/monit-check-minmon-logs-for-errors.sh
 
-    minmon__monit_send_alert_for_minmon_errors_exe_path: >-
+    minmon__monit_send_alert_for_minmon_errors_script_path: >-
       {{ minmon__data_dir_path }}/monit-send-alert-for-minmon-errors.sh
 
 - name: Create dir
@@ -44,15 +44,15 @@
     mode: u=rwx,g=rx,o=rx
   become: true
 
-- name: Render and place check exes
+- name: Render and place check scripts
   ansible.builtin.template:
     src: "{{ item | basename }}"
     dest: "{{ item }}"
     mode: u=rwx,g=r,o=r
   become: true
   loop:
-    - "{{ minmon__handle_found_failed_systemd_units_exe_path }}"
-    - "{{ minmon__handle_found_failed_systemd_units_recovery_exe_path }}"
+    - "{{ minmon__handle_found_failed_systemd_units_script_path }}"
+    - "{{ minmon__handle_found_failed_systemd_units_recovery_script_path }}"
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -198,30 +198,27 @@
   changed_when: false
   become: true
 
-- name: Render and place monit exes
+- name: Check wants symlink existence
+  ansible.builtin.stat:
+    path: /etc/systemd/system/multi-user.target.wants/{{ minmon__systemd_unit_name }}
+
+- name: Render and place monit scripts
   ansible.builtin.template:
     src: "{{ item | basename }}"
     dest: "{{ item }}"
     mode: u=rwx,g=r,o=r
   become: true
   loop:
-    - "{{ minmon__monit_check_minmon_logs_for_errors_exe_path }}"
-    - "{{ minmon__monit_send_alert_for_minmon_errors_exe_path }}"
+    - "{{ minmon__monit_check_minmon_logs_for_errors_script_path }}"
+    - "{{ minmon__monit_send_alert_for_minmon_errors_script_path }}"
 
-- name: Place check-minmon-logs-for-errors.conf
-  ansible.builtin.copy:
+- name: Render and place check-minmon-logs-for-errors.conf
+  ansible.builtin.template:
+    src: monit-check-minmon-logs-for-errors.conf
     dest: "{{ monit__config_dir_path }}/check-minmon-logs-for-errors.conf"
-    content: |
-      check program check-minmon-logs-for-errors
-        with path "{{ minmon__monit_check_minmon_logs_for_errors_exe_path }}"
-        with timeout 5 seconds
-        every 5 cycles
-      if status != 0 then
-        exec "{{ minmon__monit_send_alert_for_minmon_errors_exe_path }}"
-        repeat every 6 cycles
     mode: u=rw,g=r,o=r
   become: true
-  register: minmon__place_check_minmon_logs_for_errors_conf
+  register: minmon__render_and_place_check_minmon_logs_for_errors_conf
 
 - name: Check syntax
   ansible.builtin.command:
@@ -230,7 +227,7 @@
   become: true
 
 - name: Restart Monit systemd unit
-  when: minmon__place_check_minmon_logs_for_errors_conf.changed
+  when: minmon__render_and_place_check_minmon_logs_for_errors_conf.changed
   ansible.builtin.systemd_service:
     name: "{{ monit__systemd_unit_name }}"
     state: restarted

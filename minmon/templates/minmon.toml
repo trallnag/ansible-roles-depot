@@ -73,7 +73,7 @@ arguments = ["is-failed"]
 [[actions]]
 name = "HandleFoundFailedSystemdUnits"
 type = "Process"
-path = "{{ minmon__handle_found_failed_systemd_units_exe_path }}"
+path = "{{ minmon__handle_found_failed_systemd_units_script_path }}"
 arguments = [
   "{% raw %}{{check_name}}{% endraw %}",
   "{% raw %}{{alarm_name}}{% endraw %}"
@@ -82,7 +82,7 @@ arguments = [
 [[actions]]
 name = "HandleFoundFailedSystemdUnitsRecovery"
 type = "Process"
-path = "{{ minmon__handle_found_failed_systemd_units_recovery_exe_path }}"
+path = "{{ minmon__handle_found_failed_systemd_units_recovery_script_path }}"
 arguments = [
   "{% raw %}{{check_name}}{% endraw %}",
   "{% raw %}{{alarm_name}}{% endraw %}"
