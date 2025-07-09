@@ -3,7 +3,7 @@
 set -eu
 
 r_remote="/run/user/{{ ansible_facts.user_uid }}/gnupg/S.gpg-agent"
-r_local="{{ windows_gpg_bridge__extra_host }}:{{ windows_gpg_bridge__extra_port }}"
+r_local="{{ windows_gpg_bridge_extra_host }}:{{ windows_gpg_bridge_extra_port }}"
 
 echo "Connecting to target with OpenSSH..." >&2
 
