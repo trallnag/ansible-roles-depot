@@ -2,7 +2,10 @@
 
 Description=Windows GPG Bridge
 
-OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
 [Service]
 
@@ -11,10 +14,10 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_gpg_bridge_exe_path }} --extra {{ windows_gpg_bridge_extra_host }}:{{ windows_gpg_bridge_extra_port }}
+ExecStart={{ windows_gpg_bridge__exe_path }} --extra {{ windows_gpg_bridge__extra_host }}:{{ windows_gpg_bridge__extra_port }}
 
 Restart=always
-RestartSec=60
+RestartSec=10
 
 [Install]
 

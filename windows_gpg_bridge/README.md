@@ -15,7 +15,7 @@ versions are overwritten. It is not kept up to date.
 
 Gpg-bridge is pinned to a specific version in
 [`tasks/main.yaml`](tasks/main.yaml) via the variables
-`windows_gpg_bridge_target_version` and `windows_gpg_bridge_target_digest`.
+`windows_gpg_bridge__target_version` and `windows_gpg_bridge__target_digest`.
 
 Check the [busyjay/gpg-bridge][gpg-bridge] repository on GitHub for changes.
 

@@ -1,32 +1,32 @@
 - name: Set data dir path fact
   ansible.builtin.set_fact:
-    windows_gpg_bridge_data_dir_path: >-
-      {{ xdg_data_home_dir_path }}/windows-gpg-bridge
+    windows_gpg_bridge__data_dir_path: >-
+      {{ xdg_base_dirs__data_dir_path }}/windows-gpg-bridge
 
 - name: Set target info facts
   ansible.builtin.set_fact:
     # Version of gpg-bridge to install.
-    windows_gpg_bridge_target_version: "0.1.1"
+    windows_gpg_bridge__target_version: "0.1.1"
 
-    # Checksum (SHA-256) of gpg-bridge archive.
-    windows_gpg_bridge_target_digest: >-
-      3c7595d0f4f135937b7b9dfae7b0dc4134e88100fd563d2b751a48613dcf42ab
+    # Digest of the gpg-bridge archive.
+    windows_gpg_bridge__target_digest: >-
+      sha256:3c7595d0f4f135937b7b9dfae7b0dc4134e88100fd563d2b751a48613dcf42ab
 
 - name: Set misc facts
   ansible.builtin.set_fact:
-    windows_gpg_bridge_exe_path: >-
-      {{ windows_gpg_bridge_data_dir_path }}/gpg-bridge
+    windows_gpg_bridge__exe_path: >-
+      {{ windows_gpg_bridge__data_dir_path }}/gpg-bridge
 
-    windows_gpg_bridge_unit_name: windows-gpg-bridge.service
+    windows_gpg_bridge__systemd_unit_name: windows-gpg-bridge.service
 
     # Combined and passed with `--extra` parameter as argument.
-    windows_gpg_bridge_extra_host: "127.0.0.1"
-    windows_gpg_bridge_extra_port: "54321"
+    windows_gpg_bridge__extra_host: "127.0.0.1"
+    windows_gpg_bridge__extra_port: "34323"
 
 - name: Create data dir
   ansible.builtin.file:
     state: directory
-    path: "{{ windows_gpg_bridge_data_dir_path }}"
+    path: "{{ windows_gpg_bridge__data_dir_path }}"
     mode: u=rwx,g=,o=
 
 - name: Get installed version
@@ -34,76 +34,70 @@
     executable: /usr/bin/bash
     cmd: |
       set -euo pipefail
-      if [[ -f "{{ windows_gpg_bridge_exe_path }}" ]]; then
-        "{{ windows_gpg_bridge_exe_path }}" --version | sed "s/gpg-bridge //"
+      if [[ -f "{{ windows_gpg_bridge__exe_path }}" ]]; then
+        "{{ windows_gpg_bridge__exe_path }}" --version | sed "s/gpg-bridge //"
       fi
-  register: windows_gpg_bridge_get_installed_version
   changed_when: false
+  register: windows_gpg_bridge__get_installed_version
 
 - name: Set installed version fact
   ansible.builtin.set_fact:
-    windows_gpg_bridge_installed_version: >-
+    windows_gpg_bridge__installed_version: >-
       {{
-        windows_gpg_bridge_get_installed_version.stdout
+        windows_gpg_bridge__get_installed_version.stdout
         | regex_search(".+\..+\..+")
       }}
 
 - name: Print installed version
   ansible.builtin.debug:
-    var: windows_gpg_bridge_installed_version
+    var: windows_gpg_bridge__installed_version
 
 - name: Install
   when: >-
-    windows_gpg_bridge_installed_version
-    != windows_gpg_bridge_target_version
+    windows_gpg_bridge__installed_version
+    != windows_gpg_bridge__target_version
   block:
     - name: Delete executable
       ansible.builtin.file:
-        path: "{{ windows_gpg_bridge_exe_path }}"
+        path: "{{ windows_gpg_bridge__exe_path }}"
         state: absent
 
     - name: Create temporary directory
       ansible.builtin.tempfile:
         state: directory
-      register: temp_dir
+      register: windows_gpg_bridge__temp_dir
 
     - name: Download archive
       ansible.builtin.get_url:
         url: "{{ url_parts | join }}"
-        dest: "{{ temp_dir.path }}/gpg-bridge.zip"
+        checksum: "{{ windows_gpg_bridge__target_digest }}"
+        headers:
+          Authorization: Bearer {{ github_scopeless_token }}
+        dest: "{{ windows_gpg_bridge__temp_dir.path }}/gpg-bridge.zip"
         mode: u=rw,g=,o=
         force: true
       vars:
         url_parts:
-          - "https://github.com/BusyJay/gpg-bridge/releases/download/v"
-          - "{{ windows_gpg_bridge_target_version }}/gpg-bridge-v"
-          - "{{ windows_gpg_bridge_target_version }}.zip"
-
-    - name: Validate archive checksum
-      ansible.builtin.shell:
-        executable: /usr/bin/bash
-        cmd: |
-          set -euo pipefail
-          sha256sum "{{ temp_dir.path }}/gpg-bridge.zip" \
-            | grep -F "{{ windows_gpg_bridge_target_digest }}"
-      changed_when: false
+          - https://github.com/BusyJay/gpg-bridge/releases/download/v
+          - "{{ windows_gpg_bridge__target_version }}/gpg-bridge-v"
+          - "{{ windows_gpg_bridge__target_version }}.zip"
 
     - name: Unzip archive
       ansible.builtin.unarchive:
-        src: "{{ temp_dir.path }}/gpg-bridge.zip"
-        dest: "{{ temp_dir.path }}"
+        src: "{{ windows_gpg_bridge__temp_dir.path }}/gpg-bridge.zip"
+        dest: "{{ windows_gpg_bridge__temp_dir.path }}"
         remote_src: true
 
     - name: Move executable
       ansible.builtin.command:
         cmd: >-
           mv --force
-          "{{ temp_dir.path }}/gpg-bridge.exe"
-          "{{ windows_gpg_bridge_exe_path }}"
+          "{{ windows_gpg_bridge__temp_dir.path }}/gpg-bridge.exe"
+          "{{ windows_gpg_bridge__exe_path }}"
 
     - name: Set file permissions
       ansible.builtin.file:
-        path: "{{ windows_gpg_bridge_exe_path }}"
+        path: "{{ windows_gpg_bridge__exe_path }}"
         mode: u=rwx,g=,o=
 
     - name: Get new installed version
@@ -111,49 +105,103 @@
         executable: /usr/bin/bash
         cmd: |
           set -euo pipefail
-          "{{ windows_gpg_bridge_exe_path }}" --version | sed "s/gpg-bridge //"
-      register: windows_gpg_bridge_get_new_installed_version
+          "{{ windows_gpg_bridge__exe_path }}" --version | sed "s/gpg-bridge //"
+      register: windows_gpg_bridge__get_new_installed_version
       changed_when: false
 
     - name: Set new installed version fact
       ansible.builtin.set_fact:
-        windows_gpg_bridge_new_installed_version: >-
+        windows_gpg_bridge__new_installed_version: >-
           {{
-            windows_gpg_bridge_get_new_installed_version.stdout
+            windows_gpg_bridge__get_new_installed_version.stdout
             | regex_search('.+\..+\..+')
           }}
 
     - name: Print new installed version
       ansible.builtin.debug:
-        var: windows_gpg_bridge_new_installed_version
+        var: windows_gpg_bridge__new_installed_version
 
     - name: Validate installed version correctness
       ansible.builtin.assert:
         that:
           - >-
-            windows_gpg_bridge_new_installed_version
-            == windows_gpg_bridge_target_version
+            windows_gpg_bridge__new_installed_version
+            == windows_gpg_bridge__target_version
         fail_msg: >-
           Something went wrong with the installation. Newly installed version
-          is unexpected. Got `{{ windows_gpg_bridge_new_installed_version }}`,
-          want `{{ windows_gpg_bridge_target_version }}`.
+          is unexpected. Got `{{ windows_gpg_bridge__new_installed_version }}`,
+          want `{{ windows_gpg_bridge__target_version }}`.
 
-- name: Set up systemd unit
-  ansible.builtin.include_role:
-    name: trallnag.systemd_unit
-  vars:
-    systemd_unit_name: "{{ windows_gpg_bridge_unit_name }}"
-    systemd_unit_activate: true
-    systemd_unit_running_check: true
-    systemd_unit_running_check_delay: "3"
-    systemd_unit_content: >-
-      {{
-        lookup(
-          'ansible.builtin.template',
-          windows_gpg_bridge_unit_name
-        )
-      }}
+- name: Render and place systemd unit file
+  ansible.builtin.template:
+    src: "{{ windows_gpg_bridge__systemd_unit_name }}"
+    dest: /etc/systemd/system/{{ windows_gpg_bridge__systemd_unit_name }}
+    mode: u=rw,g=r,o=r
+  become: true
+  register: windows_gpg_bridge__render_and_place_systemd_unit_file
+
+- name: Verify systemd unit file
+  when: windows_gpg_bridge__render_and_place_systemd_unit_file.changed
+  ansible.builtin.command: systemd-analyze verify {{ windows_gpg_bridge__systemd_unit_name }}
+  become: true
+  changed_when: false
+
+- name: Reload systemd daemon
+  when: windows_gpg_bridge__render_and_place_systemd_unit_file.changed
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  become: true
+
+- name: Enable systemd unit
+  ansible.builtin.systemd_service:
+    name: "{{ windows_gpg_bridge__systemd_unit_name }}"
+    enabled: true
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ windows_gpg_bridge__systemd_unit_name }}
+  changed_when: false
+  failed_when: false
+  become: true
+  register: windows_gpg_bridge__check_systemd_unit_activity
+
+- name: Start systemd unit
+  when: windows_gpg_bridge__check_systemd_unit_activity.rc != 0
+  ansible.builtin.systemd_service:
+    name: "{{ windows_gpg_bridge__systemd_unit_name }}"
+    state: started
+  become: true
+  register: windows_gpg_bridge__start_systemd_unit
+
+- name: Restart systemd unit
+  when: >-
+    windows_gpg_bridge__check_systemd_unit_activity.rc == 0
+    and (
+      windows_gpg_bridge__render_and_place_systemd_unit_file.changed
+      or windows_gpg_bridge__installed_version
+        != windows_gpg_bridge__target_version
+    )
+  ansible.builtin.systemd_service:
+    name: "{{ windows_gpg_bridge__systemd_unit_name }}"
+    state: restarted
+  become: true
+  register: windows_gpg_bridge__restart_systemd_unit
+
+- name: Pause before checking systemd unit
+  when: >-
+    windows_gpg_bridge__start_systemd_unit.changed
+    or windows_gpg_bridge__restart_systemd_unit.changed
+  ansible.builtin.command: sleep 5
+  changed_when: false
+  become: true
+
+- name: Check systemd unit activity
+  ansible.builtin.command:
+    cmd: systemctl is-active --quiet {{ windows_gpg_bridge__systemd_unit_name }}
+  changed_when: false
+  become: true
 
 - name: Validate wants symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/{{ windows_gpg_bridge_unit_name }}
+    path: /etc/systemd/system/multi-user.target.wants/{{ windows_gpg_bridge__systemd_unit_name }}
