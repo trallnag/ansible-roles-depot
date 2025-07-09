@@ -71,7 +71,9 @@
 
 - name: Check systemd unit activity
   ansible.builtin.command:
-    cmd: systemctl is-active --quiet {{ windows_ssh_agent_relay__systemd_unit_name }}
+    cmd: >-
+      systemctl is-active --quiet
+      {{ windows_ssh_agent_relay__systemd_unit_name }}
   changed_when: false
   failed_when: false
   become: true
@@ -108,13 +110,19 @@
 
 - name: Check systemd unit activity
   ansible.builtin.command:
-    cmd: systemctl is-active --quiet {{ windows_ssh_agent_relay__systemd_unit_name }}
+    cmd: >-
+      systemctl is-active --quiet
+      {{ windows_ssh_agent_relay__systemd_unit_name }}
   changed_when: false
   become: true
 
 - name: Check wants symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/{{ windows_ssh_agent_relay__systemd_unit_name }}
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - /etc/systemd/system/multi-user.target.wants/
+      - "{{ windows_ssh_agent_relay__systemd_unit_name }}"
 
 - name: Check key existence in agent
   ansible.builtin.command:
