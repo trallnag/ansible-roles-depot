@@ -196,6 +196,10 @@
   changed_when: false
   become: true
 
+- name: Check wants symlink existence
+  ansible.builtin.stat:
+    path: /etc/systemd/system/multi-user.target.wants/{{ monit__systemd_unit_name }}
+
 - name: Delete log file
   ansible.builtin.file:
     path: /var/log/monit.log

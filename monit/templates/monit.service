@@ -5,7 +5,6 @@ Description=Monit
 After=network-online.target
 
 StartLimitIntervalSec=120
-
 StartLimitBurst=5
 
 OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
@@ -17,13 +16,10 @@ Type=simple
 KillMode=process
 
 ExecStart=/usr/bin/monit -I
-
 ExecStop=/usr/bin/monit quit
-
 ExecReload=/usr/bin/monit reload
 
 Restart=always
-
 RestartSec=10
 
 [Install]
