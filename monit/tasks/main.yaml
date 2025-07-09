@@ -198,7 +198,11 @@
 
 - name: Check wants symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/{{ monit__systemd_unit_name }}
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - /etc/systemd/system/multi-user.target.wants/
+      - "{{ monit__systemd_unit_name }}"
 
 - name: Delete log file
   ansible.builtin.file:

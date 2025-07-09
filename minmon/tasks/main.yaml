@@ -181,8 +181,8 @@
   ansible.builtin.systemd_service:
     name: "{{ minmon__systemd_unit_name }}"
     state: restarted
-  register: minmon__restart_systemd_unit
   become: true
+  register: minmon__restart_systemd_unit
 
 - name: Pause before checking systemd unit
   when: >-
@@ -200,7 +200,11 @@
 
 - name: Check wants symlink existence
   ansible.builtin.stat:
-    path: /etc/systemd/system/multi-user.target.wants/{{ minmon__systemd_unit_name }}
+    path: "{{ path_parts | join }}"
+  vars:
+    path_parts:
+      - /etc/systemd/system/multi-user.target.wants/
+      - "{{ minmon__systemd_unit_name }}"
 
 - name: Render and place monit scripts
   ansible.builtin.template:
