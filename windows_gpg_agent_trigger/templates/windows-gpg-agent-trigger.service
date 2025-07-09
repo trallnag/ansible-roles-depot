@@ -2,7 +2,10 @@
 
 Description=Windows GPG Agent Trigger
 
-OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
 [Service]
 
@@ -11,10 +14,10 @@ Type=simple
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_gpg_agent_trigger_script_path }}
+ExecStart={{ windows_gpg_agent_trigger__script_path }}
 
 Restart=always
-RestartSec=60
+RestartSec=10
 
 [Install]
 
