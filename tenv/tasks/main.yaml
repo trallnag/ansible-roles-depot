@@ -9,7 +9,7 @@
 
 - name: Set data dir path fact
   ansible.builtin.set_fact:
-    tenv_data_dir_path: "{{ xdg_data_home_dir_path }}/tenv"
+    tenv_data_dir_path: "{{ xdg_base_dirs__data_dir_path }}/tenv"
 
 - name: Create data dir
   ansible.builtin.file:
@@ -19,7 +19,7 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ shell_bash_login_script_path }}"
+    path: "{{ shell__bash_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export TENV_ROOT="{{ tenv_data_dir_path }}"
@@ -27,7 +27,7 @@
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ shell_zsh_login_script_path }}"
+    path: "{{ shell__zsh_login_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       export TENV_ROOT="{{ tenv_data_dir_path }}"

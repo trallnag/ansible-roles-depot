@@ -1,5 +1,5 @@
 if status --is-login
-  source "{{ shell_fish_login_script_path }}"
+  source "{{ shell__fish_login_script_path }}"
   source "$DOT_FISH_LOGIN_SCRIPT_PATH"
 end
 

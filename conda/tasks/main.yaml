@@ -36,14 +36,14 @@
   when: not conda_exe_stat.stat.exists
   ansible.builtin.tempfile:
     state: directory
-  register: temp_dir
+  register: windows_gpg_bridge__temp_dir
 
 - name: Install latest
   when: not conda_exe_stat.stat.exists
   ansible.builtin.shell:
     cmd: |
       set -euo pipefail
-      installer="{{ temp_dir.path }}/miniconda-installer.sh"
+      installer="{{ windows_gpg_bridge__temp_dir.path }}/miniconda-installer.sh"
       wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O "$installer"
       chmod +x "$installer"
       "$installer" -b -p ~/miniconda3

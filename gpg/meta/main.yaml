@@ -1,3 +1,4 @@
 dependencies:
   - { role: bash, tags: [bash] }
+  - { role: windows_gpg_agent_relay, tags: [windows_gpg_agent_relay] }
   - { role: zsh, tags: [zsh] }

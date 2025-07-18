@@ -1,6 +1,6 @@
 - name: Set config dir path fact
   ansible.builtin.set_fact:
-    git_config_dir_path: "{{ xdg_config_home_dir_path }}/git"
+    git_config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/git"
 
 - name: Set config path facts
   ansible.builtin.set_fact:

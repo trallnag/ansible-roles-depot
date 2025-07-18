@@ -3,6 +3,7 @@
     name:
       - graphviz
       - jq
+      - socat
       - telnet
       - unzip
       - zip

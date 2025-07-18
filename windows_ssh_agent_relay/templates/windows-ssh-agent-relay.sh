@@ -42,12 +42,12 @@ exec "{{ windows_ssh_agent_relay__ssh_exe_path }}" \
 
     while :; do
       set +e
-      ssh_add_output=$(ssh-add -l 2>&1)
+      cmd_result="$(ssh-add -l 2>&1)"
       set -e
 
-      if ! echo "$ssh_add_output" | grep -q "{{ ansible_user }}"; then
+      if ! echo "$cmd_result" | grep -F -q "{{ ansible_user }}"; then
         echo "Unexpected response from agent." >&2
-        printf '%s\n' "$ssh_add_output" >&2
+        printf '%s\n' "$cmd_result" >&2
         exit 1
       fi
 

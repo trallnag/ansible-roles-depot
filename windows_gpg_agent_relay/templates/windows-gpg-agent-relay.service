@@ -6,25 +6,22 @@ After=windows-gpg-agent-trigger.service
 After=windows-gpg-bridge.service
 After=ssh.service
 
-OnFailure={{ systemd_unit_failure_unit_name | replace('@', '@%n') }}
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+OnFailure={{ onfailure_alert__systemd_unit_name | replace('@', '@%n') }}
 
 [Service]
 
 Type=simple
 
-ExecStartPre=sleep 3s
-ExecStartPre=+mkdir -p /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
-ExecStartPre=+chown {{ ansible_user }}:{{ ansible_user }} /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
-ExecStartPre=+chmod u=rwx,g=,o= /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay
-ExecStartPre=+rm -rf /run/user/{{ ansible_facts.user_uid }}/windows-gpg-agent-relay/S.gpg-agent
-
 User={{ ansible_user }}
 Group={{ ansible_user }}
 
-ExecStart={{ windows_gpg_agent_relay_script_path }}
+ExecStart={{ windows_gpg_agent_relay__script_path }}
 
 Restart=always
-RestartSec=15
+RestartSec=10
 
 [Install]
 

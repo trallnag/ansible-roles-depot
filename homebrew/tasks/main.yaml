@@ -25,7 +25,7 @@
 
 - name: Set up environment in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_profile_script_path }}"
+    path: "{{ bash__profile_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
@@ -34,14 +34,14 @@
 
 - name: Set up completion in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_script_path }}"
+    path: "{{ bash__bashrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       source "{{ homebrew_data_dir_path }}/etc/bash_completion.d/"*
 
 - name: Set up environment in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zprofile_script_path }}"
+    path: "{{ zsh__zprofile_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
     block: |
       eval "$({{ homebrew_exe_dir_path }}/brew shellenv)"
@@ -50,7 +50,7 @@
 
 - name: Set up completion in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_compinit_pre_script_path }}"
+    path: "{{ zsh__zshrc_compinit_pre_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} completion"
     block: |
       FPATH="{{ homebrew_data_dir_path }}/share/zsh/site-functions:$FPATH"

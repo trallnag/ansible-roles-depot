@@ -5,14 +5,14 @@
 
 - name: Set up same dir in Bash
   ansible.builtin.blockinfile:
-    path: "{{ bash_bashrc_script_path }}"
+    path: "{{ bash__bashrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} same dir"
     block: |
       PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
 
 - name: Set up same dir in Zsh
   ansible.builtin.blockinfile:
-    path: "{{ zsh_zshrc_script_path }}"
+    path: "{{ zsh__zshrc_script_path }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} same dir"
     block: |
       keep_current_path() {
