@@ -1,7 +1,7 @@
 - name: Set dir path facts
   ansible.builtin.set_fact:
     monit__data_dir_path: >-
-      {{ fhs_base_dirs__opt_data_dir_path }}/monit
+      {{ base_dirs_fhs__opt_data_dir_path }}/monit
 
     monit__config_dir_path: /etc/monit/conf.d
 

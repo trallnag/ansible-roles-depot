@@ -1,7 +1,7 @@
 - name: Set data dir path fact
   ansible.builtin.set_fact:
     onfailure_alert__data_dir_path: >-
-      {{ fhs_base_dirs__opt_data_dir_path }}/onfailure-alert
+      {{ base_dirs_fhs__opt_data_dir_path }}/onfailure-alert
 
 - name: Set miscellaneous facts
   ansible.builtin.set_fact:

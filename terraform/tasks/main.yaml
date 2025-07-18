@@ -1,7 +1,7 @@
 - name: Set dir path facts
   ansible.builtin.set_fact:
-    terraform_cache_dir_path: "{{ xdg_base_dirs__cache_dir_path }}/terraform"
-    terraform_config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/terraform"
+    terraform_cache_dir_path: "{{ base_dirs_xdg__cache_dir_path }}/terraform"
+    terraform_config_dir_path: "{{ base_dirs_xdg__config_dir_path }}/terraform"
 
 - name: Set plugin cache dir path fact
   ansible.builtin.set_fact:

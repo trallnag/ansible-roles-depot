@@ -5,7 +5,7 @@
 
 - name: Set config dir path fact
   ansible.builtin.set_fact:
-    ripgrep_config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/ripgrep"
+    ripgrep_config_dir_path: "{{ base_dirs_xdg__config_dir_path }}/ripgrep"
 
 - name: Set config path fact
   ansible.builtin.set_fact:

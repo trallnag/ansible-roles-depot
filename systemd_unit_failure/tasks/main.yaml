@@ -1,7 +1,7 @@
 - name: Set data dir path fact
   ansible.builtin.set_fact:
     systemd_unit_failure_data_dir_path: >-
-      {{ xdg_base_dirs__data_dir_path }}/systemd-unit-failure
+      {{ base_dirs_xdg__data_dir_path }}/systemd-unit-failure
 
 - name: Set miscellaneous facts
   ansible.builtin.set_fact:

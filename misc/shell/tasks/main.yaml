@@ -1,0 +1,138 @@
+- name: Set config dir path fact
+  ansible.builtin.set_fact:
+    shell__config_dir_path: "{{ base_dirs_xdg__config_dir_path }}/shell"
+
+- name: Set config dir path fact for root
+  ansible.builtin.set_fact:
+    shell__root_config_dir_path: "{{ base_dirs_xdg__root_config_dir_path }}/shell"
+
+- name: Set login script path facts
+  ansible.builtin.set_fact:
+    shell__bash_login_script_path: "{{ shell__config_dir_path }}/login.bash"
+    shell__fish_login_script_path: "{{ shell__config_dir_path }}/login.fish"
+    shell__zsh_login_script_path: "{{ shell__config_dir_path }}/login.zsh"
+
+- name: Set login script path facts for root
+  ansible.builtin.set_fact:
+    shell__root_bash_login_script_path: "{{ shell__root_config_dir_path }}/login.bash"
+    shell__root_fish_login_script_path: "{{ shell__root_config_dir_path }}/login.fish"
+    shell__root_zsh_login_script_path: "{{ shell__root_config_dir_path }}/login.zsh"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ shell__config_dir_path }}"
+    state: directory
+    mode: u=rwx,g=,o=
+
+- name: Create config dir for root
+  ansible.builtin.file:
+    path: "{{ shell__root_config_dir_path }}"
+    state: directory
+    mode: u=rwx,g=,o=
+  become: true
+
+- name: Create login scripts
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  loop:
+    - "{{ shell__bash_login_script_path }}"
+    - "{{ shell__fish_login_script_path }}"
+    - "{{ shell__zsh_login_script_path }}"
+
+- name: Create login scripts for root
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    mode: u=rw,g=,o=
+    modification_time: preserve
+    access_time: preserve
+  become: true
+  loop:
+    - "{{ shell__root_bash_login_script_path }}"
+    - "{{ shell__root_fish_login_script_path }}"
+    - "{{ shell__root_zsh_login_script_path }}"
+
+- name: Set up environment in Bash
+  ansible.builtin.blockinfile:
+    path: "{{ shell__bash_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: "{{ lookup('ansible.builtin.template', 'login.bash') }}"
+
+- name: Set up environment in Bash for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_bash_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: >-
+      {{
+        lookup('ansible.builtin.template', 'login.bash', template_vars={
+          'base_dirs_xdg__cache_dir_path': base_dirs_xdg__root_cache_dir_path,
+          'base_dirs_xdg__config_dir_path': base_dirs_xdg__root_config_dir_path,
+          'base_dirs_xdg__data_dir_path': base_dirs_xdg__root_data_dir_path,
+          'base_dirs_xdg__exe_dir_path': base_dirs_xdg__root_exe_dir_path,
+          'base_dirs_xdg__state_dir_path': base_dirs_xdg__root_state_dir_path,
+          'shell__bash_login_script_path': shell__root_bash_login_script_path,
+          'shell__fish_login_script_path': shell__root_fish_login_script_path,
+          'shell__zsh_login_script_path': shell__root_zsh_login_script_path,
+        })
+      }}
+  become: true
+
+- name: Set up environment in Fish
+  ansible.builtin.blockinfile:
+    path: "{{ shell__fish_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: "{{ lookup('ansible.builtin.template', 'login.fish') }}"
+
+- name: Set up environment in Fish for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_fish_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: >-
+      {{
+        lookup('ansible.builtin.template', 'login.fish', template_vars={
+          'base_dirs_xdg__cache_dir_path': base_dirs_xdg__root_cache_dir_path,
+          'base_dirs_xdg__config_dir_path': base_dirs_xdg__root_config_dir_path,
+          'base_dirs_xdg__data_dir_path': base_dirs_xdg__root_data_dir_path,
+          'base_dirs_xdg__exe_dir_path': base_dirs_xdg__root_exe_dir_path,
+          'base_dirs_xdg__state_dir_path': base_dirs_xdg__root_state_dir_path,
+          'shell__bash_login_script_path': shell__root_bash_login_script_path,
+          'shell__fish_login_script_path': shell__root_fish_login_script_path,
+          'shell__zsh_login_script_path': shell__root_zsh_login_script_path,
+        })
+      }}
+  become: true
+
+- name: Set up environment in Zsh
+  ansible.builtin.blockinfile:
+    path: "{{ shell__zsh_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: "{{ lookup('ansible.builtin.template', 'login.zsh') }}"
+
+- name: Set up environment in Zsh for root
+  ansible.builtin.blockinfile:
+    path: "{{ shell__root_zsh_login_script_path }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: {{ role_name }} environment"
+    insertbefore: BOF
+    block: >-
+      {{
+        lookup('ansible.builtin.template', 'login.zsh', template_vars={
+          'base_dirs_xdg__cache_dir_path': base_dirs_xdg__root_cache_dir_path,
+          'base_dirs_xdg__config_dir_path': base_dirs_xdg__root_config_dir_path,
+          'base_dirs_xdg__data_dir_path': base_dirs_xdg__root_data_dir_path,
+          'base_dirs_xdg__exe_dir_path': base_dirs_xdg__root_exe_dir_path,
+          'base_dirs_xdg__state_dir_path': base_dirs_xdg__root_state_dir_path,
+          'shell__bash_login_script_path': shell__root_bash_login_script_path,
+          'shell__fish_login_script_path': shell__root_fish_login_script_path,
+          'shell__zsh_login_script_path': shell__root_zsh_login_script_path,
+        })
+      }}
+  become: true

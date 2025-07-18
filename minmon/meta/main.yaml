@@ -1,5 +1,5 @@
 dependencies:
-  - { role: fhs_base_dirs, tags: [fhs_base_dirs] }
+  - { role: base_dirs_fhs, tags: [base_dirs_fhs] }
   - { role: monit, tags: [monit] }
   - { role: msmtp, tags: [msmtp] }
   - { role: onfailure_alert, tags: [onfailure_alert] }

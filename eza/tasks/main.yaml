@@ -5,7 +5,7 @@
 
 - name: Set config dir path fact
   ansible.builtin.set_fact:
-    eza_config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/eza"
+    eza_config_dir_path: "{{ base_dirs_xdg__config_dir_path }}/eza"
 
 - name: Create config dir
   ansible.builtin.file:

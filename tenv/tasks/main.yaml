@@ -9,7 +9,7 @@
 
 - name: Set data dir path fact
   ansible.builtin.set_fact:
-    tenv_data_dir_path: "{{ xdg_base_dirs__data_dir_path }}/tenv"
+    tenv_data_dir_path: "{{ base_dirs_xdg__data_dir_path }}/tenv"
 
 - name: Create data dir
   ansible.builtin.file:

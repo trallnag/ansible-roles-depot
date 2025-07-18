@@ -2,4 +2,4 @@ dependencies:
   - { role: onfailure_alert, tags: [onfailure_alert] }
   - { role: windows_gpg_agent_trigger, tags: [windows_gpg_agent_trigger] }
   - { role: windows_gpg_bridge, tags: [windows_gpg_bridge] }
-  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
+  - { role: base_dirs_xdg, tags: [base_dirs_xdg] }

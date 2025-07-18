@@ -1,0 +1,4 @@
+dependencies:
+  - { role: base_dirs_fhs, tags: [base_dirs_fhs] }
+  - { role: base_dirs_xdg, tags: [base_dirs_xdg] }
+  - { role: shell, tags: [shell] }

@@ -1,0 +1,40 @@
+- name: Set home dir path facts
+  ansible.builtin.set_fact:
+    base_dirs_xdg__cache_dir_path: /home/{{ ansible_user }}/.cache
+    base_dirs_xdg__config_dir_path: /home/{{ ansible_user }}/.config
+    base_dirs_xdg__data_dir_path: /home/{{ ansible_user }}/.local/share
+    base_dirs_xdg__exe_dir_path: /home/{{ ansible_user }}/.local/bin
+    base_dirs_xdg__state_dir_path: /home/{{ ansible_user }}/.local/state
+
+- name: Set home dir path facts for root
+  ansible.builtin.set_fact:
+    base_dirs_xdg__root_cache_dir_path: /root/.cache
+    base_dirs_xdg__root_config_dir_path: /root/.config
+    base_dirs_xdg__root_data_dir_path: /root/.local/share
+    base_dirs_xdg__root_exe_dir_path: /root/.local/bin
+    base_dirs_xdg__root_state_dir_path: /root/.local/state
+
+- name: Create home dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{ base_dirs_xdg__cache_dir_path }}"
+    - "{{ base_dirs_xdg__config_dir_path }}"
+    - "{{ base_dirs_xdg__data_dir_path }}"
+    - "{{ base_dirs_xdg__exe_dir_path }}"
+    - "{{ base_dirs_xdg__state_dir_path }}"
+
+- name: Create home dirs for root
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=,o=
+  become: true
+  loop:
+    - "{{ base_dirs_xdg__root_cache_dir_path }}"
+    - "{{ base_dirs_xdg__root_config_dir_path }}"
+    - "{{ base_dirs_xdg__root_data_dir_path }}"
+    - "{{ base_dirs_xdg__root_exe_dir_path }}"
+    - "{{ base_dirs_xdg__root_state_dir_path }}"

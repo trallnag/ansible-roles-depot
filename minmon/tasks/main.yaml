@@ -1,7 +1,7 @@
 - name: Set data dir path fact
   ansible.builtin.set_fact:
     minmon__data_dir_path: >-
-      {{ fhs_base_dirs__opt_data_dir_path }}/minmon
+      {{ base_dirs_fhs__opt_data_dir_path }}/minmon
 
 - name: Set target info facts
   ansible.builtin.set_fact:

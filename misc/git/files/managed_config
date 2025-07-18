@@ -1,0 +1,34 @@
+[user]
+  email = tim@trallnag.com
+  name = Tim Schwenke
+  signingKey = ACCB8F306184BEEE49E7370E5DBF2C327E72AA3F
+
+[commit]
+  gpgSign = true
+
+[gpg]
+  program = /usr/bin/gpg
+
+[init]
+  defaultBranch = master
+
+[pull]
+  rebase = true
+
+[tag]
+  forceSignAnnotated = true
+
+[merge]
+  conflictStyle = zdiff3
+
+[status]
+  submoduleSummary = true
+
+[branch]
+  sort = committerdate
+
+[tag]
+  sort = taggerdate
+
+[diff]
+  algorithm = histogram

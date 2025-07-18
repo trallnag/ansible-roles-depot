@@ -1,4 +1,4 @@
 dependencies:
   - { role: homebrew, tags: [homebrew] }
   - { role: shell, tags: [shell] }
-  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
+  - { role: base_dirs_xdg, tags: [base_dirs_xdg] }

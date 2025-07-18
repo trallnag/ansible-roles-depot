@@ -1,7 +1,7 @@
 - name: Set data dir path fact
   ansible.builtin.set_fact:
     windows_gpg_bridge__data_dir_path: >-
-      {{ xdg_base_dirs__data_dir_path }}/windows-gpg-bridge
+      {{ base_dirs_xdg__data_dir_path }}/windows-gpg-bridge
 
 - name: Set target info facts
   ansible.builtin.set_fact:

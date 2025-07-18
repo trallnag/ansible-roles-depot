@@ -3,4 +3,4 @@ dependencies:
   - { role: tenv, tags: [tenv] }
   - { role: homebrew, tags: [homebrew] }
   - { role: zsh, tags: [zsh] }
-  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
+  - { role: base_dirs_xdg, tags: [base_dirs_xdg] }

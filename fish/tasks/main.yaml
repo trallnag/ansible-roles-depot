@@ -10,7 +10,7 @@
 
 - name: Set config dir path fact
   ansible.builtin.set_fact:
-    fish_config_dir_path: "{{ xdg_base_dirs__config_dir_path }}/fish"
+    fish_config_dir_path: "{{ base_dirs_xdg__config_dir_path }}/fish"
 
 - name: Create config dir
   ansible.builtin.file:

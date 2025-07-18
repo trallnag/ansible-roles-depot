@@ -1,0 +1,14 @@
+- name: Set facts
+  ansible.builtin.set_fact:
+    base_dirs_fhs__opt_exe_dir_path: /opt/bin
+    base_dirs_fhs__opt_data_dir_path: /opt/{{ ansible_user }}
+
+- name: Create dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  become: true
+  loop:
+    - "{{ base_dirs_fhs__opt_exe_dir_path }}"
+    - "{{ base_dirs_fhs__opt_data_dir_path }}"

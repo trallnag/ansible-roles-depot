@@ -2,4 +2,4 @@ dependencies:
   - { role: onfailure_alert, tags: [onfailure_alert] }
   - { role: shell, tags: [shell] }
   - { role: windows_burnt_toast, tags: [windows_burnt_toast] }
-  - { role: xdg_base_dirs, tags: [xdg_base_dirs] }
+  - { role: base_dirs_xdg, tags: [base_dirs_xdg] }
